@@ -20,7 +20,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-const Profile = ({ refreshUser, userObj }) => {
+const Profile = ({ userObj }) => {
   const navigate = useNavigate();
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const fileInput = useRef();
@@ -65,16 +65,6 @@ const Profile = ({ refreshUser, userObj }) => {
   };
   const onSubmit = async (event) => {
     event.preventDefault();
-    /*
-    // 강의
-    if (userObj.displayName !== newDisplayName) {
-      await userObj.updateProfile({
-        displayName: newDisplayName,
-      });
-      refreshUser();
-    }
-    */
-    
     if (
       userObj.displayName !== newDisplayName ||
       userObj.photoURL !== attachment
@@ -103,18 +93,10 @@ const Profile = ({ refreshUser, userObj }) => {
             attachmentUrl = await getDownloadURL(attachmentRef);
           }
 
-          /* 5-2. 댓글 참고 수정 전 주석처리
           await updateProfile(userObj, {
             displayName: newDisplayName,
             photoURL: attachmentUrl,
           });
-          */
-          await updateProfile(authService().currentUser, {
-            displayName: newDisplayName,
-            photoURL: attachmentUrl,
-          });
-          refreshUser();
-          // 이렇게 했을 때 App.js의 setUserObj에 updateProfile을 새로 선언해주지 않아도 정상동작한다고 한다.
 
           const { email, uid } = userObj;
           const newUserObj = {
