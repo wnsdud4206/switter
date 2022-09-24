@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AppRouter from "components/Router";
 import { authService, onAuth } from "fbase";
+import GlobalStyle from "styles/GlobalStyle";
 
 function App() {
   const [init, setInit] = useState(false);
@@ -14,6 +15,7 @@ function App() {
           displayName: user.displayName,
           uid: user.uid,
           photoURL: user.photoURL,
+          email: user.email,
           updateProfile: (args) => user.updateProfile(args),
         });
         // 5-2. 방법 2
@@ -32,6 +34,7 @@ function App() {
       displayName: user.displayName,
       uid: user.uid,
       photoURL: user.photoURL,
+      email: user.email,
       updateProfile: (args) => user.updateProfile(args),
     });
     // 5-2. 방법 2
@@ -40,6 +43,7 @@ function App() {
 
   return (
     <>
+      <GlobalStyle />
       {/* Loading중 같은 */}
       {init ? (
         <AppRouter

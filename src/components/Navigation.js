@@ -1,6 +1,10 @@
 import { dbService, collection, query, onSnapshot } from "fbase";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter } from "@fortawesome/free-brands-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import NavigationStyle from "styles/NavigationStyle";
 
 const Navigation = ({ userObj }) => {
   const [userName, setUserName] = useState(userObj.displayName);
@@ -15,6 +19,7 @@ const Navigation = ({ userObj }) => {
       //   id: doc.id,
       //   ...doc.data(), // creatorId, createdAt, text
       // }));
+      // eslint-disable-next-line no-unused-vars
       const sweetArr = snapshot.docs.forEach((doc) => {
         // console.log("id: " + doc.id);
         // console.log(userObj.uid);
@@ -28,20 +33,26 @@ const Navigation = ({ userObj }) => {
       });
       // const sweetArr = snapshot.docs.find(doc => doc.id === userObj.uid);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      <nav>
+      <NavigationStyle>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">
+              <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
+            </Link>
           </li>
           <li>
-            <Link to="/profile">{userName}'s Profile</Link>
+            <Link to="/profile">
+              <FontAwesomeIcon icon={faUser} />
+              {userName}'s Profile
+            </Link>
           </li>
         </ul>
-      </nav>
+      </NavigationStyle>
       {userProfileImage && (
         <img
           src={userProfileImage}
@@ -76,12 +87,14 @@ export default Navigation;
 // user에서 따로 displayName, email, photoURL, uid를 저장하거나 혹은 user > providerData[array](위 properties 외에도 phoneNumber, providerID가 있음) 를 저장해서 사용하면 될듯
 // 이제 이 user 정보를 firestore에 users라는 collection을 만들어 저장하는 로직을 Auth.js에서 구현하고 Profile.js에서 불러와 onSnapshot을 사용해서 실시간으로 데이터를 바꿀 수 있도록 구현해주면 될듯
 // * 로그인 할 때마다 users collection에 중복으로 추가되는 문제가 발생하는데 문서의 이름을 랜덤으로 하지 않고 `${providerId}/${email}`이런식으로 만들어서 중복되면 실행되지 않게끔 진행하거나 다른 방법을 찾아야할듯 - 참고: https://firebase.google.com/docs/firestore/manage-data/add-data?authuser=0#set_a_document
+// = setDoc 사용
 
 // Profile.js에 updateProfile을 firestore의 users에도 반영되도록 해야됨
 // 이제 users collection에 저장하는 것은 됐고(아직 부족하지만) 이제 Navigation.js에서 users collection의 문서이름(user의 uid)를 가져오는 방법을 알아야함, 왜나하면 그 문서의 이름(uid)와 props로 받은 userObje.uid를 비교하여 같은 문서를 가져와 사용 - XXX, 이미 snapshot으로 변경을 감지하고 있으니 updateProfile만 users collection의 해당문서의 displayName만 잘 수정되도록 해야함
 
 // 성공!!
 // + 프로필 사진 바꿀 때 기존의 사진 지우는 기능도 추가해야 할듯 - 성공
-// + sweet Edit 할 때 사진도 바뀌도록? - 나중에...
+// + sweet Edit 할 때 사진도 바뀌도록? - 나중에..., 성공
 
 // 강의랑 같이 볼 수 있게 branch로 나눠서 구현할 걸 그랬네..
+// 아니면 애초에 App.js에서 onSnapshot을 사용해주면 될려나?
