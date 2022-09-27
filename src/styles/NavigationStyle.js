@@ -1,12 +1,60 @@
 import styled from "styled-components";
 
 const NavigationStyle = styled.nav`
-  ul {
-    
-    li {
+  /* outline: 1px solid white; */
 
-      svg {
+  margin: 0;
+  margin-top: 58px;
+
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+
+    padding: 0;
+
+    li {
+      display: flex;
+
+      width: 100%;
+
+      &:first-child {
+        justify-content: flex-end
+      }
+
+      a {
+        text-decoration: none;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 120px;
+      }
+
+      a:not(#myProfile) {
+      }
+
+      a#myProfile {
+        display: flex;
+        flex-direction: column;
+
+        span {
+          color: white;
+          font-size: 12px;
+
+          margin-top: 4px;
+        }
+      }
+
+      a > svg {
         color: #00acee;
+        width: 38px;
+        height: 38px;
+
+        &#twitterIcon {
+        }
+        &#profileicon {
+        }
       }
     }
   }

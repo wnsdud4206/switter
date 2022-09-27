@@ -17,17 +17,24 @@ const Home = ({ userObj }) => {
 
   // 읽기, 데이터 받아오기
   const getSweets = async () => {
-    const dbSweets = await getDocs(collection(dbService(), "sweets"));
-    setSweets([]);
-    dbSweets.forEach((doc) => {
-      const sweetObj = {
-        ...doc.data(),
-        id: doc.id,
-        // id, text, creatorId, createdAt
-      };
-      // 왜 자꾸 뒤죽박죽으로 받아오지?? 저장할 때 뒤죽박죽인건가? - orderBy 로 정리
-      setSweets((prev) => [sweetObj, ...prev]);
-    });
+    try {
+      const dbSweets = await getDocs(
+        collection(dbService(), "sweets"),
+        // orderBy("createdAt", "desc"),
+      );
+      setSweets([]);
+      dbSweets.forEach((doc) => {
+        const sweetObj = {
+          ...doc.data(),
+          id: doc.id,
+          // id, text, creatorId, createdAt
+        };
+        // 왜 자꾸 뒤죽박죽으로 받아오지?? 저장할 때 뒤죽박죽인건가? - orderBy 로 정리
+        setSweets((prev) => [sweetObj, ...prev]);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
   useEffect(() => {
     getSweets();
@@ -44,17 +51,31 @@ const Home = ({ userObj }) => {
     });
   }, []);
 
+  // useEffect(() => {
+  //   let test = sweets.sort((a, b) => {
+  //     if (a.createdAt < b.createdAt) return 1;
+  //     if (a.createdAt > b.createdAt) return -1;
+  //     return 0;
+  //   });
+  // });
+
   return (
-    <HomeStyle>
+    <HomeStyle sweetLength={sweets.length}>
       <SweetFactory userObj={userObj} />
-      <div>
-        {sweets.map((sweet) => (
-          <Sweet
-            key={sweet.id}
-            sweetObj={sweet}
-            isOwner={sweet.creatorId === userObj.uid}
-          />
-        ))}
+      <div id="sweetList">
+        {sweets
+          .sort((a, b) => {
+            if (a.createdAt < b.createdAt) return 1;
+            if (a.createdAt > b.createdAt) return -1;
+            return 0;
+          })
+          .map((sweet) => (
+            <Sweet
+              key={sweet.id}
+              sweetObj={sweet}
+              isOwner={sweet.creatorId === userObj.uid}
+            />
+          ))}
       </div>
     </HomeStyle>
   );

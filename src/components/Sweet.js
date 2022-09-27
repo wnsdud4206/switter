@@ -1,20 +1,43 @@
 import React, { useState } from "react";
-import { doc, updateDoc, deleteDoc, dbService, storageService, ref, deleteObject } from "fbase";
+import {
+  doc,
+  updateDoc,
+  deleteDoc,
+  dbService,
+  storageService,
+  ref,
+  deleteObject,
+} from "fbase";
+import SweetStyle from "styles/SweetStyle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const Sweet = ({ sweetObj, isOwner }) => {
   // editing과 newSweet은 분리시켜야 한다.
   const [editing, setEditing] = useState(false);
   const [newSweet, setNewSweet] = useState(sweetObj.text);
+  const [deleteBox, setDeleteBox] = useState(false);
 
   // 삭제, deleteDoc
   const onDeleteClick = async () => {
+    // try {
     const ok = window.confirm("Are you sure you want to delete this sweet?");
     if (ok) {
-      const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-      const r = ref(storageService(), sweetObj.attachmentUrl);
-      await deleteDoc(d);
-      await deleteObject(r);
+      setDeleteBox(true);
+      setTimeout(async () => {
+        const d = doc(dbService(), "sweets", `${sweetObj.id}`);
+        await deleteDoc(d);
+
+        if (sweetObj.attachmentUrl) {
+          // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 sweet을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
+          const r = ref(storageService(), sweetObj.attachmentUrl);
+          await deleteObject(r);
+        }
+      }, 200);
     }
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   // 수정, updateDoc
@@ -33,7 +56,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
   };
 
   return (
-    <div>
+    <SweetStyle className={deleteBox && "fadeout"} editing={editing}>
       {editing ? (
         <>
           {/* 왜 form안에 넣어줬지? input은 무조건 form 안에 있어야 하나? */}
@@ -46,9 +69,14 @@ const Sweet = ({ sweetObj, isOwner }) => {
               onChange={onChange}
               required
             />
-            <input type="submit" value="Update Sweet" />
+            <label>
+              <FontAwesomeIcon icon={faPencil} />
+              <input type="submit" value="Update Sweet" />
+            </label>
           </form>
-          <button onClick={toggleEditing}>Cancel</button>
+          <button onClick={toggleEditing}>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </>
       ) : (
         <>
@@ -63,13 +91,17 @@ const Sweet = ({ sweetObj, isOwner }) => {
           )}
           {isOwner && (
             <>
-              <button onClick={onDeleteClick}>Delete Sweet</button>
-              <button onClick={toggleEditing}>Edit Sweet</button>
+              <button id="deleteBtn" onClick={onDeleteClick}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+              <button id="editBtn" onClick={toggleEditing}>
+                <FontAwesomeIcon icon={faPencil} />
+              </button>
             </>
           )}
         </>
       )}
-    </div>
+    </SweetStyle>
   );
 };
 

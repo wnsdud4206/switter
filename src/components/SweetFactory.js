@@ -10,6 +10,8 @@ import {
   dbService,
 } from "fbase";
 import SweetFactoryStyle from "styles/SweetFactoryStyle";
+import { faArrowRight, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SweetFactory = ({ userObj }) => {
   const [sweet, setSweet] = useState("");
@@ -95,24 +97,36 @@ const SweetFactory = ({ userObj }) => {
   };
   return (
     <SweetFactoryStyle onSubmit={onSubmit}>
-      <input
-        value={sweet}
-        onChange={onChange}
-        type="text"
-        placeholder="What's on you mind?"
-        maxLength={120}
-      />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={onFileChange}
-        ref={fileInput}
-      />
-      <input type="submit" value="Sweet" />
+      <fieldset>
+        <input
+          value={sweet}
+          onChange={onChange}
+          type="text"
+          placeholder="What's on you mind?"
+          maxLength={120}
+        />
+        <label htmlFor="submitBtn">
+          <FontAwesomeIcon icon={faArrowRight} />
+          <input id="submitBtn" type="submit" value="Sweet" />
+        </label>
+      </fieldset>
+      <label htmlFor="fileBtn">
+        Add photo
+        <FontAwesomeIcon icon={faPlus} />
+        <input
+          id="fileBtn"
+          type="file"
+          accept="image/*"
+          onChange={onFileChange}
+          ref={fileInput}
+        />
+      </label>
       {attachment && (
-        <div>
-          <img src={attachment} width="50px" height="50px" alt="uploadImage" />
-          <button onClick={onClearAttachmentClick}>Clear</button>
+        <div id="selectImage">
+          <img src={attachment} width="70px" height="70px" alt="uploadImage" />
+          <button onClick={onClearAttachmentClick}>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </div>
       )}
     </SweetFactoryStyle>

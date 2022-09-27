@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const SweetFactoryStyle = styled.form`
+const ProfileStyle = styled.form`
   /* outline: 1px solid white; */
 
   display: flex;
@@ -147,29 +147,32 @@ const SweetFactoryStyle = styled.form`
   }
 `;
 
-export default SweetFactoryStyle;
+const LogOutBtnStyle = styled.div`
+  display: flex;
+  justify-content: center;
 
-/* <SweetFactoryStyle onSubmit={onSubmit}>
-<div>
-  <input
-    value={sweet}
-    onChange={onChange}
-    type="text"
-    placeholder="What's on you mind?"
-    maxLength={120}
-  />
-  <input type="submit" value="Sweet" />
-</div>
-<input
-  type="file"
-  accept="image/*"
-  onChange={onFileChange}
-  ref={fileInput}
-/>
-{attachment && (
-  <div>
-    <img src={attachment} width="50px" height="50px" alt="uploadImage" />
-    <button onClick={onClearAttachmentClick}>Clear</button>
-  </div>
-)}
-</SweetFactoryStyle> */
+  button {
+    border: none;
+    outline: none;
+    background: #444;
+    color: #bbb;
+
+    font-weight: bold;
+    font-size: 1.2em;
+
+    border-radius: 4px;
+    
+    padding: 8px 12px;
+
+    transition: background .2s, color .2s;
+
+    cursor: pointer;
+
+    &:hover {
+      background:#ff6633;
+      color: #fff;
+    }
+  }
+`;
+
+export { ProfileStyle, LogOutBtnStyle };

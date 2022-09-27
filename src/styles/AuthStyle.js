@@ -4,10 +4,11 @@ const AuthStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   /* gap: 36px; */
 
-  width: 380px;
+  width: 100%;
+  height: 100%;
 
   svg#twiterLogo {
     color: #00acee;
@@ -37,8 +38,8 @@ const AuthStyle = styled.div`
 
       cursor: pointer;
 
-      svg#googleLogo,
-      svg#githubLogo {
+      svg#googleSignInImage,
+      svg#githubSignInImage {
         margin-left: 4px;
       }
     }

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import NavigationStyle from "styles/NavigationStyle";
+import NavigationProfileImage from "styles/NavigationProfileImage";
 
 const Navigation = ({ userObj }) => {
   const [userName, setUserName] = useState(userObj.displayName);
@@ -42,26 +43,28 @@ const Navigation = ({ userObj }) => {
         <ul>
           <li>
             <Link to="/">
-              <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
+              <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
             </Link>
           </li>
           <li>
-            <Link to="/profile">
-              <FontAwesomeIcon icon={faUser} />
-              {userName}'s Profile
+            <Link id="myProfile" to="/profile">
+              <FontAwesomeIcon id="profileicon" icon={faUser} />
+              <span>{userName}'s Profile</span>
             </Link>
           </li>
         </ul>
+        {userProfileImage && (
+          <NavigationProfileImage>
+            <img
+              src={userProfileImage}
+              width="70px"
+              height="70px"
+              style={{ borderRadius: "50%" }}
+              alt="profileImage"
+            />
+          </NavigationProfileImage>
+        )}
       </NavigationStyle>
-      {userProfileImage && (
-        <img
-          src={userProfileImage}
-          width="50px"
-          height="50px"
-          style={{ borderRadius: "50%" }}
-          alt="profileImage"
-        />
-      )}
     </>
   );
 };

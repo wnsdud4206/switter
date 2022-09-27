@@ -1,8 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  html, body {
+  html, body, div#root {
     height: 100%;
+
+    margin: 0;
+    padding: 0;
+
   }
   body {
     font-weight: bold;
@@ -10,9 +14,16 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
+    width: 100vw;
+
+    overflow-x: hidden;
     
     color: white;
+
+    div#root {
+      width: 400px;
+    }
   }
 `;
 

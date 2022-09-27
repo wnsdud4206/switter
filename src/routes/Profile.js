@@ -1,4 +1,10 @@
 import {
+  faArrowRight,
+  faPlus,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
   authService,
   dbService,
   signOut,
@@ -18,11 +24,13 @@ import {
 } from "fbase";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ProfileStyle, LogOutBtnStyle } from "styles/ProfileStyle";
 import { v4 as uuidv4 } from "uuid";
 
 const Profile = ({ refreshUser, userObj }) => {
   const navigate = useNavigate();
-  const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
+  // const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
+  const [newDisplayName, setNewDisplayName] = useState("");
   const fileInput = useRef();
   const [attachment, setAttachment] = useState("");
   const onLogOutClick = () => {
@@ -163,33 +171,47 @@ const Profile = ({ refreshUser, userObj }) => {
 
   return (
     <>
-      <form onSubmit={onSubmit}>
-        <input
-          onChange={onChange}
-          type="text"
-          placeholder="Display Name"
-          value={newDisplayName}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onPhotoChange}
-          ref={fileInput}
-        />
-        <input type="submit" value="Update Profile" />
+      <ProfileStyle onSubmit={onSubmit}>
+        <fieldset>
+          <input
+            onChange={onChange}
+            type="text"
+            placeholder="Profile name to update"
+            value={newDisplayName}
+          />
+          <label htmlFor="submitBtn">
+            <FontAwesomeIcon icon={faArrowRight} />
+            <input id="submitBtn" type="submit" value="Update Profile" />
+          </label>
+        </fieldset>
+        <label htmlFor="fileBtn">
+          Change photo
+          <FontAwesomeIcon icon={faPlus} />
+          <input
+            id="fileBtn"
+            type="file"
+            accept="image/*"
+            onChange={onPhotoChange}
+            ref={fileInput}
+          />
+        </label>
         {attachment && (
-          <div>
+          <div id="selectImage">
             <img
               src={attachment}
-              width="50px"
-              height="50px"
+              width="70px"
+              height="70px"
               alt="uploadImage"
             />
-            <button onClick={onClearAttachmentClick}>Clear</button>
+            <button onClick={onClearAttachmentClick}>
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
           </div>
         )}
-      </form>
-      <button onClick={onLogOutClick}>Log Out</button>
+      </ProfileStyle>
+      <LogOutBtnStyle>
+        <button onClick={onLogOutClick}>Log Out</button>
+      </LogOutBtnStyle>
     </>
   );
 };

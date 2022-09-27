@@ -1,4 +1,8 @@
-import { faTwitter, faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AuthForm from "components/AuthForm";
 import {
@@ -30,19 +34,21 @@ const Auth = () => {
   };
 
   return (
-    <AuthStyle>
-      <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
-      <AuthForm />
-      <div>
-        <button onClick={onSocialClick} name="google">
-          Continue with Google 
-          <FontAwesomeIcon id="googleLogo" icon={faGoogle} />
-        </button>
-        <button onClick={onSocialClick} name="github">
-          Continue with Github 
-          <FontAwesomeIcon id="githubLogo" icon={faGithub} />
-        </button>
-      </div>
+    <AuthStyle className="authPage">
+      {/* <div> */}
+        <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
+        <AuthForm />
+        <div>
+          <button onClick={onSocialClick} name="google">
+            Continue with Google
+            <FontAwesomeIcon id="googleSignInImage" icon={faGoogle} />
+          </button>
+          <button onClick={onSocialClick} name="github">
+            Continue with Github
+            <FontAwesomeIcon id="githubSignInImage" icon={faGithub} />
+          </button>
+        </div>
+      {/* </div> */}
     </AuthStyle>
   );
 };
