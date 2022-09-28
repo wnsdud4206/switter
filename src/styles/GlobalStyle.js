@@ -22,7 +22,14 @@ const GlobalStyle = createGlobalStyle`
     color: white;
 
     div#root {
-      width: 400px;
+      width: 420px;
+      
+      @media screen and (max-width: 500px) {
+        width: 100%;
+        padding: 0 8px;
+        box-sizing: border-box;
+      }
+
     }
   }
 `;

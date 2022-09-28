@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AppRouter from "components/Router";
 import { authService, onAuth } from "fbase";
 import GlobalStyle from "styles/GlobalStyle";
+import LoadingBox from "styles/AppStyle";
 
 function App() {
   const [init, setInit] = useState(false);
@@ -52,7 +53,7 @@ function App() {
           userObj={userObj}
         />
       ) : (
-        "Initializing..."
+        <LoadingBox>"Initializing..."</LoadingBox>
       )}
       {/* <footer>&copy; Switter {new Date().getFullYear()}</footer> */}
     </>
