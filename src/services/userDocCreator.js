@@ -22,6 +22,18 @@ const userDocCreator = async (data) => {
     { merge: false },
   );
   // capital, merge를 다뤄도 무조건 덮어씌우는데?
+
+  // google이나 github 의 프로파일 이미지를 가져와서 storage에 저장하는 건 안되는 듯
+  // const attachmentRef = ref(
+  //   storageService(),
+  //   `${authService().currentUser.uid}/profileImages/${uuidv4()}`,
+  // );
+  // // eslint-disable-next-line no-unused-vars
+  // const response = await uploadString(
+  //   attachmentRef,
+  //   authService().currentUser.photoURL,
+  //   "data_url",
+  // );
 };
 
 export default userDocCreator;

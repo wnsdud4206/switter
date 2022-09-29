@@ -7,6 +7,7 @@ import {
   storageService,
   ref,
   deleteObject,
+  authService,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -55,6 +56,8 @@ const Sweet = ({ sweetObj, isOwner }) => {
     setNewSweet(value);
   };
 
+  console.log(authService().currentUser.displayName);
+
   return (
     <SweetStyle className={deleteBox && "fadeout"} editing={editing}>
       {editing ? (
@@ -80,6 +83,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
         </>
       ) : (
         <>
+          {/* <span>{authService().currentUser.displayName}</span> */}
           <h4>{sweetObj.text}</h4>
           {sweetObj.attachmentUrl && (
             <img

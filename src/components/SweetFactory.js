@@ -44,6 +44,7 @@ const SweetFactory = ({ userObj }) => {
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
+        displayName: userObj.displayName
       };
       // firestore에 추가
       // eslint-disable-next-line no-unused-vars

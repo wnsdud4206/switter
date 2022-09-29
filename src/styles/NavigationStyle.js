@@ -4,7 +4,7 @@ const NavigationStyle = styled.nav`
   /* outline: 1px solid white; */
 
   margin: 0;
-  margin-top: 58px;
+  margin-top: 50px;
 
   ul {
     list-style: none;
@@ -37,10 +37,13 @@ const NavigationStyle = styled.nav`
       a#myProfile {
         display: flex;
         flex-direction: column;
+        align-items: center;
 
         span {
           color: white;
           font-size: 12px;
+
+          flex-wrap: nowrap;
 
           margin-top: 4px;
         }

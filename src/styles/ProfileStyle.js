@@ -169,7 +169,7 @@ const LogOutBtnStyle = styled.div`
     cursor: pointer;
 
     &:hover {
-      background:#ff6633;
+      background: #ff6633;
       color: #fff;
     }
   }

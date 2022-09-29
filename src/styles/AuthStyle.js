@@ -12,36 +12,50 @@ const AuthStyle = styled.div`
 
   svg#twiterLogo {
     color: #00acee;
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
 
-    margin-bottom: 32px;
+    margin-bottom: 16px;
   }
 
   div {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
 
     width: 100%;
 
-    button {
-      height: 36px;
-      background: #eee;
-      outline: none;
-      border: none;
-      border-radius: 18px;
-      box-sizing: border-box;
-      font-weight: bold;
+    div {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
 
-      padding: 0 12px;
-      margin-top: 32px;
 
-      cursor: pointer;
+      button {
+        height: 36px;
+        background: #eee;
+        outline: none;
+        border: none;
+        border-radius: 18px;
+        box-sizing: border-box;
+        font-weight: bold;
 
-      svg#googleSignInImage,
-      svg#githubSignInImage {
-        margin-left: 4px;
+        padding: 0 12px;
+        margin: 24px 0 16px;
+
+        cursor: pointer;
+
+        svg#googleSignInImage,
+        svg#githubSignInImage {
+          margin-left: 4px;
+        }
       }
+    }
+
+    span {
+      color: #ff6633;
+
+      flex-wrap: nowrap;
     }
   }
 `;

@@ -10,34 +10,50 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signInSocial,
+  updateProfile,
 } from "fbase";
-import React from "react";
+import React, { useState } from "react";
 import userDocCreator from "services/userDocCreator";
 import AuthStyle from "styles/AuthStyle";
 // 회원탈퇴는?
 
 const Auth = () => {
+  const [error, setError] = useState("");
+
   const onSocialClick = async (event) => {
     const {
       target: { name },
     } = event;
     let provider;
 
-    if (name === "google") {
-      provider = new GoogleAuthProvider();
-    } else if (name === "github") {
-      provider = new GithubAuthProvider();
-    }
-    const data = await signInSocial(authService(), provider);
+    try {
+      if (name === "google") {
+        provider = new GoogleAuthProvider();
+      } else if (name === "github") {
+        provider = new GithubAuthProvider();
+      }
+      const data = await signInSocial(authService(), provider);
 
-    userDocCreator(data);
+      if (!authService().currentUser.displayName) {
+        await updateProfile(authService().currentUser, {
+          displayName: authService().currentUser.uid.slice(0, 11),
+        });
+      }
+
+      userDocCreator(data);
+    } catch (e) {
+      setError(e.code);
+      console.error(e);
+    }
   };
 
   return (
     <AuthStyle className="authPage">
       {/* <div> */}
-        <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
-        <AuthForm />
+      <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
+      SWITTER(임시)
+      <AuthForm />
+      <div>
         <div>
           <button onClick={onSocialClick} name="google">
             Continue with Google
@@ -48,6 +64,8 @@ const Auth = () => {
             <FontAwesomeIcon id="githubSignInImage" icon={faGithub} />
           </button>
         </div>
+        {error && <span>{error}</span>}
+      </div>
       {/* </div> */}
     </AuthStyle>
   );
