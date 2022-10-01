@@ -43,6 +43,8 @@ const NavigationStyle = styled.nav`
           color: white;
           font-size: 12px;
 
+          text-align: center;
+
           flex-wrap: nowrap;
 
           margin-top: 4px;

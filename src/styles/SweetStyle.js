@@ -4,6 +4,8 @@ const SweetStyle = styled.div`
   display: flex;
   align-items: flex-start;
 
+  height: 82px;
+
   color: black;
   background: white;
 
@@ -88,7 +90,7 @@ const SweetStyle = styled.div`
             outline: none;
             color: #444;
 
-            padding: 2px;
+            padding: 2px 4px;
 
             transition: color 0.25s;
 
@@ -99,48 +101,62 @@ const SweetStyle = styled.div`
             }
 
             svg {
-              width: 16px;
-              height: 16px;
+              width: 18px;
+              height: 18px;
             }
           }
         `
       : css`
-          h4 {
-            font-weight: normal;
+          div#textWrap {
+            width: 100%;
 
-            margin: 16px 0;
-            padding: 0 8px;
+            div#nameAndBtn {
+              display: flex;
+              justify-content: space-between;
 
-            flex: auto;
+              span {
+                padding-left: 4px;
+              }
+
+              div#btnWrap {
+                button {
+                  background: none;
+                  border: none;
+                  outline: none;
+                  color: #444;
+
+                  transition: color 0.25s;
+
+                  cursor: pointer;
+
+                  &#deleteBtn:hover {
+                    color: #ff6633;
+                  }
+                  &#editBtn:hover {
+                    color: #00bdee;
+                  }
+                }
+              }
+            }
+
+            h4 {
+              font-weight: normal;
+
+              margin: 16px 50px 16px 0;
+              padding: 0 4px;
+
+              flex: auto;
+            }
           }
 
           img {
             background-color: white;
             position: absolute;
             right: 0px;
-            bottom: -15px;
+            bottom: 0px;
 
-            border-radius: 50%;
-          }
-
-          button {
-            background: none;
-            border: none;
-            outline: none;
-            color: #444;
-
-            padding: 4px;
-
-            transition: color 0.25s;
-
-            cursor: pointer;
-
-            &#deleteBtn:hover {
-              color: #ff6633;
-            }
-            &#editBtn:hover {
-              color: #00bdee;
-            }
+            /* border-radius: 50%; */
+            border-radius: 10px;
           }
         `}
 `;

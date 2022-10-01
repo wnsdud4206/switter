@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   dbService,
   collection,
@@ -51,14 +51,19 @@ const Home = ({ userObj }) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   let test = sweets.sort((a, b) => {
-  //     if (a.createdAt < b.createdAt) return 1;
-  //     if (a.createdAt > b.createdAt) return -1;
-  //     return 0;
-  //   });
-  // });
+  /* height을 받아오고 늦게 적용시키면? */
+  // const sweetListHeight = (children) => {
+  //   console.log(children);
 
+  //   if (sweetListRef.current === undefined) return;
+  //   let height;
+  //   for (let child in children) {
+  //     if (typeof children[child] === "object") {
+  //       height += children[child].clientHeight;
+  //     }
+  //   }
+  //   setSweetHeight(height + ((children.length - 1) * 24));
+  // };
   return (
     <HomeStyle sweetLength={sweets.length}>
       <SweetFactory userObj={userObj} />

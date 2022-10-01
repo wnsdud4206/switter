@@ -7,7 +7,6 @@ import {
   storageService,
   ref,
   deleteObject,
-  authService,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,8 +55,6 @@ const Sweet = ({ sweetObj, isOwner }) => {
     setNewSweet(value);
   };
 
-  console.log(authService().currentUser.displayName);
-
   return (
     <SweetStyle className={deleteBox && "fadeout"} editing={editing}>
       {editing ? (
@@ -83,8 +80,22 @@ const Sweet = ({ sweetObj, isOwner }) => {
         </>
       ) : (
         <>
-          {/* <span>{authService().currentUser.displayName}</span> */}
-          <h4>{sweetObj.text}</h4>
+          <div id="textWrap">
+            <div id="nameAndBtn">
+              <span>{sweetObj.displayName}</span>
+              {isOwner && (
+                <div id="btnWrap">
+                  <button id="editBtn" onClick={toggleEditing}>
+                    <FontAwesomeIcon icon={faPencil} />
+                  </button>
+                  <button id="deleteBtn" onClick={onDeleteClick}>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              )}
+            </div>
+            <h4>{sweetObj.text}</h4>
+          </div>
           {sweetObj.attachmentUrl && (
             <img
               src={sweetObj.attachmentUrl}
@@ -92,16 +103,6 @@ const Sweet = ({ sweetObj, isOwner }) => {
               height="50px"
               alt="sweetImage"
             />
-          )}
-          {isOwner && (
-            <>
-              <button id="deleteBtn" onClick={onDeleteClick}>
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-              <button id="editBtn" onClick={toggleEditing}>
-                <FontAwesomeIcon icon={faPencil} />
-              </button>
-            </>
           )}
         </>
       )}

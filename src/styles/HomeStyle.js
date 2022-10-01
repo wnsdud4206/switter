@@ -1,17 +1,30 @@
 import styled from "styled-components";
 
 const HomeStyle = styled.div`
+  /* div#sweetListContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    
+    height: ${({ sweetHeight }) => {
+    return sweetHeight;
+  }}px;
+
+    transition: height 0.5s;
+
+    outline: 1px solid white; */
+
   div#sweetList {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     gap: 24px;
 
-    /* 자식요소가 추가될 때마다 height값이 늘어나는 애니메이션 어떻게 구현? */
-
-    /* outline: 1px solid white; */
-
+    /* visibility: hidden; */
+    
     overflow: hidden;
+
+    /* 자식요소가 추가될 때마다 height값이 늘어나는 애니메이션 어떻게 구현? */
 
     // 61(height) 24(gap)
     /* height: 450px; */
@@ -20,14 +33,15 @@ const HomeStyle = styled.div`
       if (sweetLength === 0) {
         return 0;
       } else if (sweetLength === 1) {
-        return 61;
+        return 82;
       } else if (sweetLength > 1) {
-        return sweetLength * 85 - 24;
+        return sweetLength * 106 - 24;
       }
     }}px;
-
+    
     transition: height 0.5s;
   }
+  /* } */
 
   /* outline: 1px solid white; */
 `;
