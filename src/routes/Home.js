@@ -37,6 +37,8 @@ const Home = ({ userObj }) => {
     }
   };
   useEffect(() => {
+    console.log(userObj);
+    
     getSweets();
     const q = query(
       collection(dbService(), "sweets"),

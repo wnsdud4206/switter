@@ -13,6 +13,8 @@ const SweetStyle = styled.div`
 
   padding: 4px;
 
+  box-sizing: border-box;
+
   position: relative;
 
   animation: boxFadeIn 0.25s ease-in;
@@ -27,7 +29,7 @@ const SweetStyle = styled.div`
   }
 
   &.fadeout {
-    animation: boxFadeOut 0.21s linear;
+    animation: boxFadeOut 0.2s linear forwards;
 
     @keyframes boxFadeOut {
       0% {

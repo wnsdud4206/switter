@@ -48,22 +48,23 @@ const Navigation = ({ userObj }) => {
           </li>
           <li>
             <Link id="myProfile" to="/profile">
-              <FontAwesomeIcon id="profileicon" icon={faUser} />
+              {userProfileImage ? (
+                <NavigationProfileImage>
+                  <img
+                    src={userProfileImage}
+                    width="50px"
+                    height="50px"
+                    style={{ borderRadius: "50%" }}
+                    alt="profileImage"
+                  />
+                </NavigationProfileImage>
+              ) : (
+                <FontAwesomeIcon id="profileicon" icon={faUser} />
+              )}
               <span>{userName}'s Profile</span>
             </Link>
           </li>
         </ul>
-        {userProfileImage && (
-          <NavigationProfileImage>
-            <img
-              src={userProfileImage}
-              width="70px"
-              height="70px"
-              style={{ borderRadius: "50%" }}
-              alt="profileImage"
-            />
-          </NavigationProfileImage>
-        )}
       </NavigationStyle>
     </>
   );

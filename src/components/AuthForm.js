@@ -31,7 +31,7 @@ const AuthForm = () => {
   const fileInput = useRef();
   const [attachment, setAttachment] = useState("");
   const [error, setError] = useState("");
-  const [nameAndPhotoInp, setNameAndPhotoInp] = useState(null);
+  const [nameAndPhotoInp, setNameAndPhotoInp] = useState(false);
 
   const onChange = ({ target: { name, value } }) => {
     setForm({ ...form, [name]: value });
@@ -65,50 +65,50 @@ const AuthForm = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     // email/password로 계정을 생성하면 google, github와는 다르게 providerId와 displayName, photoURL가 null인 상태인 문제가 발생
-    if (
-      form.email === "" ||
-      form.password.length < 7 ||
-      form.displayName === ""
-    ) {
-      alert("빈 입력창이 없도록 확인해 주세요.");
-      return;
-    } else {
-      try {
-        let data;
-        const auth = authService();
-        if (newAccount) {
-          data = await createUser(auth, form.email, form.password);
+    try {
+      let data;
+      const auth = authService();
+      if (newAccount) {
+        // if (
+        //   form.email === "" ||
+        //   form.password.length < 7 ||
+        //   form.displayName === ""
+        // ) {
+        //   alert("빈 입력창이 없도록 확인해 주세요.");
+        //   return;
+        // }
 
-          let attachmentUrl = "";
+        data = await createUser(auth, form.email, form.password);
 
-          if (attachment !== "") {
-            const attachmentRef = ref(
-              storageService(),
-              `${authService().currentUser.uid}/profileImages/${uuidv4()}`,
-            );
-            // eslint-disable-next-line no-unused-vars
-            const response = await uploadString(
-              attachmentRef,
-              attachment,
-              "data_url",
-            );
-            attachmentUrl = await getDownloadURL(attachmentRef);
-          }
+        let attachmentUrl = "";
 
-          await updateProfile(auth.currentUser, {
-            displayName: form.displayName,
-            photoURL: attachmentUrl,
-          });
-        } else {
-          data = await signInEmail(auth, form.email, form.password);
+        if (attachment !== "") {
+          const attachmentRef = ref(
+            storageService(),
+            `${authService().currentUser.uid}/profileImages/${uuidv4()}`,
+          );
+          // eslint-disable-next-line no-unused-vars
+          const response = await uploadString(
+            attachmentRef,
+            attachment,
+            "data_url",
+          );
+          attachmentUrl = await getDownloadURL(attachmentRef);
         }
 
-        // email/password는 displayName 등등 유저 정보가 null로 생성되는 문제
-        userDocCreator(data);
-      } catch (error) {
-        console.dir(error);
-        setError(error.message);
+        await updateProfile(auth.currentUser, {
+          displayName: form.displayName,
+          photoURL: attachmentUrl,
+        });
+      } else {
+        data = await signInEmail(auth, form.email, form.password);
       }
+
+      // email/password는 displayName 등등 유저 정보가 null로 생성되는 문제
+      userDocCreator(data);
+    } catch (error) {
+      console.dir(error);
+      setError(error.message);
     }
   };
   const toggleAccount = () => setNewAccount((prev) => !prev);
@@ -119,7 +119,7 @@ const AuthForm = () => {
       setNameAndPhotoInp(newAccount);
     } else if (!newAccount) {
       setTimeout(() => {
-        setNameAndPhotoInp(!newAccount);
+        setNameAndPhotoInp(newAccount);
       }, 310);
     }
   }, [newAccount]);

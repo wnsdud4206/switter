@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
@@ -8,9 +8,14 @@ import {
   getDownloadURL,
   collection,
   dbService,
+  authService,
 } from "fbase";
 import SweetFactoryStyle from "styles/SweetFactoryStyle";
-import { faArrowRight, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faPlus,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SweetFactory = ({ userObj }) => {
@@ -18,6 +23,11 @@ const SweetFactory = ({ userObj }) => {
 
   const [attachment, setAttachment] = useState("");
   const fileInput = useRef();
+
+  // useEffect(() => {
+  //   // console.log(userObj);   // 20221002, 가입할때 바로 적용이 안됨, App.js에서 받아오는데 애초에 App.js에서부터 onSnapshot을 해줘야 하나?? - 임시로 sweet데이터에 authService().currentUser.displayName 적용
+  //   console.log(authService().currentUser);
+  // });
 
   // 쓰기, 데이터 추가
   const onSubmit = async (event) => {
@@ -44,7 +54,8 @@ const SweetFactory = ({ userObj }) => {
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
-        displayName: userObj.displayName
+        // displayName: userObj.displayName,
+        displayName: authService().currentUser.displayName,
       };
       // firestore에 추가
       // eslint-disable-next-line no-unused-vars

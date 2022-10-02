@@ -32,26 +32,36 @@ const Profile = ({ refreshUser, userObj }) => {
   // const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const [newDisplayName, setNewDisplayName] = useState("");
   const fileInput = useRef();
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState(
+    authService().currentUser.photoURL,
+  );
+
   const onLogOutClick = () => {
     signOut(authService());
     navigate("/", { replace: true });
   };
 
   const getMySweets = async () => {
-    const q = query(
-      collection(dbService(), "sweets"),
-      where("creatorId", "==", userObj.uid),
-      orderBy("createdAt"),
-    );
-    // eslint-disable-next-line no-unused-vars
-    const querySnapshot = await getDocs(q);
-    // querySnapshot.forEach((doc) => {
-    //   console.log(doc.id, "=>", doc.data());
-    // });
+    try {
+      const q = query(
+        collection(dbService(), "sweets"),
+        where("creatorId", "==", userObj.uid),
+        orderBy("createdAt"),
+      );
+      // eslint-disable-next-line no-unused-vars
+      const querySnapshot = await getDocs(q);
+      // state에 담고 map으로 출력
+      // console.log(querySnapshot);
+      // querySnapshot.forEach((doc) => {
+      //   console.log(doc.id, "=>", doc.data());
+      // });
+    } catch (error) {
+      console.error(error);
+    }
   };
   useEffect(() => {
     getMySweets();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,102 +82,129 @@ const Profile = ({ refreshUser, userObj }) => {
     setAttachment("");
     fileInput.current.value = "";
   };
-  const onSubmit = async (event) => {
-    event.preventDefault();
-    /*
-    // 강의
-    if (userObj.displayName !== newDisplayName) {
-      await userObj.updateProfile({
+
+  const updateProfileAndDoc = async (url) => {
+    if (url === undefined) {
+      await updateProfile(authService().currentUser, {
         displayName: newDisplayName,
       });
-      refreshUser();
+    } else {
+      await updateProfile(authService().currentUser, {
+        displayName: newDisplayName,
+        photoURL: url,
+      });
     }
-    */
 
+    const { email, uid } = userObj;
+    const newUserObj = {
+      attachmentUrl: url || authService().currentUser.photoURL,
+      displayName: newDisplayName,
+      email: email,
+      uid: uid,
+    };
+    const newUser = doc(dbService(), "users", userObj.uid);
+    // eslint-disable-next-line no-unused-vars
+    const docRef = await setDoc(newUser, newUserObj);
+
+    // setAttachment(authService().currentUser.photoURL);
+    // fileInput.current.value = authService().currentUser.photoURL;
+  };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
     if (
-      userObj.displayName !== newDisplayName ||
-      userObj.photoURL !== attachment
+      authService().currentUser.displayName !== newDisplayName ||
+      authService().currentUser.photoURL !== attachment
     ) {
       const ok = window.confirm(
         "Are you sure you want to update your profile?",
       );
       if (ok) {
-        // 기존 profile image 지우기, 현재 image url(userObj.photoURL)을 storage 안에서 자동으로 찾아 지우는 듯
-
         try {
-          // 현재 내 프로필의 유무와 선택한 이미지파일 유무에 따라 storage에 저장할지 여부를 결정
-          let attachmentUrl = "";
-          if (attachment !== "") {
-            if (authService().currentUser.photoURL) {
-              const r = ref(
-                storageService(),
-                authService().currentUser.photoURL,
-              );
-              await deleteObject(r);
-            }
+          // 기존 url과 새 url이 같다.
+          if (authService().currentUser.photoURL === attachment) {
+            updateProfileAndDoc();
+            // 기존 url과 새 url이 다르다.
+          } else if (authService().currentUser.photoURL !== attachment) {
+            let attachmentUrl = "";
 
-            const attachmentRef = ref(
-              storageService(),
-              `${userObj.uid}/profileImages/${uuidv4()}`,
-            );
-            // eslint-disable-next-line no-unused-vars
-            const response = await uploadString(
-              attachmentRef,
-              attachment,
-              "data_url",
-            );
-            attachmentUrl = await getDownloadURL(attachmentRef);
-          } else {
-            const sure = window.confirm(
-              "Are you sure you want to update empty profile image?",
-            );
-            if (sure) {
-              if (authService().currentUser.photoURL) {
+            // 존재하는 기존 url -> 새 url 혹은 빈 url
+            if (authService().currentUser.photoURL) {
+              // 새 url이 존재하면
+              if (attachment !== "") {
+                // if (authService().currentUser.photoURL) {
                 const r = ref(
                   storageService(),
                   authService().currentUser.photoURL,
                 );
                 await deleteObject(r);
+                // }
+
+                const attachmentRef = ref(
+                  storageService(),
+                  `${userObj.uid}/profileImages/${uuidv4()}`,
+                );
+                // eslint-disable-next-line no-unused-vars
+                const response = await uploadString(
+                  attachmentRef,
+                  attachment,
+                  "data_url",
+                );
+                attachmentUrl = await getDownloadURL(attachmentRef);
+
+                // 새 url이 존재하지 않다면(빈 url)
+              } else if (attachment === "") {
+                const sure = window.confirm(
+                  "Are you sure you want to update empty profile image?",
+                );
+                if (sure) {
+                  // if (authService().currentUser.photoURL) {
+                  const r = ref(
+                    storageService(),
+                    authService().currentUser.photoURL,
+                  );
+                  await deleteObject(r);
+                  // }
+                } else {
+                  alert("please again profile update!");
+                  return;
+                }
               }
+
+              updateProfileAndDoc(attachmentUrl);
+
+              // 비어있는 기존 url
             } else {
-              alert("please again profile update!");
-              return;
+              const attachmentRef = ref(
+                storageService(),
+                `${userObj.uid}/profileImages/${uuidv4()}`,
+              );
+              // eslint-disable-next-line no-unused-vars
+              const response = await uploadString(
+                attachmentRef,
+                attachment,
+                "data_url",
+              );
+              attachmentUrl = await getDownloadURL(attachmentRef);
+
+              updateProfileAndDoc(attachmentUrl);
             }
           }
-
-          // 5-2. 댓글 참고 수정 전 주석처리
-          // 지금 상황에 이걸로 하면 getitorken?이 필요하다고 하는데 현재 userObj에는 App.js에서 내가 필요한 정보들만(displayName, photoURL, email, .. 등등) 있기 때문에 getitorken 뭐시기를 못찾아서 문제가 생긴다. 그래서 아래코드(authService().currentUser)로 사용
-          // await updateProfile(userObj, {
-          //   displayName: newDisplayName,
-          //   photoURL: attachmentUrl,
-          // });
-          // auth 정보 수정
-          await updateProfile(authService().currentUser, {
-            displayName: newDisplayName,
-            photoURL: attachmentUrl,
-          });
-          // refreshUser();
-          // 이렇게 했을 때 App.js의 setUserObj에 updateProfile을 새로 선언해주지 않아도 정상동작한다고 한다.
-
-          const { email, uid } = userObj;
-          const newUserObj = {
-            attachmentUrl,
-            displayName: newDisplayName,
-            email: email,
-            uid: uid,
-          };
-          const newUser = doc(dbService(), "users", userObj.uid);
-          // eslint-disable-next-line no-unused-vars
-          const docRef = await setDoc(newUser, newUserObj);
-
-          setAttachment(""); // 미리보기 사진 제거
-          fileInput.current.value = ""; // 올리고 선택된 파일 해제
         } catch (error) {
           console.error(error);
         }
       }
+    } else {
+      alert("수정된 정보가 없습니다.");
+      return;
     }
   };
+
+  // const profileImageFormat = async () => {
+  //   await updateProfile(authService().currentUser, {
+  //     photoURL: null,
+  //   });
+  // };
 
   return (
     <>
@@ -212,6 +249,7 @@ const Profile = ({ refreshUser, userObj }) => {
       <LogOutBtnStyle>
         <button onClick={onLogOutClick}>Log Out</button>
       </LogOutBtnStyle>
+      {/* <button onClick={profileImageFormat}>profile image format button</button> */}
     </>
   );
 };

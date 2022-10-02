@@ -53,8 +53,8 @@ const NavigationStyle = styled.nav`
 
       a > svg {
         color: #00acee;
-        width: 38px;
-        height: 38px;
+        width: 50px;
+        height: 50px;
 
         &#twitterIcon {
         }
