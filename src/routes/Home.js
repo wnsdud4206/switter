@@ -37,8 +37,6 @@ const Home = ({ userObj }) => {
     }
   };
   useEffect(() => {
-    console.log(userObj);
-    
     getSweets();
     const q = query(
       collection(dbService(), "sweets"),
@@ -66,23 +64,40 @@ const Home = ({ userObj }) => {
   //   }
   //   setSweetHeight(height + ((children.length - 1) * 24));
   // };
+
+  // 각 sweet마다 transition height 효과주기 성공하면 지워도 될듯
+  const listRef = useRef();
+  const [boxSize, setBoxSize] = useState(0);
+  const sweetContainerSize = useCallback(() => {
+    setBoxSize(listRef.current.clientHeight);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boxSize]);
+  useEffect(() => {
+    console.log(listRef.current.clientHeight);
+    sweetContainerSize();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listRef.current, sweets.length]);
+
   return (
-    <HomeStyle sweetLength={sweets.length}>
+    <HomeStyle sweetLength={sweets.length} boxSize={boxSize}>
       <SweetFactory userObj={userObj} />
-      <div id="sweetList">
-        {sweets
-          .sort((a, b) => {
-            if (a.createdAt < b.createdAt) return 1;
-            if (a.createdAt > b.createdAt) return -1;
-            return 0;
-          })
-          .map((sweet) => (
-            <Sweet
-              key={sweet.id}
-              sweetObj={sweet}
-              isOwner={sweet.creatorId === userObj.uid}
-            />
-          ))}
+      <div id="sweetConatiner">
+        <div id="sweetList" ref={listRef}>
+          {sweets
+            .sort((a, b) => {
+              if (a.createdAt < b.createdAt) return 1;
+              if (a.createdAt > b.createdAt) return -1;
+              return 0;
+            })
+            .map((sweet) => (
+              <Sweet
+                key={sweet.id}
+                sweetObj={sweet}
+                isOwner={sweet.creatorId === userObj.uid}
+                sweetContainerSize={sweetContainerSize}
+              />
+            ))}
+        </div>
       </div>
     </HomeStyle>
   );

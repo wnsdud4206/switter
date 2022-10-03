@@ -10,6 +10,11 @@ const SweetFactoryStyle = styled.form`
   padding: 16px 0;
   margin-bottom: 16px;
 
+  width: 100%;
+  
+  /* position: absolute;
+  z-index: 10; */
+
   fieldset {
     display: flex;
 

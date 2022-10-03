@@ -121,6 +121,8 @@ const ProfileStyle = styled.form`
     }
 
     button {
+      outline: none;
+      border: none;
       background: transparent;
 
       color: #444;

@@ -1,35 +1,45 @@
 import styled from "styled-components";
 
 const HomeStyle = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-start; */
 
-  div#sweetList {
-    display: flex;
+  /* outline: 1px solid red; */
+
+  div#sweetConatiner {
+    /* display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    gap: 24px;
+    justify-content: flex-end; */
 
-    /* visibility: hidden; */
+    position: relative;
 
     overflow: hidden;
+    /* overflow: visible; */
 
-    /* 자식요소가 추가될 때마다 height값이 늘어나는 애니메이션 어떻게 구현? */
+    height: ${({ boxSize }) => boxSize}px;
 
-    // 61(height) 24(gap)
-    /* height: 450px; */
-    // 더 쉬운 방법 없나...
-    height: ${({ sweetLength }) => {
-      if (sweetLength === 0) {
-        return 0;
-      } else if (sweetLength > 0) {
-        return sweetLength * 106 - 24;
-      }
-    }}px;
-
-    transition: height 0.35s;
+    transition: height 0.5s;
 
     /* outline: 1px solid white; */
+
+    div#sweetList {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 24px;
+
+      width: 100%;
+
+      position: absolute;
+      bottom: 0;
+      /* top: 0; */
+
+      overflow: hidden;
+
+      /* outline: 1px solid powderblue; */
+    }
   }
-  /* } */
 `;
 
 export default HomeStyle;

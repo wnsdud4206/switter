@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   doc,
   updateDoc,
@@ -11,12 +11,14 @@ import {
 import SweetStyle from "styles/SweetStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import SweetActoins from "./SweetActions";
 
-const Sweet = ({ sweetObj, isOwner }) => {
+const Sweet = ({ sweetObj, isOwner, sweetContainerSize }) => {
   // editing과 newSweet은 분리시켜야 한다.
   const [editing, setEditing] = useState(false);
   const [newSweet, setNewSweet] = useState(sweetObj.text);
   const [deleteBox, setDeleteBox] = useState(false);
+  const [closeUp, setCloseUp] = useState(false);
 
   // 삭제, deleteDoc
   const onDeleteClick = async () => {
@@ -44,6 +46,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
   const toggleEditing = () => {
     setEditing((prev) => !prev);
   };
+
   // async&await는 써도되고 안써도 된다. 어떤 방법을 써도 snapshot 덕분에 업데이트는 확인할 수 있기 때문이다.
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -55,9 +58,20 @@ const Sweet = ({ sweetObj, isOwner }) => {
     setNewSweet(value);
   };
 
+  useEffect(() => {
+    // sweet 갯수만큼 반복호출되는 문제
+    sweetContainerSize();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editing, closeUp]);
+
+  const onCloseUpImgToggle = () => {
+    setCloseUp((prev) => !prev);
+  };
+
   return (
     <SweetStyle className={deleteBox && "fadeout"} editing={editing}>
       {editing ? (
+        // profile image 변경 추가
         <>
           {/* 왜 form안에 넣어줬지? input은 무조건 form 안에 있어야 하나? */}
           <form onSubmit={onSubmit}>
@@ -80,30 +94,44 @@ const Sweet = ({ sweetObj, isOwner }) => {
         </>
       ) : (
         <>
-          <div id="textWrap">
-            <div id="nameAndBtn">
-              <span>{sweetObj.displayName}</span>
-              {isOwner && (
-                <div id="btnWrap">
-                  <button id="editBtn" onClick={toggleEditing}>
-                    <FontAwesomeIcon icon={faPencil} />
-                  </button>
-                  <button id="deleteBtn" onClick={onDeleteClick}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              )}
-            </div>
-            <h4>{sweetObj.text}</h4>
+          {/* <div id="textWrap"> */}
+          <div id="nameAndBtn">
+            <span>{sweetObj.displayName}</span>
+            {isOwner && (
+              <div id="btnWrap">
+                <button id="editBtn" onClick={toggleEditing}>
+                  <FontAwesomeIcon icon={faPencil} />
+                </button>
+                <button id="deleteBtn" onClick={onDeleteClick}>
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            )}
           </div>
-          {sweetObj.attachmentUrl && (
-            <img
-              src={sweetObj.attachmentUrl}
-              width="50px"
-              height="50px"
-              alt="sweetImage"
-            />
+          <div id="textAndImg">
+            <p>{sweetObj.text}</p>
+            {/* </div> */}
+            {sweetObj.attachmentUrl && (
+              <img
+                src={sweetObj.attachmentUrl}
+                width="50px"
+                height="50px"
+                alt="sweetImage"
+                onClick={onCloseUpImgToggle}
+              />
+            )}
+          </div>
+          {closeUp && (
+            <div id="closeUpImg">
+              <img
+                src={sweetObj.attachmentUrl}
+                width="100%"
+                height="100%"
+                alt="sweetImage"
+              />
+            </div>
           )}
+          <SweetActoins />
         </>
       )}
     </SweetStyle>

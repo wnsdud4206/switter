@@ -2,9 +2,13 @@ import styled, { css } from "styled-components";
 
 const SweetStyle = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
 
-  height: 82px;
+  flex-wrap: wrap;
+
+  /* width: 100%; */
+  /* height: 82px; */
 
   color: black;
   background: white;
@@ -109,58 +113,77 @@ const SweetStyle = styled.div`
           }
         `
       : css`
-          div#textWrap {
+          div#nameAndBtn {
+            display: flex;
+            justify-content: space-between;
+
             width: 100%;
 
-            div#nameAndBtn {
-              display: flex;
-              justify-content: space-between;
+            span {
+              padding-left: 4px;
+            }
 
-              span {
-                padding-left: 4px;
-              }
+            div#btnWrap {
+              button {
+                background: none;
+                border: none;
+                outline: none;
+                color: #444;
 
-              div#btnWrap {
-                button {
-                  background: none;
-                  border: none;
-                  outline: none;
-                  color: #444;
+                transition: color 0.25s;
 
-                  transition: color 0.25s;
+                cursor: pointer;
 
-                  cursor: pointer;
-
-                  &#deleteBtn:hover {
-                    color: #ff6633;
-                  }
-                  &#editBtn:hover {
-                    color: #00bdee;
-                  }
+                &#deleteBtn:hover {
+                  color: #ff6633;
+                }
+                &#editBtn:hover {
+                  color: #00bdee;
                 }
               }
             }
+          }
 
-            h4 {
+          div#textAndImg {
+            display: flex;
+            width: 100%;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            outline: 1px solid black;
+
+            p {
+              display: flex;
+
               font-weight: normal;
 
-              margin: 16px 50px 16px 0;
+              margin: 16px 0;
               padding: 0 4px;
 
               flex: auto;
+              flex-wrap: wrap;
+            }
+
+            img {
+              background-color: white;
+
+              /* border-radius: 50%; */
+              border: 1px solid black;
+              border-radius: 10px;
+
+              box-sizing: border-box;
             }
           }
 
-          img {
-            background-color: white;
-            position: absolute;
-            right: 0px;
-            bottom: 0px;
+          div#closeUpImg {
+            
+          }
 
-            /* border-radius: 50%; */
-            border-radius: 10px;
+          div#actions {
+
           }
         `}
+  outline: 1px solid red;
 `;
 
 export default SweetStyle;

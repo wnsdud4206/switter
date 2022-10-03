@@ -13,26 +13,15 @@ const Navigation = ({ userObj }) => {
   useEffect(() => {
     const q = query(collection(dbService(), "users"));
     onSnapshot(q, (snapshot) => {
-      // console.log(snapshot);
-      // console.log(snapshot.docs);
-      // console.log(userObj);
-      // const sweetArr = snapshot.docs.map((doc) => ({
-      //   id: doc.id,
-      //   ...doc.data(), // creatorId, createdAt, text
-      // }));
+      // console.log(snapshot.docs[0].data());
       // eslint-disable-next-line no-unused-vars
       const sweetArr = snapshot.docs.forEach((doc) => {
-        // console.log("id: " + doc.id);
-        // console.log(userObj.uid);
-        // console.log(doc.data()); // creatorId, createdAt, text
-        // 위 doc.data()안에 객체 안에 uid를 사용하면 성능낭비같음, findIndex였나? find였나 그걸로 찾아서 써야하는데 문서의 이름만 출력하는 명령어를 아직 모르겠음
         if (doc.id === userObj.uid) {
           setUserName(doc.data().displayName);
           setUserProfileImage(doc.data().attachmentUrl);
           return;
         }
       });
-      // const sweetArr = snapshot.docs.find(doc => doc.id === userObj.uid);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

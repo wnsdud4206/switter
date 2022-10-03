@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
@@ -54,8 +54,8 @@ const SweetFactory = ({ userObj }) => {
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
-        // displayName: userObj.displayName,
         displayName: authService().currentUser.displayName,
+        // id: uuidv4()
       };
       // firestore에 추가
       // eslint-disable-next-line no-unused-vars
