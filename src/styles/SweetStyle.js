@@ -3,225 +3,351 @@ import styled, { css } from "styled-components";
 const SweetStyle = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-
-  flex-wrap: wrap;
+  justify-content: flex-start;
 
   /* width: 100%; */
   /* height: 82px; */
 
-  color: black;
-  background: white;
+  // paddingBox에 따로 transition 효과 줘야 이미지가 없어질 때 줄어드는 모션을 할듯 이 div는 transition을 하고있는데 paddingBox는 transition이 없으니 확 줄어버리는 것, 이미지도 하면 댓글도 해야할건데... function으로 묶어서 사용해야 할듯
+  height: ${({ sweetPaddingSize }) => sweetPaddingSize}px;
 
-  border-radius: 10px;
+  transition: height 0.25s ease-out;
 
-  padding: 4px;
+  overflow: hidden;
 
-  box-sizing: border-box;
-
-  position: relative;
-
-  animation: boxFadeIn 0.25s ease-in;
+  animation: boxFadeIn 0.25s;
 
   @keyframes boxFadeIn {
     0% {
+      justify-content: flex-end;
       opacity: 0;
     }
     100% {
+      justify-content: flex-end;
       opacity: 1;
     }
   }
 
   &.fadeout {
-    animation: boxFadeOut 0.2s linear forwards;
+    $height-value: ${({ sweetPaddingSize }) => sweetPaddingSize}px;
+    animation: boxFadeOut 0.25s ease-out forwards;
 
     @keyframes boxFadeOut {
       0% {
+        justify-content: flex-end;
         opacity: 1;
+        height: $height-value;
       }
       100% {
+        justify-content: flex-end;
         opacity: 0;
+        height: 0;
       }
     }
   }
 
-  ${(props) =>
-    props.editing
-      ? css`
-          form {
-            display: flex;
-            align-items: flex-start;
+  &:not(:last-child) > div#sweetPadding {
+    padding-bottom: 24px;
+  }
 
-            flex: auto;
+  div#sweetPadding {
+    div#sweetContainer {
+      color: white;
+      background-color: #222;
 
-            input {
-            }
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
 
-            input[type="text"] {
-              margin: 16px 0;
-              padding: 0 8px;
+      /* outline: 1px solid red; */
 
-              flex: auto;
-            }
+      /* padding: 4px; */
 
-            label {
-              display: flex;
-              align-items: center;
-              justify-content: center;
+      border-radius: 4px;
+      border: 1px solid white;
 
-              color: #444;
-              cursor: pointer;
+      box-sizing: border-box;
 
-              transition: color 0.25s;
+      overflow: hidden;
 
-              &:hover {
-                color: #00bdee;
-              }
+      ${(props) =>
+        props.editing
+          ? css`
+              form {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
 
-              svg {
-                width: 14px;
-                height: 14px;
+                flex: auto;
 
-                padding: 4px;
-              }
+                width: 100%;
 
-              input[type="submit"] {
-                display: none;
-              }
-            }
-          }
-          button {
-            background: none;
-            border: none;
-            outline: none;
-            color: #444;
+                div.textEditWrap {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  justify-content: space-between;
 
-            padding: 2px 4px;
+                  width: 100%;
 
-            transition: color 0.25s;
+                  outline: 1px solid red;
 
-            cursor: pointer;
+                  div.btnWrap {
+                    display: flex;
+                    flex-direction: row;
 
-            &:hover {
-              color: #ff6633;
-            }
+                    height: 21px;
 
-            svg {
-              width: 18px;
-              height: 18px;
-            }
-          }
-        `
-      : css`
-          div#nameAndBtn {
-            display: flex;
-            justify-content: space-between;
+                    margin: 8px 0 16px;
+                    padding: 0 8px;
+                    box-sizing: border-box;
 
-            width: 100%;
+                    label {
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
 
-            span {
-              padding-left: 4px;
-            }
+                      padding: 1px 4px 0;
 
-            div#btnWrap {
-              button {
-                background: none;
-                border: none;
-                outline: none;
-                color: #444;
+                      color: #444;
+                      cursor: pointer;
 
-                transition: color 0.25s;
+                      transition: color 0.2s;
 
-                cursor: pointer;
+                      &:hover {
+                        color: #00bdee;
+                      }
 
-                &#deleteBtn:hover {
-                  color: #ff6633;
+                      svg {
+                        width: 14px;
+                        height: 14px;
+                      }
+
+                      input[type="submit"] {
+                        display: none;
+                      }
+                    }
+
+                    button {
+                      background: none;
+                      border: none;
+                      outline: none;
+                      color: #444;
+
+                      padding: 0 3px 0 4px;
+
+                      transition: color 0.2s;
+
+                      cursor: pointer;
+
+                      &:hover {
+                        color: #ff6633;
+                      }
+
+                      svg {
+                        width: 18px;
+                        height: 18px;
+                      }
+                    }
+                  }
+
+                  input {
+                  }
+
+                  /* input[type="text"] { */
+                  div.paddingBox {
+                    width: 100%;
+
+                    padding: 24px 0 20px;
+
+                    box-sizing: border-box;
+
+                    textarea {
+                      outline: none;
+                      border: none;
+                      background-color: transparent;
+                      color: white;
+
+                      font-size: 16px;
+                      font-family: "Malgun Gothic";
+                      line-height: 24px;
+
+                      width: 100%;
+                      height: ${({ textareaHeight }) =>
+                        textareaHeight !== 0 && textareaHeight}px;
+
+                      resize: none;
+
+                      padding: 0 8px;
+                      border-top: 2px solid #444;
+                      border-bottom: 2px solid #444;
+                      box-sizing: border-box;
+
+                      overflow: hidden;
+
+                      transition: border 0.2s;
+
+                      &:focus {
+                        border-top: 2px solid #00bdee;
+                        border-bottom: 2px solid #00bdee;
+                      }
+                    }
+                  }
                 }
-                &#editBtn:hover {
-                  color: #00bdee;
+
+                div.sweetImg {
+                  margin-bottom: 24px;
+
+                  img {
+                    background-color: white;
+                  }
+                }
+
+                label[for="sweetUpdatefileBtn"] {
+                  color: #00acee;
+                  font-weight: normal;
+
+                  margin-bottom: 8px;
+
+                  cursor: pointer;
+
+                  transition: color 0.2s;
+
+                  &:hover {
+                    color: #00bdee;
+                  }
+
+                  svg {
+                    margin-left: 8px;
+                  }
+
+                  input[type="file"] {
+                    display: none;
+                  }
                 }
               }
-            }
-          }
+            `
+          : css`
+              div.nameAndBtn {
+                display: flex;
+                justify-content: space-between;
 
-          div#textAndImg {
-            display: flex;
-            width: 100%;
-            align-items: flex-end;
-            justify-content: space-between;
+                width: 100%;
 
-            outline: 1px solid black;
+                margin: 8px 0 16px;
+                padding: 0 8px;
+                box-sizing: border-box;
 
-            p {
-              display: flex;
+                span {
+                  padding-left: 4px;
+                }
 
-              font-weight: normal;
+                div.btnWrap {
+                  button {
+                    background: none;
+                    border: none;
+                    outline: none;
+                    color: #444;
 
-              margin: 16px 0;
-              padding: 0 4px;
+                    transition: color 0.2s;
 
-              flex: auto;
-              flex-wrap: wrap;
-            }
+                    cursor: pointer;
 
-            img {
-              background-color: white;
+                    &.deleteBtn:hover {
+                      color: #ff6633;
+                    }
+                    &.editBtn:hover {
+                      color: #00bdee;
+                    }
+                  }
+                }
+              }
 
-              /* border-radius: 50%; */
-              border: 1px solid black;
-              border-radius: 10px;
+              p {
+                display: flex;
 
-              box-sizing: border-box;
-            }
-          }
+                font-weight: normal;
 
-          div#closeUpImg {
-            
-          }
+                width: 100%;
 
-          div#actions {
+                margin: 24px 0;
+                padding: 0 8px;
+                box-sizing: border-box;
 
-          }
-        `}
-  outline: 1px solid red;
+                white-space: pre-line;
+                line-height: 24px;
+
+                flex: auto;
+                flex-wrap: wrap;
+              }
+
+              div.sweetImg {
+                margin-bottom: 24px;
+
+                border: 2px solid #444;
+
+                transition: border-color 0.2s;
+
+                &:hover {
+                  border: 2px solid #00bdee;
+                  box-sizing: border-box;
+                }
+
+                img {
+                  background-color: white;
+
+                  cursor: pointer;
+                }
+              }
+            `}
+    }
+  }
+
+  div.closeUpImgContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.3);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+
+    z-index: 100;
+
+    animation: fadeIn 0.25s forwards;
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    &.visible {
+      animation: fadeOut 0.25s forwards;
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+    }
+
+    img {
+    }
+  }
 `;
 
 export default SweetStyle;
-
-// <SweetStyle>
-// {editing ? (
-//   <>
-//     {/* 왜 form안에 넣어줬지? input은 무조건 form 안에 있어야 하나? */}
-//     <form onSubmit={onSubmit}>
-//       {/* required는 아무것도 입력하지 않고 제출하면 경고창이 뜨게 해주는 속성 */}
-//       <input
-//         type="text"
-//         placeholder="Edit your sweet"
-//         value={newSweet}
-//         onChange={onChange}
-//         required
-//       />
-//       <input type="submit" value="Update Sweet" />
-//     </form>
-//     <button onClick={toggleEditing}>Cancel</button>
-//   </>
-// ) : (
-//   <>
-//     <h4>{sweetObj.text}</h4>
-//     {sweetObj.attachmentUrl && (
-//       <img
-//         src={sweetObj.attachmentUrl}
-//         width="50px"
-//         height="50px"
-//         alt="sweetImage"
-//       />
-//     )}
-//     {isOwner && (
-//       <>
-//         <button onClick={onDeleteClick}>Delete Sweet</button>
-//         <button onClick={toggleEditing}>Edit Sweet</button>
-//       </>
-//     )}
-//   </>
-// )}
-// </SweetStyle>

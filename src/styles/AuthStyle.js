@@ -61,15 +61,3 @@ const AuthStyle = styled.div`
 `;
 
 export default AuthStyle;
-
-/* <div>
-<AuthForm />
-<div>
-  <button onClick={onSocialClick} name="google">
-    Continue with Google
-  </button>
-  <button onClick={onSocialClick} name="github">
-    Continue with Github
-  </button>
-</div>
-</div> */

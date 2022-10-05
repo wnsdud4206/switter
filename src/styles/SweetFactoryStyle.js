@@ -11,7 +11,7 @@ const SweetFactoryStyle = styled.form`
   margin-bottom: 16px;
 
   width: 100%;
-  
+
   /* position: absolute;
   z-index: 10; */
 
@@ -153,28 +153,3 @@ const SweetFactoryStyle = styled.form`
 `;
 
 export default SweetFactoryStyle;
-
-/* <SweetFactoryStyle onSubmit={onSubmit}>
-<div>
-  <input
-    value={sweet}
-    onChange={onChange}
-    type="text"
-    placeholder="What's on you mind?"
-    maxLength={120}
-  />
-  <input type="submit" value="Sweet" />
-</div>
-<input
-  type="file"
-  accept="image/*"
-  onChange={onFileChange}
-  ref={fileInput}
-/>
-{attachment && (
-  <div>
-    <img src={attachment} width="50px" height="50px" alt="uploadImage" />
-    <button onClick={onClearAttachmentClick}>Clear</button>
-  </div>
-)}
-</SweetFactoryStyle> */

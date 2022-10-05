@@ -22,7 +22,7 @@ const GlobalStyle = createGlobalStyle`
     color: white;
 
     div#root {
-      width: 420px;
+      width: 500px;
       
       @media screen and (max-width: 500px) {
         width: 100%;

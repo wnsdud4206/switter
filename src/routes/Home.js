@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   dbService,
   collection,
@@ -51,38 +51,11 @@ const Home = ({ userObj }) => {
     });
   }, []);
 
-  /* height을 받아오고 늦게 적용시키면? */
-  // const sweetListHeight = (children) => {
-  //   console.log(children);
-
-  //   if (sweetListRef.current === undefined) return;
-  //   let height;
-  //   for (let child in children) {
-  //     if (typeof children[child] === "object") {
-  //       height += children[child].clientHeight;
-  //     }
-  //   }
-  //   setSweetHeight(height + ((children.length - 1) * 24));
-  // };
-
-  // 각 sweet마다 transition height 효과주기 성공하면 지워도 될듯
-  const listRef = useRef();
-  const [boxSize, setBoxSize] = useState(0);
-  const sweetContainerSize = useCallback(() => {
-    setBoxSize(listRef.current.clientHeight);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boxSize]);
-  useEffect(() => {
-    console.log(listRef.current.clientHeight);
-    sweetContainerSize();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listRef.current, sweets.length]);
-
   return (
-    <HomeStyle sweetLength={sweets.length} boxSize={boxSize}>
+    <HomeStyle sweetLength={sweets.length}>
       <SweetFactory userObj={userObj} />
       <div id="sweetConatiner">
-        <div id="sweetList" ref={listRef}>
+        <div id="sweetList">
           {sweets
             .sort((a, b) => {
               if (a.createdAt < b.createdAt) return 1;
@@ -94,7 +67,6 @@ const Home = ({ userObj }) => {
                 key={sweet.id}
                 sweetObj={sweet}
                 isOwner={sweet.creatorId === userObj.uid}
-                sweetContainerSize={sweetContainerSize}
               />
             ))}
         </div>

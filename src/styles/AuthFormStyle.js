@@ -135,28 +135,3 @@ const AuthFormSpanStyle = styled.span`
 `;
 
 export { AuthFormStyle, AuthFormSpanStyle };
-
-// <form onSubmit={onSubmit}>
-// <input
-//   name="email"
-//   type="email"
-//   placeholder="Email"
-//   required
-//   value={form.name}
-//   onChange={onChange}
-// />
-// <input
-//   name="password"
-//   type="password"
-//   placeholder="Password"
-//   required
-//   value={form.password}
-//   onChange={onChange}
-// />
-// <input type="submit" value={newAccount ? "Create Accont" : "Log In"} />
-// {error}
-// </form>
-// {/* newAccount를 true로 바꾸어 submit 이벤트의 if문에 따라 버튼을 클릭하면 이전처럼 계정생성이 아닌 로그인(Sign In 메소드)이 되는 것 */}
-// <span onClick={toggleAccount}>
-// {newAccount ? "Sign In" : "Create Account"}
-// </span>

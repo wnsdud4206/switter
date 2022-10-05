@@ -162,9 +162,9 @@ const AuthForm = () => {
               type="text"
               maxLength="11"
               placeholder="Nickname"
-              required
               value={form.displayName}
               onChange={onChange}
+              required
             />
           </>
         )}
@@ -172,17 +172,17 @@ const AuthForm = () => {
           name="email"
           type="email"
           placeholder="Email"
-          required
           value={form.name}
           onChange={onChange}
+          required
         />
         <input
           name="password"
           type="password"
           placeholder="Password"
-          required
           value={form.password}
           onChange={onChange}
+          required
         />
         {/* <input
           name="profileImage"

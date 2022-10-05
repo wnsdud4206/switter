@@ -86,11 +86,11 @@ const Profile = ({ refreshUser, userObj }) => {
   const updateProfileAndDoc = async (url) => {
     if (url === undefined) {
       await updateProfile(authService().currentUser, {
-        displayName: newDisplayName,
+        displayName: newDisplayName || userObj.displayName,
       });
     } else {
       await updateProfile(authService().currentUser, {
-        displayName: newDisplayName,
+        displayName: newDisplayName || userObj.displayName,
         photoURL: url,
       });
     }

@@ -107,6 +107,7 @@ const SweetFactory = ({ userObj }) => {
     setAttachment(null);
     fileInput.current.value = "";
   };
+  
   return (
     <SweetFactoryStyle onSubmit={onSubmit}>
       <fieldset>
