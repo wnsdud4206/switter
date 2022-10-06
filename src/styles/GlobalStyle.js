@@ -20,6 +20,19 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     
     color: white;
+    
+    /* &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: #444;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    } */
 
     div#root {
       width: 500px;

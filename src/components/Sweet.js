@@ -27,10 +27,9 @@ const Sweet = ({ sweetObj, isOwner }) => {
   const [deleteBox, setDeleteBox] = useState(false);
   const [attachment, setAttachment] = useState(sweetObj.attachmentUrl);
   const [sweetPaddingSize, setSweetPaddingSize] = useState(0);
-  const [textareaHeight, setTextareaHeight] = useState(0);
-  // const [closeUp, setCloseUp] = useState(false);
   const [closeUpImg, setCloseUpImg] = useState("");
   const [visibleCloseUpImg, setVisibleCloseUpImg] = useState(false);
+  const [innerSize, setInnerSize] = useState(false);
 
   const fileInput = useRef();
   const sweetPaddingRef = useRef();
@@ -44,6 +43,12 @@ const Sweet = ({ sweetObj, isOwner }) => {
 
   useEffect(() => {
     getUserName();
+    // if ()
+    if (window.innerHeight >= window.innerWidth) {
+      setInnerSize(false);
+    } else if (window.innerHeight < window.innerWidth) {
+      setInnerSize(true);
+    }
   }, []);
 
   // 삭제, deleteDoc
@@ -92,11 +97,6 @@ const Sweet = ({ sweetObj, isOwner }) => {
     }
   };
 
-  const resizeTextarea = () => {
-    setTextareaHeight(textareaRef.current?.scrollHeight);
-    // console.log(textareaRef.current.value.match(/\n/g));
-  };
-
   const onChange = ({ target: { value } }) => {
     setNewSweetText(value);
   };
@@ -126,17 +126,30 @@ const Sweet = ({ sweetObj, isOwner }) => {
   }, []);
   useEffect(() => {
     sweetSizing();
-    resizeTextarea();
     if (!editing) setNewSweetText(sweetObj.text);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editing]);
+
+  const onCloseUpImg = (e) => {
+    if (!visibleCloseUpImg) {
+      // img closeUp
+      setCloseUpImg(e.target.src);
+      setVisibleCloseUpImg(true);
+      console.log(false);
+    } else if (visibleCloseUpImg) {
+      // img closeDown?
+      setVisibleCloseUpImg(false);
+      setTimeout(() => setCloseUpImg(""), 260);
+      console.log(true);
+    }
+  };
 
   return (
     <SweetStyle
       className={deleteBox ? "fadeout" : ""}
       sweetPaddingSize={sweetPaddingSize}
       editing={editing}
-      textareaHeight={textareaHeight}
+      innerSize={innerSize}
     >
       <div id="sweetPadding" ref={sweetPaddingRef}>
         <div id="sweetContainer">
@@ -168,8 +181,6 @@ const Sweet = ({ sweetObj, isOwner }) => {
                       placeholder="Edit your sweet"
                       value={newSweetText}
                       onChange={onChange}
-                      onKeyDown={resizeTextarea}
-                      onKeyUp={resizeTextarea}
                       maxLength="1200"
                       ref={textareaRef}
                       required
@@ -231,35 +242,29 @@ const Sweet = ({ sweetObj, isOwner }) => {
                     height="100%"
                     alt="sweetImage"
                     onLoad={sweetSizing}
-                    onClick={(e) => {
-                      setCloseUpImg(e.target.src);
-                      setVisibleCloseUpImg(true);
-                    }}
+                    onClick={onCloseUpImg}
                   />
                 </div>
               )}
-              <SweetActoins />
+              <SweetActoins sweetObj={sweetObj} />
             </>
           )}
         </div>
       </div>
 
-      {visibleCloseUpImg && (
+      {closeUpImg && (
         <div
           className={`closeUpImgContainer ${!visibleCloseUpImg && "visible"}`}
-          onClick={(e) => {
-            setVisibleCloseUpImg(false);
-            setTimeout(() => setCloseUpImg(""), 260);
-          }}
+          onClick={onCloseUpImg}
         >
-          {/* <div className="closeUpImgSize"> */}
-          <img
-            src={closeUpImg}
-            width="80%"
-            height="80%"
-            alt="CloseUpSweetImage"
-          />
-          {/* </div> */}
+          <div className="closeUpImgSize">
+            <img
+              src={closeUpImg}
+              width="100%"
+              height="100%"
+              alt="CloseUpSweetImage"
+            />
+          </div>
         </div>
       )}
     </SweetStyle>

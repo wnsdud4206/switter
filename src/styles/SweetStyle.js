@@ -47,7 +47,7 @@ const SweetStyle = styled.div`
   }
 
   &:not(:last-child) > div#sweetPadding {
-    padding-bottom: 24px;
+    padding-bottom: 72px;
   }
 
   div#sweetPadding {
@@ -76,7 +76,7 @@ const SweetStyle = styled.div`
               form {
                 display: flex;
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
 
                 flex: auto;
 
@@ -173,8 +173,11 @@ const SweetStyle = styled.div`
                       line-height: 24px;
 
                       width: 100%;
-                      height: ${({ textareaHeight }) =>
-                        textareaHeight !== 0 && textareaHeight}px;
+                      /* height: ${({ textareaHeight }) =>
+                        textareaHeight !== 0 && textareaHeight}px; */
+                      /* height: ${({ textareaHeight }) => textareaHeight}px; */
+                      // 너무 느려져짐
+                      min-height: 60px;
 
                       resize: none;
 
@@ -183,23 +186,63 @@ const SweetStyle = styled.div`
                       border-bottom: 2px solid #444;
                       box-sizing: border-box;
 
-                      overflow: hidden;
-
                       transition: border 0.2s;
 
                       &:focus {
                         border-top: 2px solid #00bdee;
                         border-bottom: 2px solid #00bdee;
                       }
+
+                      &::-webkit-scrollbar {
+                        width: 8px;
+                      }
+
+                      &::-webkit-scrollbar-thumb {
+                        border-radius: 4px;
+                        background-color: #444;
+                      }
+
+                      &::-webkit-scrollbar-track {
+                        background-color: transparent;
+                      }
                     }
                   }
                 }
 
                 div.sweetImg {
-                  margin-bottom: 24px;
+                  margin-bottom: 16px;
+
+                  position: relative;
 
                   img {
                     background-color: white;
+                  }
+
+                  button {
+                    outline: none;
+                    border: none;
+                    background: none;
+
+                    padding: 0;
+
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+
+                    cursor: pointer;
+
+                    svg {
+                      color: white;
+
+                      width: 24px;
+                      height: 24px;
+
+                      transition: color 0.2s;
+                    }
+
+                    &:hover > svg {
+                      color: #ff6633;
+                    }
                   }
                 }
 
@@ -284,19 +327,19 @@ const SweetStyle = styled.div`
               div.sweetImg {
                 margin-bottom: 24px;
 
-                border: 2px solid #444;
-
-                transition: border-color 0.2s;
-
-                &:hover {
-                  border: 2px solid #00bdee;
-                  box-sizing: border-box;
-                }
-
                 img {
                   background-color: white;
 
+                  border: 2px solid #444;
+                  box-sizing: border-box;
+
+                  transition: border-color 0.2s;
+
                   cursor: pointer;
+
+                  &:hover {
+                    border: 2px solid #00bdee;
+                  }
                 }
               }
             `}
@@ -308,7 +351,7 @@ const SweetStyle = styled.div`
     align-items: center;
     justify-content: center;
 
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
 
     position: fixed;
     top: 0;
@@ -345,7 +388,20 @@ const SweetStyle = styled.div`
       }
     }
 
-    img {
+    div.closeUpImgSize {
+      ${({ innerSize }) =>
+        innerSize
+          ? css`
+              width: 70vw;
+              height: 70vw;
+            `
+          : css`
+              width: 70vh;
+              height: 70vh;
+            `}
+
+      img {
+      }
     }
   }
 `;

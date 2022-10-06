@@ -25,6 +25,8 @@ import {
   doc,
   updateDoc,
   setDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -76,7 +78,9 @@ export {
   deleteDoc,
   doc,
   updateDoc,
-  setDoc
+  setDoc,
+  arrayUnion,
+  arrayRemove,
 };
 
 // Storage
