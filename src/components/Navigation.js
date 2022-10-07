@@ -10,6 +10,7 @@ import NavigationProfileImage from "styles/NavigationProfileImage";
 const Navigation = ({ userObj }) => {
   const [userName, setUserName] = useState(userObj.displayName);
   const [userProfileImage, setUserProfileImage] = useState(userObj.photoURL);
+
   useEffect(() => {
     const q = query(collection(dbService(), "users"));
     onSnapshot(q, (snapshot) => {
@@ -23,6 +24,7 @@ const Navigation = ({ userObj }) => {
         }
       });
     });
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -30,12 +32,12 @@ const Navigation = ({ userObj }) => {
     <>
       <NavigationStyle>
         <ul>
-          <li>
+          <li id="homeLink">
             <Link to="/">
               <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
             </Link>
           </li>
-          <li>
+          <li id="profileLink">
             <Link id="myProfile" to="/profile">
               {userProfileImage ? (
                 <NavigationProfileImage>

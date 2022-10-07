@@ -5,15 +5,19 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "./Navigation";
 
-const AppRouter = ({ refreshUser, isLoggedIn, userObj }) => {
+const AppRouter = ({ refreshUser, isLoggedIn, userObj, init }) => {
   return (
     <Router>
       {isLoggedIn && <Navigation userObj={userObj} />}
       <Routes>
         {isLoggedIn ? (
           <>
-            <Route path="/" element={<Home userObj={userObj} />} />
-            <Route path="/profile" element={<Profile userObj={userObj} />} refreshUser={refreshUser} />
+            <Route path="/" element={<Home userObj={userObj} init={init} />} />
+            <Route
+              path="/profile"
+              element={<Profile userObj={userObj} />}
+              refreshUser={refreshUser}
+            />
             {/* redirect 사라져서 이렇게 사용, 또는 Profile.js 에서 useNavigate() 사용 */}
             <Route path="*" element={<Navigation replace to="/" />} />
           </>

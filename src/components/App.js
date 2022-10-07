@@ -51,6 +51,7 @@ function App() {
           refreshUser={refreshUser}
           isLoggedIn={userObj}
           userObj={userObj}
+          init={init}
         />
       ) : (
         <LoadingBox>"Initializing..."</LoadingBox>

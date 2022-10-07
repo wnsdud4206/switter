@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div#root {
-    height: 100%;
+    min-height: 100%;
 
     margin: 0;
     padding: 0;
@@ -20,22 +20,24 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     
     color: white;
-    
-    /* &::-webkit-scrollbar {
-      width: 8px;
+
+    &::-webkit-scrollbar {
+      width: 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-      border-radius: 4px;
-      background-color: #444;
+      border-radius: 5px;
+      background-color: #00bdee;
     }
 
     &::-webkit-scrollbar-track {
       background-color: transparent;
-    } */
+    }
 
     div#root {
       width: 500px;
+
+      position: relative;
       
       @media screen and (max-width: 500px) {
         width: 100%;

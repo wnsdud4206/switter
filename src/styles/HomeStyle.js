@@ -39,6 +39,10 @@ const HomeStyle = styled.div`
       /* top: 0;
 
       overflow: hidden;  */
+
+      div#loadingBox {
+        text-align: center;
+      }
     }
   }
 `;

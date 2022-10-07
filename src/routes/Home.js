@@ -12,7 +12,7 @@ import Sweet from "components/Sweet";
 import SweetFactory from "components/SweetFactory";
 import HomeStyle from "styles/HomeStyle";
 
-const Home = ({ userObj }) => {
+const Home = ({ userObj, init }) => {
   const [sweets, setSweets] = useState([]);
 
   // 읽기, 데이터 받아오기
@@ -37,6 +37,9 @@ const Home = ({ userObj }) => {
     }
   };
   useEffect(() => {
+    // console.log(sweets)
+    // console.log(userObj);
+
     getSweets();
     const q = query(
       collection(dbService(), "sweets"),
@@ -56,19 +59,23 @@ const Home = ({ userObj }) => {
       <SweetFactory userObj={userObj} />
       <div id="sweetConatiner">
         <div id="sweetList">
-          {sweets
-            .sort((a, b) => {
-              if (a.createdAt < b.createdAt) return 1;
-              if (a.createdAt > b.createdAt) return -1;
-              return 0;
-            })
-            .map((sweet) => (
-              <Sweet
-                key={sweet.id}
-                sweetObj={sweet}
-                isOwner={sweet.creatorId === userObj.uid}
-              />
-            ))}
+          {sweets.length ? (
+            sweets
+              .sort((a, b) => {
+                if (a.createdAt < b.createdAt) return 1;
+                if (a.createdAt > b.createdAt) return -1;
+                return 0;
+              })
+              .map((sweet) => (
+                <Sweet
+                  key={sweet.id}
+                  sweetObj={sweet}
+                  isOwner={sweet.creatorId === userObj.uid}
+                />
+              ))
+          ) : (
+            <div id="loadingBox">Loading...</div>
+          )}
         </div>
       </div>
     </HomeStyle>

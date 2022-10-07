@@ -35,6 +35,7 @@ const SweetActionsStyle = styled.div`
     }
 
     div.likeAndHateWrap {
+      
       div.likeAndHatePopup {
         display: none;
         flex-direction: column;
@@ -105,6 +106,10 @@ const SweetActionsStyle = styled.div`
           transform: scale(1.2, 1.2);
         } */
       }
+    }
+
+    span.likeCounter {
+
     }
   }
 

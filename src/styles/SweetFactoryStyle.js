@@ -7,8 +7,8 @@ const SweetFactoryStyle = styled.form`
   flex-direction: column;
   align-items: center;
 
+  margin: 8px 0 16px;
   padding: 16px 0;
-  margin-bottom: 16px;
 
   width: 100%;
 
