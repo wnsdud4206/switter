@@ -89,17 +89,20 @@ const SweetActoins = ({ sweetObj, onShowComment, showComment }) => {
     <SweetActionsStyle className="actions">
       <div className="likeAndHateContainer">
         <div className="likeAndHateWrap">
+          {" "}
+          {/* hover */}
           <div className="likeAndHatePopup">
+            {" "}
+            {/* display */}
             <div className="likeAndHate">
               <button className="like" onClick={onLike}>
                 <FontAwesomeIcon icon={like} />
               </button>
-              <button className="hate">
-                <FontAwesomeIcon icon={faHeartCrack} onClick={onHate} />
+              <button className="hate" onClick={onHate}>
+                <FontAwesomeIcon icon={faHeartCrack} />
               </button>
             </div>
           </div>
-
           <button className="emptyLike" onClick={onLikeToggle}>
             {/* 싫어요도 추가, 다시 누르먄 좋아요&싫어요 취소 */}
             {currentUserLike ? (

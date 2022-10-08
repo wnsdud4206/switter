@@ -35,7 +35,6 @@ const SweetActionsStyle = styled.div`
     }
 
     div.likeAndHateWrap {
-      
       div.likeAndHatePopup {
         display: none;
         flex-direction: column;
@@ -93,6 +92,15 @@ const SweetActionsStyle = styled.div`
         }
       }
 
+      // 마우스 포인터의 유무를 감지해서 모바일과 pc를 감지 - https://velog.io/@juunini/CSS%EB%A1%9C-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4%EB%A5%BC-%EC%96%B4%EB%96%BB%EA%B2%8C-%ED%8C%90%EB%B3%84%ED%95%B4%EB%82%BC-%EC%88%98-%EC%9E%88%EC%9D%84%EA%B9%8C
+      @media (pointer: coarse) {
+        &:hover {
+          div.likeAndHatePopup {
+            display: none;
+          }
+        }
+      }
+
       button.emptyLike {
         color: white;
 
@@ -109,7 +117,6 @@ const SweetActionsStyle = styled.div`
     }
 
     span.likeCounter {
-
     }
   }
 

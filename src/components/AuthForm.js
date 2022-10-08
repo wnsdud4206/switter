@@ -1,7 +1,7 @@
 // firebase 내장 uuid인가?
 import { uuidv4 } from "@firebase/util";
 import {
-  faNetworkWired,
+  // faNetworkWired,
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -127,64 +127,65 @@ const AuthForm = () => {
   return (
     <>
       <AuthFormStyle newAccount={newAccount} onSubmit={onSubmit}>
-        {nameAndPhotoInp && (
-          <>
-            <label htmlFor="fileBtn">
-              <div id="profileImageInp">
-                {attachment ? (
-                  <>
-                    <img
-                      width="70"
-                      height="70"
-                      src={attachment}
-                      alt="profileImage"
-                    />
-                    <button onClick={onPhotoClear}>
-                      <FontAwesomeIcon icon={faXmark} />
-                    </button>
-                  </>
-                ) : (
-                  <div>
-                    <FontAwesomeIcon icon={faPlus} />
-                  </div>
-                )}
-              </div>
+        <div id="authFormWrap">
+          {nameAndPhotoInp && (
+            <>
+              <label htmlFor="fileBtn">
+                <div id="profileImageInp">
+                  {attachment ? (
+                    <>
+                      <img
+                        width="70"
+                        height="70"
+                        src={attachment}
+                        alt="profileImage"
+                      />
+                      <button onClick={onPhotoClear}>
+                        <FontAwesomeIcon icon={faXmark} />
+                      </button>
+                    </>
+                  ) : (
+                    <div>
+                      <FontAwesomeIcon icon={faPlus} />
+                    </div>
+                  )}
+                </div>
+                <input
+                  id="fileBtn"
+                  type="file"
+                  accept="image/*"
+                  onChange={onPhotoChange}
+                  ref={fileInput}
+                />
+              </label>
               <input
-                id="fileBtn"
-                type="file"
-                accept="image/*"
-                onChange={onPhotoChange}
-                ref={fileInput}
+                name="displayName"
+                type="text"
+                maxLength="11"
+                placeholder="Nickname"
+                value={form.displayName}
+                onChange={onChange}
+                required
               />
-            </label>
-            <input
-              name="displayName"
-              type="text"
-              maxLength="11"
-              placeholder="Nickname"
-              value={form.displayName}
-              onChange={onChange}
-              required
-            />
-          </>
-        )}
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          value={form.name}
-          onChange={onChange}
-          required
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={onChange}
-          required
-        />
-        {/* <input
+            </>
+          )}
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.name}
+            onChange={onChange}
+            required
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={onChange}
+            required
+          />
+          {/* <input
           name="profileImage"
           type="file"
           placeholder="Password"
@@ -192,7 +193,11 @@ const AuthForm = () => {
           value={form.password}
           onChange={onChange}
         /> */}
-        <input type="submit" value={newAccount ? "Create Accont" : "Log In"} />
+          <input
+            type="submit"
+            value={newAccount ? "Create Accont" : "Log In"}
+          />
+        </div>
         {error && <span id="errorText">{error}</span>}
       </AuthFormStyle>
       {/* newAccount를 true로 바꾸어 submit 이벤트의 if문에 따라 버튼을 클릭하면 이전처럼 계정생성이 아닌 로그인(Sign In 메소드)이 되는 것 */}

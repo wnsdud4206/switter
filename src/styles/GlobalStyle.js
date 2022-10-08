@@ -2,7 +2,7 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div#root {
-    min-height: 100%;
+    min-height: 100vh;
 
     margin: 0;
     padding: 0;
@@ -44,7 +44,6 @@ const GlobalStyle = createGlobalStyle`
         padding: 0 8px;
         box-sizing: border-box;
       }
-
     }
   }
 `;

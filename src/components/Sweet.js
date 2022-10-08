@@ -10,15 +10,8 @@ import {
   getDoc,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPencil,
-  faTrash,
-  faPlus,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import SweetActoins from "./SweetActions";
-import SweetComment from "./SweetComment";
+import SweetEdit from "./SweetEdit";
+import SweetContent from "./SweetContent";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
@@ -54,7 +47,6 @@ const Sweet = ({ sweetObj, isOwner }) => {
 
   // 반대로도 textarea의 사이즈를 p태그에 주기, 그래야 자연스러운 애니메이션이 될듯
 
-  // 수정해야함
   useEffect(() => {
     getUserName();
     // if ()
@@ -63,8 +55,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
     } else if (window.innerHeight < window.innerWidth) {
       setInnerSize(true);
     }
-    console.log(innerSize);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 삭제, deleteDoc
@@ -159,135 +150,46 @@ const Sweet = ({ sweetObj, isOwner }) => {
   };
 
   return (
-    <SweetStyle
-      className={deleteBox ? "fadeout" : ""}
-      // sweetPaddingSize={sweetPaddingSize}
-      sweetSize={sweetSize}
-      editing={editing}
-      innerSize={innerSize}
-    >
-      {/* <div className="sweetPadding" ref={sweetPaddingRef}> */}
+    <SweetStyle className={deleteBox ? "fadeout" : ""} sweetSize={sweetSize}>
       <div className="sweetPadding">
         <div className="sweetSize">
           <div className="sweetContainer" ref={sweetContainerRef}>
             {editing ? (
-              // profile image 변경 추가
-              <>
-                {/* 왜 form안에 넣어줬지? input은 무조건 form 안에 있어야 하나? */}
-                <form onSubmit={onSubmit}>
-                  {/* required는 아무것도 입력하지 않고 제출하면 경고창이 뜨게 해주는 속성 */}
-                  <div className="textEditWrap">
-                    {/* <input
-                    type="text"
-                    placeholder="Edit your sweet"
-                    value={newSweetText}
-                    onChange={onChange}
-                    required
-                  /> */}
-                    <div className="btnWrap">
-                      <label>
-                        <FontAwesomeIcon icon={faPencil} />
-                        <input type="submit" value="Update Sweet" />
-                      </label>
-                      <button onClick={offEditing}>
-                        <FontAwesomeIcon icon={faXmark} />
-                      </button>
-                    </div>
-                    <div className="paddingBox">
-                      <textarea
-                        placeholder="Edit your sweet"
-                        value={newSweetText}
-                        onChange={onChange}
-                        maxLength="1200"
-                        required
-                        autoFocus
-                      ></textarea>
-                    </div>
-                  </div>
-
-                  {attachment && (
-                    <div className="sweetImg">
-                      <img
-                        src={attachment}
-                        width="100%"
-                        height="100%"
-                        alt="sweetImage"
-                        onLoad={sweetSizing}
-                      />
-                      <button onClick={onClearAttachmentClick}>
-                        <FontAwesomeIcon icon={faXmark} />
-                      </button>
-                    </div>
-                  )}
-
-                  <label htmlFor="sweetUpdatefileBtn">
-                    Edit photo
-                    <FontAwesomeIcon icon={faPlus} />
-                    <input
-                      className="sweetUpdatefileBtn"
-                      type="file"
-                      accept="image/*"
-                      onChange={onFileChange}
-                      ref={fileInput}
-                    />
-                  </label>
-                </form>
-              </>
+              <SweetEdit
+                onSubmit={onSubmit}
+                offEditing={offEditing}
+                newSweetText={newSweetText}
+                onChange={onChange}
+                attachment={attachment}
+                sweetSizing={sweetSizing}
+                onClearAttachmentClick={onClearAttachmentClick}
+                onFileChange={onFileChange}
+                fileInput={fileInput}
+              />
             ) : (
-              <>
-                {/* <div className="textWrap"> */}
-                <div className="nameAndBtn">
-                  <span>{userName}</span>
-                  {isOwner && (
-                    <div className="btnWrap">
-                      <button className="editBtn" onClick={onEditing}>
-                        <FontAwesomeIcon icon={faPencil} />
-                      </button>
-                      <button className="deleteBtn" onClick={onDeleteClick}>
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <p>{sweetObj.text}</p>
-                {sweetObj.attachmentUrl && (
-                  <div className="sweetImg">
-                    <img
-                      src={sweetObj.attachmentUrl}
-                      width="100%"
-                      height="100%"
-                      alt="sweetImage"
-                      onLoad={sweetSizing}
-                      onClick={onCloseUpImg}
-                    />
-                  </div>
-                )}
-                <SweetActoins
-                  sweetObj={sweetObj}
-                  onShowComment={onShowComment}
-                  showComment={showComment}
-                />
-                {showComment && <SweetComment />}
-              </>
+              <SweetContent
+                userName={userName}
+                isOwner={isOwner}
+                onEditing={onEditing}
+                onDeleteClick={onDeleteClick}
+                sweetObj={sweetObj}
+                sweetSizing={sweetSizing}
+                onCloseUpImg={onCloseUpImg}
+                onShowComment={onShowComment}
+                showComment={showComment}
+              />
             )}
           </div>
         </div>
       </div>
 
       {closeUpImg && (
-        <div
-          className={`closeUpImgContainer ${!visibleCloseUpImg && "visible"}`}
-          onClick={onCloseUpImg}
-        >
-          <div className="closeUpImgSize">
-            <img
-              src={closeUpImg}
-              width="100%"
-              height="100%"
-              alt="CloseUpSweetImage"
-            />
-          </div>
-        </div>
+        <closeUpImgContainer
+          visibleCloseUpImg={visibleCloseUpImg}
+          onCloseUpImg={onCloseUpImg}
+          closeUpImg={closeUpImg}
+          innerSize={innerSize}
+        />
       )}
     </SweetStyle>
   );

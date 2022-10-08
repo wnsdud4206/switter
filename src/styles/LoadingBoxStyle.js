@@ -5,16 +5,18 @@ const LoadingBox = styled.div`
   align-items: center;
   justify-content: center;
 
-  height: 100%;
+  /* color: white; */
 
-  animation: loading .75s infinite linear alternate;
+  height: 100vh;
+
+  animation: loading 0.75s infinite linear alternate;
 
   @keyframes loading {
     0% {
-      opacity: 0;
+      color: black;
     }
     100% {
-      opacity: 1;
+      color: white;
     }
   }
 `;

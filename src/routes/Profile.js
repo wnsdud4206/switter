@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { ProfileStyle, LogOutBtnStyle } from "styles/ProfileStyle";
 import { v4 as uuidv4 } from "uuid";
 
-const Profile = ({ refreshUser, userObj }) => {
+const Profile = ({ userObj }) => {
   const navigate = useNavigate();
   // const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const [newDisplayName, setNewDisplayName] = useState("");

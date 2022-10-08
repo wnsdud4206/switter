@@ -8,9 +8,8 @@ import {
   onSnapshot,
   orderBy,
 } from "fbase";
-import Sweet from "components/Sweet";
 import SweetFactory from "components/SweetFactory";
-import HomeStyle from "styles/HomeStyle";
+import SweetConatiner from "components/SweetConatiner";
 
 const Home = ({ userObj, init }) => {
   const [sweets, setSweets] = useState([]);
@@ -55,30 +54,10 @@ const Home = ({ userObj, init }) => {
   }, []);
 
   return (
-    <HomeStyle sweetLength={sweets.length}>
+    <>
       <SweetFactory userObj={userObj} />
-      <div id="sweetConatiner">
-        <div id="sweetList">
-          {sweets.length ? (
-            sweets
-              .sort((a, b) => {
-                if (a.createdAt < b.createdAt) return 1;
-                if (a.createdAt > b.createdAt) return -1;
-                return 0;
-              })
-              .map((sweet) => (
-                <Sweet
-                  key={sweet.id}
-                  sweetObj={sweet}
-                  isOwner={sweet.creatorId === userObj.uid}
-                />
-              ))
-          ) : (
-            <div id="loadingBox">Loading...</div>
-          )}
-        </div>
-      </div>
-    </HomeStyle>
+      <SweetConatiner sweets={sweets} userObj={userObj} />
+    </>
   );
 };
 
