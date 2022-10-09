@@ -7,8 +7,12 @@ const SweetActionsStyle = styled.div`
 
   width: 100%;
 
-  margin: 16px 0 8px;
-  padding: 0 8px;
+  margin-top: 24px;
+  padding: 8px;
+
+  border-bottom: 2px solid #444;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   box-sizing: border-box;
 
   overflow: visible;

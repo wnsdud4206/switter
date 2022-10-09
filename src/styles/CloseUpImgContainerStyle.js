@@ -14,6 +14,20 @@ const CloseUpImgContainerStyle = styled.div`
   width: 100%;
   height: 100%;
 
+  @media (orientation: portrait) {
+    padding: 10vw;
+  }
+
+  @media (orientation: landscape) {
+    padding: 10vh;
+  }
+
+  @media (pointer: coarse) {
+    padding: 0;
+  }
+
+  box-sizing: border-box;
+
   cursor: pointer;
 
   z-index: 100;
@@ -42,31 +56,37 @@ const CloseUpImgContainerStyle = styled.div`
     }
   }
 
-  div.closeUpImgSize {
-    ${({ innerSize }) =>
-      innerSize
-        ? css`
-            width: 80vh;
-            height: 80vh;
-          `
-        : css`
-            width: 80vw;
-            height: 80vw;
-          `}
+  img {
+    background-color: white;
+    background-size: 80% auto;
 
-    /* 모바일 세로모드 */
-      @media (orientation: portrait) {
-      width: 100vw;
-      height: 100vw;
+    // 수정해야함, 데스크탑은 여백 있게 모바일은 없게(100%) - 일단 된 것 같은데 코드정리가 필요할 듯
+
+    @media (orientation: portrait) {
+      width: 80%;
     }
-    /* 모바일 가로모드 */
+
     @media (orientation: landscape) {
-      width: 100vh;
-      height: 100vh;
+      height: 80%;
     }
 
-    img {
+    @media (pointer: coarse) and (orientation: portrait) {
+      width: 100%;
     }
+
+    @media (pointer: coarse) and (orientation: landscape) {
+      height: 100%;
+    }
+
+    aspect-ratio: auto 1/1;
+
+    border: 3px solid #00bdee;
+    box-sizing: border-box;
+  }
+
+  span.imgLoadingBox {
+    color: black;
+    text-align: center;
   }
 `;
 

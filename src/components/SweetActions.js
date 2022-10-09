@@ -26,7 +26,7 @@ import {
 하트의 색이 여러개(깨진하트(1개)포함)로 하거나 얼굴 이모티콘 여러개로 해도 될듯, 일단 지금은 좋아요&안좋아요(싫어요처럼 -1은 안하거나 나중에 나누거나)
 */
 
-const SweetActoins = ({ sweetObj, onShowComment, showComment }) => {
+const SweetActoins = ({ sweetObj, onScrollComment, scrollComment }) => {
   const [likeCount, setLikeCount] = useState(sweetObj.like);
   const [currentUserLike, setCurrentUserLike] = useState(false);
 
@@ -116,8 +116,8 @@ const SweetActoins = ({ sweetObj, onShowComment, showComment }) => {
         <span className="likeCounter">{likeCount && likeCount.length}</span>
       </div>
 
-      <button className="commentBtn" onClick={onShowComment}>
-        {showComment ? (
+      <button className="commentBtn" onClick={onScrollComment}>
+        {scrollComment ? (
           <FontAwesomeIcon icon={faComment} />
         ) : (
           <FontAwesomeIcon icon={faRegCommnet} />

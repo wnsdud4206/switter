@@ -7,7 +7,11 @@ const SweetCommentStyle = styled.div`
 
   padding: 16px 0;
   
-  outline: 1px solid red;
+  /* outline: 1px solid red; */
+
+  &.hide {
+    display: none;
+  }
 `;
 
 export default SweetCommentStyle;

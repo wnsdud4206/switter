@@ -53,6 +53,24 @@ const Home = ({ userObj, init }) => {
     });
   }, []);
 
+  // dom 변경이 감지될까? event?
+  // const [innerSize, setInnerSize] = useState(false);
+  // const onResizeHandler = useCallback((e) => {
+  //   if (window.innerHeight >= window.innerWidth) {
+  //     setInnerSize(false);
+  //   } else if (window.innerHeight < window.innerWidth) {
+  //     setInnerSize(true);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log(innerSize);
+  //   window.addEventListener("resize", onResizeHandler);
+  //   return () => {
+  //     window.addEventListener("resize", onResizeHandler);
+  //   };
+  // }, [onResizeHandler, innerSize]);
+
   return (
     <>
       <SweetFactory userObj={userObj} />

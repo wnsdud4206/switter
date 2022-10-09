@@ -13,43 +13,51 @@ const SweetContent = ({
   sweetObj,
   sweetSizing,
   onCloseUpImg,
-  onShowComment,
+  sweetContentRef,
+  onScrollComment,
+  scrollComment,
   showComment,
-}) => (
-  <SweetContentStyle>
-    <div className="nameAndBtn">
-      <span>{userName}</span>
-      {isOwner && (
-        <div className="btnWrap">
-          <button className="editBtn" onClick={onEditing}>
-            <FontAwesomeIcon icon={faPencil} />
-          </button>
-          <button className="deleteBtn" onClick={onDeleteClick}>
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
+}) => {
+  return (
+    <>
+      <SweetContentStyle ref={sweetContentRef}>
+        <div className="nameAndBtn">
+          <span>{userName}</span>
+          {isOwner && (
+            <div className="btnWrap">
+              <button className="editBtn" onClick={onEditing}>
+                <FontAwesomeIcon icon={faPencil} />
+              </button>
+              <button className="deleteBtn" onClick={onDeleteClick}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
-    <p>{sweetObj.text}</p>
-    {sweetObj.attachmentUrl && (
-      <div className="sweetImg">
-        <img
-          src={sweetObj.attachmentUrl}
-          width="100%"
-          height="100%"
-          alt="sweetImage"
-          onLoad={sweetSizing}
-          onClick={onCloseUpImg}
+        <p>{sweetObj.text}</p>
+        {sweetObj.attachmentUrl && (
+          <div className="sweetImg">
+            <img
+              src={sweetObj.attachmentUrl}
+              width="100%"
+              height="100%"
+              alt="sweetImage"
+              onLoad={sweetSizing}
+              onClick={onCloseUpImg}
+            />
+          </div>
+        )}
+        <SweetActoins
+          sweetObj={sweetObj}
+          onScrollComment={onScrollComment}
+          scrollComment={scrollComment}
         />
-      </div>
-    )}
-    <SweetActoins
-      sweetObj={sweetObj}
-      onShowComment={onShowComment}
-      showComment={showComment}
-    />
-    {showComment && <SweetComment />}
-  </SweetContentStyle>
-);
+      </SweetContentStyle>
+
+      {/* showComment를 늦추는 수 밖에 */}
+      {showComment && <SweetComment />}
+    </>
+  );
+};
 
 export default SweetContent;

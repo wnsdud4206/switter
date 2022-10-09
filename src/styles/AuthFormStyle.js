@@ -135,7 +135,7 @@ const AuthFormStyle = styled.form`
     text-align: center;
     color: #ff6633;
 
-    outline: 1px solid red;
+    /* outline: 1px solid red; */
 
     position: absolute;
     bottom: -28px;

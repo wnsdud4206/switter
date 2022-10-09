@@ -1,24 +1,20 @@
-import CloseUpImgContainerStyle from "styles/closeUpImgContainerStyle";
+import CloseUpImgContainerStyle from "styles/CloseUpImgContainerStyle";
 
-const CloseUpImgContainer = ({
-  visibleCloseUpImg,
-  onCloseUpImg,
-  closeUpImg,
-  innerSize,
-}) => (
+const CloseUpImgContainer = ({ showCloseUpImg, onCloseUpImg, closeUpImg }) => (
   <CloseUpImgContainerStyle
-    className={`closeUpImgContainer ${!visibleCloseUpImg && "visible"}`}
+    className={`closeUpImgContainer ${!showCloseUpImg ? "visible" : ""}`}
     onClick={onCloseUpImg}
-    innerSize={innerSize}
   >
-    <div className="closeUpImgSize">
+    {closeUpImg ? (
       <img
         src={closeUpImg}
-        width="100%"
-        height="100%"
+        // width="100%"
+        // height="100%"
         alt="CloseUpSweetImage"
       />
-    </div>
+    ) : (
+      <span className="imgLoadingBox">Image Loading..</span>
+    )}
   </CloseUpImgContainerStyle>
 );
 

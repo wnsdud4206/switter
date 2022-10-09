@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   doc,
-  updateDoc,
   deleteDoc,
   dbService,
   storageService,
@@ -12,6 +11,7 @@ import {
 import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
 import SweetContent from "./SweetContent";
+import CloseUpImgContainer from "./CloseUpImgContainer";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
@@ -20,15 +20,14 @@ const Sweet = ({ sweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
   const [newSweetText, setNewSweetText] = useState(sweetObj.text);
   const [deleteBox, setDeleteBox] = useState(false);
-  const [attachment, setAttachment] = useState(sweetObj.attachmentUrl);
   const [sweetSize, setSweetSize] = useState(0);
   const [closeUpImg, setCloseUpImg] = useState("");
-  const [visibleCloseUpImg, setVisibleCloseUpImg] = useState(false);
-  const [innerSize, setInnerSize] = useState(false);
+  const [showCloseUpImg, setShowCloseUpImg] = useState(false);
+  const [scrollComment, setScrollComment] = useState(false);
   const [showComment, setShowComment] = useState(false);
 
-  const fileInput = useRef();
   const sweetContainerRef = useRef();
+  const sweetContentRef = useRef();
 
   const getUserName = async () => {
     const d = doc(dbService(), "users", `${sweetObj.creatorId}`);
@@ -38,25 +37,28 @@ const Sweet = ({ sweetObj, isOwner }) => {
 
   const sweetSizing = useCallback(() => {
     // console.log(`${sweetObj.text}: ${sweetContainerRef.current.offsetHeight}`);
-    setSweetSize(sweetContainerRef.current.offsetHeight);
-  }, []);
+    let height;
+    if (scrollComment) {
+      setShowComment(true);
+      height = sweetContainerRef.current.offsetHeight;
+    } else if (!scrollComment) {
+      height = sweetContentRef.current.offsetHeight;
+      setTimeout(() => {
+        setShowComment(false);
+      }, 200);
+    }
+
+    setSweetSize(height);
+  }, [scrollComment]);
   useEffect(() => {
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, showComment]);
-
-  // 반대로도 textarea의 사이즈를 p태그에 주기, 그래야 자연스러운 애니메이션이 될듯
+  }, [editing, scrollComment, showComment]);
 
   useEffect(() => {
     getUserName();
-    // if ()
-    if (window.innerHeight >= window.innerWidth) {
-      setInnerSize(false);
-    } else if (window.innerHeight < window.innerWidth) {
-      setInnerSize(true);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   // 삭제, deleteDoc
   const onDeleteClick = async () => {
@@ -90,63 +92,24 @@ const Sweet = ({ sweetObj, isOwner }) => {
     setNewSweetText(sweetObj.text);
   };
 
-  // async&await는 써도되고 안써도 된다. 어떤 방법을 써도 snapshot 덕분에 업데이트는 확인할 수 있기 때문이다.
-  const onSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      if (sweetObj.attachmentUrl && sweetObj.attachmentUrl !== attachment) {
-        const r = ref(storageService(), sweetObj.attachmentUrl);
-        await deleteObject(r);
-      }
-
-      const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-      await updateDoc(d, { text: newSweetText, attachmentUrl: attachment });
-
-      offEditing();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const onChange = ({ target: { value } }) => {
     setNewSweetText(value);
   };
 
-  const onFileChange = (event) => {
-    const {
-      target: { files },
-    } = event;
-    const theFile = files[0];
-    const reader = new FileReader();
-    reader.onloadend = (finishedEvent) => {
-      // onloadend에 finishedEvent의 result를 setAttachment로 설정해주는 것
-      const {
-        currentTarget: { result },
-      } = finishedEvent;
-      setAttachment(result);
-    };
-    reader.readAsDataURL(theFile);
-  };
-  const onClearAttachmentClick = () => {
-    setAttachment(null);
-    fileInput.current.value = "";
-  };
-
   const onCloseUpImg = (e) => {
-    if (!visibleCloseUpImg) {
+    if (!showCloseUpImg) {
       // img closeUp
       setCloseUpImg(e.target.src);
-      setVisibleCloseUpImg(true);
-    } else if (visibleCloseUpImg) {
+      setShowCloseUpImg(true);
+    } else if (showCloseUpImg) {
       // img closeDown?
-      setVisibleCloseUpImg(false);
+      setShowCloseUpImg(false);
       setTimeout(() => setCloseUpImg(""), 260);
     }
   };
 
-  const onShowComment = () => {
-    setShowComment((prev) => !prev);
+  const onScrollComment = () => {
+    setScrollComment((prev) => (prev = !prev));
   };
 
   return (
@@ -156,15 +119,11 @@ const Sweet = ({ sweetObj, isOwner }) => {
           <div className="sweetContainer" ref={sweetContainerRef}>
             {editing ? (
               <SweetEdit
-                onSubmit={onSubmit}
+                sweetObj={sweetObj}
                 offEditing={offEditing}
                 newSweetText={newSweetText}
                 onChange={onChange}
-                attachment={attachment}
                 sweetSizing={sweetSizing}
-                onClearAttachmentClick={onClearAttachmentClick}
-                onFileChange={onFileChange}
-                fileInput={fileInput}
               />
             ) : (
               <SweetContent
@@ -175,7 +134,9 @@ const Sweet = ({ sweetObj, isOwner }) => {
                 sweetObj={sweetObj}
                 sweetSizing={sweetSizing}
                 onCloseUpImg={onCloseUpImg}
-                onShowComment={onShowComment}
+                sweetContentRef={sweetContentRef}
+                onScrollComment={onScrollComment}
+                scrollComment={scrollComment}
                 showComment={showComment}
               />
             )}
@@ -184,11 +145,10 @@ const Sweet = ({ sweetObj, isOwner }) => {
       </div>
 
       {closeUpImg && (
-        <closeUpImgContainer
-          visibleCloseUpImg={visibleCloseUpImg}
+        <CloseUpImgContainer
+          showCloseUpImg={showCloseUpImg}
           onCloseUpImg={onCloseUpImg}
           closeUpImg={closeUpImg}
-          innerSize={innerSize}
         />
       )}
     </SweetStyle>

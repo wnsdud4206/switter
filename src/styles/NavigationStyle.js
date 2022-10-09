@@ -9,6 +9,7 @@ const NavigationStyle = styled.nav`
 
   box-sizing: border-box;
 
+  // 개발자도구의 모바일로 보면 nav가 좀 위로 올라가는데 실제 모바일로보면 괜찮음
   position: sticky;
   top: 0;
   /* bottom: 869px; */
