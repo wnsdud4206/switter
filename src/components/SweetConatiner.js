@@ -3,7 +3,7 @@ import React from "react";
 import SweetContainerStyle from "styles/SweetContainerStyle";
 
 const SweetConatiner = ({ sweets, userObj }) => (
-  <SweetContainerStyle sweetLength={sweets.length}>
+  <SweetContainerStyle>
     <div id="sweetList">
       {sweets.length ? (
         sweets
@@ -17,6 +17,7 @@ const SweetConatiner = ({ sweets, userObj }) => (
               key={sweet.id}
               sweetObj={sweet}
               isOwner={sweet.creatorId === userObj.uid}
+              userObj={userObj}
             />
           ))
       ) : (

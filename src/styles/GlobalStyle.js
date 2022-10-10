@@ -3,6 +3,8 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
   html, body, div#root {
     min-height: 100vh;
+    
+    scroll-behavior: smooth;
 
     margin: 0;
     padding: 0;

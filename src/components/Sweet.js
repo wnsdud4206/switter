@@ -7,6 +7,8 @@ import {
   ref,
   deleteObject,
   getDoc,
+  collection,
+  getDocs,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
@@ -15,7 +17,7 @@ import CloseUpImgContainer from "./CloseUpImgContainer";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
-const Sweet = ({ sweetObj, isOwner }) => {
+const Sweet = ({ sweetObj, isOwner, userObj }) => {
   const [userName, setUserName] = useState("");
   const [editing, setEditing] = useState(false);
   const [newSweetText, setNewSweetText] = useState(sweetObj.text);
@@ -25,6 +27,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
   const [showCloseUpImg, setShowCloseUpImg] = useState(false);
   const [scrollComment, setScrollComment] = useState(false);
   const [showComment, setShowComment] = useState(false);
+  const [commentLength, setCommentLength] = useState(0);
 
   const sweetContainerRef = useRef();
   const sweetContentRef = useRef();
@@ -33,27 +36,48 @@ const Sweet = ({ sweetObj, isOwner }) => {
     const d = doc(dbService(), "users", `${sweetObj.creatorId}`);
     const docSnap = await getDoc(d);
     setUserName(docSnap.data().displayName);
+    // console.log(docSnap.data().comments.length || 0);
+    // setCommentLength(docSnap.data().comments.length || 0);
+  };
+
+  const getCommentLength = async () => {
+    try {
+      const dbComments = await getDocs(
+        collection(dbService(), "comments"),
+        // orderBy("createdAt", "desc"),
+      );
+      setCommentLength(dbComments.size);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const sweetSizing = useCallback(() => {
     // console.log(`${sweetObj.text}: ${sweetContainerRef.current.offsetHeight}`);
-    let height;
-    if (scrollComment) {
-      setShowComment(true);
-      height = sweetContainerRef.current.offsetHeight;
-    } else if (!scrollComment) {
-      height = sweetContentRef.current.offsetHeight;
-      setTimeout(() => {
-        setShowComment(false);
-      }, 200);
-    }
+    if (editing) {
+      setSweetSize(sweetContainerRef.current.offsetHeight);
+    } else if (!editing) {
+      let height;
+      if (scrollComment) {
+        setShowComment(true);
+        height = sweetContainerRef.current.clientHeight;
+        // console.log(sweetContainerRef.current.clientHeight);
+      } else if (!scrollComment) {
+        height = sweetContentRef.current.clientHeight;
+        // console.log(sweetContentRef.current.clientHeight);
+        setTimeout(() => {
+          setShowComment(false);
+        }, 200);
+      }
 
-    setSweetSize(height);
-  }, [scrollComment]);
+      setSweetSize(height);
+    }
+  }, [editing, scrollComment]);
   useEffect(() => {
+    getCommentLength();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, scrollComment, showComment]);
+  }, [editing, scrollComment, showComment, commentLength]);
 
   useEffect(() => {
     getUserName();
@@ -132,6 +156,7 @@ const Sweet = ({ sweetObj, isOwner }) => {
                 onEditing={onEditing}
                 onDeleteClick={onDeleteClick}
                 sweetObj={sweetObj}
+                userObj={userObj}
                 sweetSizing={sweetSizing}
                 onCloseUpImg={onCloseUpImg}
                 sweetContentRef={sweetContentRef}

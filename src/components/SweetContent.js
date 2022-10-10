@@ -11,6 +11,7 @@ const SweetContent = ({
   onEditing,
   onDeleteClick,
   sweetObj,
+  userObj,
   sweetSizing,
   onCloseUpImg,
   sweetContentRef,
@@ -55,7 +56,9 @@ const SweetContent = ({
       </SweetContentStyle>
 
       {/* showComment를 늦추는 수 밖에 */}
-      {showComment && <SweetComment />}
+      {showComment && (
+        <SweetComment sweetObj={sweetObj} userObj={userObj} />
+      )}
     </>
   );
 };
