@@ -4,7 +4,6 @@ import {
   collection,
   getDocs,
   query,
-  // where,
   onSnapshot,
   orderBy,
 } from "fbase";

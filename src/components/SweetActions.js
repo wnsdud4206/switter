@@ -26,7 +26,12 @@ import {
 하트의 색이 여러개(깨진하트(1개)포함)로 하거나 얼굴 이모티콘 여러개로 해도 될듯, 일단 지금은 좋아요&안좋아요(싫어요처럼 -1은 안하거나 나중에 나누거나)
 */
 
-const SweetActoins = ({ sweetObj, onScrollComment, scrollComment }) => {
+const SweetActoins = ({
+  sweetObj,
+  onScrollComment,
+  scrollComment,
+  commentCount,
+}) => {
   const [likeCount, setLikeCount] = useState(sweetObj.like);
   const [currentUserLike, setCurrentUserLike] = useState(false);
 
@@ -116,13 +121,18 @@ const SweetActoins = ({ sweetObj, onScrollComment, scrollComment }) => {
         <span className="likeCounter">{likeCount && likeCount.length}</span>
       </div>
 
-      <button className="commentBtn" onClick={onScrollComment}>
-        {scrollComment ? (
-          <FontAwesomeIcon icon={faComment} />
-        ) : (
-          <FontAwesomeIcon icon={faRegCommnet} />
-        )}
-      </button>
+      {/* 여기에 상태창 나타났다 지워지는 로직 구현하기(ex. 좋아요를 눌렀습니다., 댓글 보는중...) */}
+
+      <div className="commentWrap">
+        <span className="commentCounter">{commentCount}</span>
+        <button className="commentBtn" onClick={onScrollComment}>
+          {scrollComment ? (
+            <FontAwesomeIcon className="commentShow" icon={faComment} />
+          ) : (
+            <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
+          )}
+        </button>
+      </div>
     </SweetActionsStyle>
   );
 };

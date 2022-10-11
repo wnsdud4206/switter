@@ -124,14 +124,34 @@ const SweetActionsStyle = styled.div`
     }
   }
 
-  button.commentBtn {
-    outline: 1px solid white;
-    border: none;
-    background: none;
+  div.commentWrap {
+    
+    span.commentCounter {
 
-    color: white;
+    }
 
-    cursor: pointer;
+    button.commentBtn {
+      outline: none;
+      border: none;
+      background: none;
+  
+      color: white;
+  
+      cursor: pointer;
+  
+      svg {
+        width: 18px;
+        height: 18px;
+
+        &.commentHidden {
+
+        }
+
+        &.commentShow {
+          color: #00bdee;
+        }
+      }
+    }
   }
 `;
 

@@ -1,67 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useState } from "react";
 import SweetCommentStyle from "styles/SweetCommentStyle";
 import {
-  authService,
   dbService,
   addDoc,
   collection,
-  getDocs,
-  query,
-  orderBy,
-  onSnapshot,
   doc,
   updateDoc,
   arrayUnion,
 } from "fbase";
 import Comment from "./Comment";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronRight, faUser } from "@fortawesome/free-solid-svg-icons";
 
 // sweets 콜렉션에 comments([]) 추가, comments 콜렉션 추가
 
-const SweetComment = ({ sweetObj, userObj }) => {
-  // console.log(sweetObj);
-  // console.log(userObj);
-
+const SweetComment = ({
+  sweetObj,
+  userObj,
+  comments,
+  onCommentEditing,
+  offCommentEditing,
+  commentEditing,
+}) => {
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
-
-  // 읽기, 데이터 받아오기
-  const getComments = async () => {
-    try {
-      const dbComments = await getDocs(
-        collection(dbService(), "comments"),
-        // orderBy("createdAt", "desc"),
-      );
-      setComments([]);
-      dbComments.forEach((doc) => {
-        const sweetObj = {
-          ...doc.data(),
-          id: doc.id,
-          // id, text, creatorId, createdAt
-        };
-        // 왜 자꾸 뒤죽박죽으로 받아오지?? 저장할 때 뒤죽박죽인건가? - orderBy 로 정리
-        setComments((prev) => [sweetObj, ...prev]);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    getComments();
-
-    const q = query(
-      collection(dbService(), "comments"),
-      orderBy("createdAt", "desc"), // 순서 정렬, 최신 sweet이 위에서 쌓이게 하고 싶기 때문에 "desc" 추가
-    );
-    onSnapshot(q, (snapshot) => {
-      const commentArr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // creatorId, createdAt, text
-      }));
-      console.log(commentArr);
-      setComments(commentArr);
-    });
-  }, []);
 
   // 쓰기, 데이터 추가
   const onSubmit = async (event) => {
@@ -71,8 +32,9 @@ const SweetComment = ({ sweetObj, userObj }) => {
         text: comment,
         createdAt: Date.now(),
         creatorId: userObj.uid,
+        // attachmentUrl: authService().currentUser.photoURL,
         sweetId: sweetObj.id,
-        displayName: authService().currentUser.displayName,
+        // displayName: authService().currentUser.displayName,
         like: [],
       };
       // firestore에 추가
@@ -83,10 +45,10 @@ const SweetComment = ({ sweetObj, userObj }) => {
       );
 
       // console.log(docRef);
-      // console.log(commentObj.uid);
+      // console.log(commentObj.id);
 
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-      await updateDoc(d, { comments: arrayUnion(commentObj.uid) });
+      await updateDoc(d, { comments: arrayUnion(docRef.id) });
 
       setComment("");
     } catch (error) {
@@ -104,22 +66,39 @@ const SweetComment = ({ sweetObj, userObj }) => {
 
   return (
     <SweetCommentStyle>
-      개발중
+      <p style={{textAlign: "center", margin: 0}}>아직 댓글 수정&좋아요는 안돼용~</p>
       {/* SweetCommentFactory, form */}
       <form onSubmit={onSubmit}>
+        <div className="userImage">
+          {userObj.photoURL ? (
+            <img
+              src={userObj.photoURL}
+              width="100%"
+              height="100%"
+              alt="userImage"
+            />
+          ) : (
+            <FontAwesomeIcon id="profileicon" icon={faUser} />
+          )}
+        </div>
+
         <input
           type="text"
           value={comment}
           onChange={onChange}
           placeholder="comment"
           maxLength={120}
+          required
         />
 
-        <input id="submitBtn" type="submit" value="Comment" />
+        <label htmlFor="commentSubmitBtn">
+          <FontAwesomeIcon icon={faChevronRight} />
+          <input id="commentSubmitBtn" type="submit" value="Comment" />
+        </label>
       </form>
       {/* SweetCommentList, div */}
-      <div id="sweetList">
-        {comments.length ? (
+      <div id="commentList">
+        {comments.length &&
           comments
             .sort((a, b) => {
               if (a.createdAt < b.createdAt) return -1;
@@ -132,15 +111,15 @@ const SweetComment = ({ sweetObj, userObj }) => {
                 commentObj={comment}
                 isOwner={comment.creatorId === userObj.uid}
                 userObj={userObj}
+                sweetObj={sweetObj}
+                onCommentEditing={onCommentEditing}
+                offCommentEditing={offCommentEditing}
+                commentEditing={commentEditing}
               />
-            ))
-        ) : (
-          <div id="loadingBox">Loading...</div>
-        )}
+            ))}
       </div>
-      준비중
     </SweetCommentStyle>
   );
 };
 
-export default SweetComment;
+export default React.memo(SweetComment);

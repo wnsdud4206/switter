@@ -9,13 +9,26 @@ const SweetEditStyle = styled.form`
 
   width: 100%;
 
-  div.textEditWrap {
+  div.sweetEditHeader {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
 
     width: 100%;
+    /* height: 37px; */
+    height: 50px;
+
+    margin-bottom: 8px;
+    padding: 0 8px;
+    border-bottom: 2px solid #444;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-sizing: border-box;
+
+    // option input, sweet 색상 변경, factory에도 sweet색상선택 구현 예정
+    input {
+      display: none;
+    }
 
     div.btnWrap {
       display: flex;
@@ -24,21 +37,13 @@ const SweetEditStyle = styled.form`
       justify-content: flex-end;
 
       width: 100%;
-      height: 37px;
-
-      margin-bottom: 8px;
-      padding: 0 8px;
-      border-bottom: 2px solid #444;
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-      box-sizing: border-box;
 
       label {
         display: flex;
         align-items: center;
         justify-content: center;
 
-        padding: 1px 4px 0;
+        padding: 0 6px;
 
         color: #444;
         cursor: pointer;
@@ -50,8 +55,8 @@ const SweetEditStyle = styled.form`
         }
 
         svg {
-          width: 14px;
-          height: 14px;
+          width: 16px;
+          height: 16px;
         }
 
         input[type="submit"] {
@@ -76,66 +81,62 @@ const SweetEditStyle = styled.form`
         }
 
         svg {
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
         }
       }
     }
+  }
 
-    input {
-    }
+  div.paddingBox {
+    width: 100%;
 
-    /* input[type="text"] { */
-    div.paddingBox {
+    padding: 24px 0 20px;
+
+    box-sizing: border-box;
+
+    textarea {
+      outline: none;
+      border: none;
+      background-color: transparent;
+      color: white;
+
+      font-size: 16px;
+      font-family: "Malgun Gothic";
+      line-height: 24px;
+
       width: 100%;
+      /* height: ${({ textareaHeight }) =>
+        textareaHeight !== 0 && textareaHeight}px; */
+      /* height: ${({ textareaHeight }) => textareaHeight}px; */
+      // 너무 느려져짐
+      min-height: 120px;
 
-      padding: 24px 0 20px;
+      resize: none;
 
+      padding: 0 12px;
+      border-top: 2px solid #444;
+      border-bottom: 2px solid #444;
       box-sizing: border-box;
 
-      textarea {
-        outline: none;
-        border: none;
+      transition: border 0.2s;
+
+      &:focus {
+        border-top: 2px solid #00bdee;
+        border-bottom: 2px solid #00bdee;
+      }
+
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #444;
+      }
+
+      &::-webkit-scrollbar-track {
         background-color: transparent;
-        color: white;
-
-        font-size: 16px;
-        font-family: "Malgun Gothic";
-        line-height: 24px;
-
-        width: 100%;
-        /* height: ${({ textareaHeight }) =>
-          textareaHeight !== 0 && textareaHeight}px; */
-        /* height: ${({ textareaHeight }) => textareaHeight}px; */
-        // 너무 느려져짐
-        min-height: 120px;
-
-        resize: none;
-
-        padding: 0 12px;
-        border-top: 2px solid #444;
-        border-bottom: 2px solid #444;
-        box-sizing: border-box;
-
-        transition: border 0.2s;
-
-        &:focus {
-          border-top: 2px solid #00bdee;
-          border-bottom: 2px solid #00bdee;
-        }
-
-        &::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          border-radius: 4px;
-          background-color: #444;
-        }
-
-        &::-webkit-scrollbar-track {
-          background-color: transparent;
-        }
       }
     }
   }

@@ -67,14 +67,14 @@ const SweetEdit = ({
       {/* 왜 form안에 넣어줬지? input은 무조건 form 안에 있어야 하나? */}
       <SweetEditStyle onSubmit={onSubmit}>
         {/* required는 아무것도 입력하지 않고 제출하면 경고창이 뜨게 해주는 속성 */}
-        <div className="textEditWrap">
-          {/* <input
-        type="text"
-        placeholder="Edit your sweet"
-        value={newSweetText}
-        onChange={onChange}
-        required
-      /> */}
+        <div className="sweetEditHeader">
+          <input
+            type="text"
+            placeholder="Edit your sweet color"
+            value={newSweetText}
+            onChange={onChange}
+            required
+          />
           <div className="btnWrap">
             <label>
               <FontAwesomeIcon icon={faPencil} />
@@ -84,15 +84,16 @@ const SweetEdit = ({
               <FontAwesomeIcon icon={faXmark} />
             </button>
           </div>
-          <div className="paddingBox">
-            <textarea
-              placeholder="Edit your sweet"
-              value={newSweetText}
-              onChange={onChange}
-              maxLength="1200"
-              autoFocus
-            ></textarea>
-          </div>
+        </div>
+        
+        <div className="paddingBox">
+          <textarea
+            placeholder="Edit your sweet"
+            value={newSweetText}
+            onChange={onChange}
+            maxLength="1200"
+            autoFocus
+          ></textarea>
         </div>
 
         {attachment && (

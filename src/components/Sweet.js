@@ -4,11 +4,13 @@ import {
   deleteDoc,
   dbService,
   storageService,
+  query,
   ref,
   deleteObject,
   getDoc,
   collection,
-  getDocs,
+  where,
+  onSnapshot,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
@@ -19,7 +21,9 @@ import CloseUpImgContainer from "./CloseUpImgContainer";
 
 const Sweet = ({ sweetObj, isOwner, userObj }) => {
   const [userName, setUserName] = useState("");
+  const [userAttachmentUrl, setUserAttachmentUrl] = useState("");
   const [editing, setEditing] = useState(false);
+  const [commentEditing, setCommentEditing] = useState(false);
   const [newSweetText, setNewSweetText] = useState(sweetObj.text);
   const [deleteBox, setDeleteBox] = useState(false);
   const [sweetSize, setSweetSize] = useState(0);
@@ -27,7 +31,7 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
   const [showCloseUpImg, setShowCloseUpImg] = useState(false);
   const [scrollComment, setScrollComment] = useState(false);
   const [showComment, setShowComment] = useState(false);
-  const [commentLength, setCommentLength] = useState(0);
+  const [comments, setComments] = useState(0);
 
   const sweetContainerRef = useRef();
   const sweetContentRef = useRef();
@@ -36,17 +40,24 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     const d = doc(dbService(), "users", `${sweetObj.creatorId}`);
     const docSnap = await getDoc(d);
     setUserName(docSnap.data().displayName);
+    setUserAttachmentUrl(docSnap.data().attachmentUrl);
     // console.log(docSnap.data().comments.length || 0);
     // setCommentLength(docSnap.data().comments.length || 0);
   };
 
-  const getCommentLength = async () => {
+  const getComments = async () => {
     try {
-      const dbComments = await getDocs(
-        collection(dbService(), "comments"),
-        // orderBy("createdAt", "desc"),
-      );
-      setCommentLength(dbComments.size);
+      const q = query(collection(dbService(), "comments"),
+      where("sweetId", "==", sweetObj.id))
+      
+    onSnapshot(q, (snapshot) => {
+      const commentArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(), // creatorId, createdAt, text
+      }));
+      // console.log(commentArr);
+      setComments(commentArr);
+    });
     } catch (error) {
       console.error(error);
     }
@@ -74,10 +85,10 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     }
   }, [editing, scrollComment]);
   useEffect(() => {
-    getCommentLength();
+    getComments();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, scrollComment, showComment, commentLength]);
+  }, [editing, scrollComment, showComment, comments.length]);
 
   useEffect(() => {
     getUserName();
@@ -106,6 +117,10 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     // }
   };
 
+  const onChange = ({ target: { value } }) => {
+    setNewSweetText(value);
+  };
+
   // 수정, updateDoc
   const onEditing = () => {
     setEditing(true);
@@ -116,9 +131,12 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     setNewSweetText(sweetObj.text);
   };
 
-  const onChange = ({ target: { value } }) => {
-    setNewSweetText(value);
+  const onCommentEditing = () => {
+    setCommentEditing(true);
   };
+  const offCommentEditing = () => {
+    setCommentEditing(false);
+  }
 
   const onCloseUpImg = (e) => {
     if (!showCloseUpImg) {
@@ -152,6 +170,7 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
             ) : (
               <SweetContent
                 userName={userName}
+                userAttachmentUrl={userAttachmentUrl}
                 isOwner={isOwner}
                 onEditing={onEditing}
                 onDeleteClick={onDeleteClick}
@@ -163,6 +182,10 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
                 onScrollComment={onScrollComment}
                 scrollComment={scrollComment}
                 showComment={showComment}
+                comments={comments}
+                onCommentEditing={onCommentEditing}
+                offCommentEditing={offCommentEditing}
+                commentEditing={commentEditing}
               />
             )}
           </div>

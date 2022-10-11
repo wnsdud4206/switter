@@ -4,9 +4,13 @@ const NavigationProfileImage = styled.div`
   display: flex;
   justify-content: center;
 
-  border: 1px solid #00acee;
+  border: 2px solid #00acee;
   border-radius: 50%;
   box-sizing: border-box;
+
+  img {
+    background-color: white;
+  }
 `;
 
 export default NavigationProfileImage;

@@ -3,13 +3,14 @@ import styled from "styled-components";
 const SweetContentStyle = styled.div`
   width: 100%;
 
-  div.nameAndBtn {
+  div.sweetHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
 
     width: 100%;
-    height: 37px;
+    /* height: 37px; */
+    height: 50px;
 
     margin-bottom: 8px;
     padding: 0 8px;
@@ -18,8 +19,42 @@ const SweetContentStyle = styled.div`
     border-bottom-right-radius: 8px;
     box-sizing: border-box;
 
-    span {
-      padding-left: 4px;
+    div.userWrap {
+      display: flex;
+      align-items: center;
+
+      div.sweetUserImage {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+
+        min-width: 40px;
+        height: 40px;
+
+        background-color: white;
+
+        border-radius: 50%;
+        border: 1px solid #00bdee;
+        box-sizing: border-box;
+
+        overflow: hidden;
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+
+        svg {
+          color: #00bdee;
+
+          width: 34px;
+          height: 34px;
+        }
+      }
+
+      span {
+        padding-left: 8px;
+      }
     }
 
     div.btnWrap {
@@ -39,12 +74,17 @@ const SweetContentStyle = styled.div`
         &.editBtn:hover {
           color: #00bdee;
         }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
     }
   }
 
   p {
-    display: flex;
+    /* display: flex; */
 
     font-weight: normal;
 

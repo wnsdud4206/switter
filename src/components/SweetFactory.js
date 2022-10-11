@@ -8,7 +8,6 @@ import {
   getDownloadURL,
   collection,
   dbService,
-  authService,
 } from "fbase";
 import SweetFactoryStyle from "styles/SweetFactoryStyle";
 import {
@@ -54,7 +53,7 @@ const SweetFactory = ({ userObj }) => {
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
-        displayName: authService().currentUser.displayName,
+        // displayName: authService().currentUser.displayName,
         // id: uuidv4()
       };
       // firestore에 추가
