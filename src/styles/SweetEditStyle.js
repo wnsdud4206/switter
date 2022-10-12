@@ -64,7 +64,7 @@ const SweetEditStyle = styled.form`
         }
       }
 
-      button {
+      button.sweetEditCancel {
         background: none;
         border: none;
         outline: none;

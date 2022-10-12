@@ -2,8 +2,9 @@ import styled from "styled-components";
 
 const SweetActionsStyle = styled.div`
   display: flex;
-  /* gap: 32px; */
+  align-items: center;
   justify-content: space-between;
+  /* gap: 32px; */
 
   width: 100%;
 
@@ -75,7 +76,7 @@ const SweetActionsStyle = styled.div`
             color: #ff6633;
           }
 
-          button.hate {
+          button.notLike {
             color: #8b00ff;
           }
         }
@@ -105,7 +106,7 @@ const SweetActionsStyle = styled.div`
         }
       }
 
-      button.emptyLike {
+      button.likeToggle {
         color: white;
 
         transition: transform 0.2s;
@@ -125,26 +126,29 @@ const SweetActionsStyle = styled.div`
   }
 
   div.commentWrap {
-    
-    span.commentCounter {
+    display: flex;
+    align-items: center;
 
+    span.commentCounter {
     }
 
     button.commentBtn {
       outline: none;
       border: none;
       background: none;
-  
+
+      display: flex;
+      align-items: center;
+
       color: white;
-  
+
       cursor: pointer;
-  
+
       svg {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
 
         &.commentHidden {
-
         }
 
         &.commentShow {

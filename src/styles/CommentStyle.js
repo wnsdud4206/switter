@@ -4,10 +4,16 @@ import styled from "styled-components";
 
 const CommentStyle = styled.div`
   display: flex;
+  justify-content: flex-start;
+
+  width: 100%;
 
   box-sizing: border-box;
 
-  /* outline: 1px solid orange; */
+  /* outline: 1px solid red; */
+  &:first-child {
+    margin-top: 36px;
+  }
 
   &:not(:last-child) {
     /* padding-bottom: 32px; */
@@ -46,71 +52,11 @@ const CommentStyle = styled.div`
     }
   }
 
-  div.commentWrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    padding-top: 8px;
-    padding-left: 8px;
-    box-sizing: border-box;
-
-    width: 100%;
-
-    /* outline: 1px solid red; */
-
-    div.commentHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      width: 100%;
-
-      span.commentUserName {
-        /* outline: 1px solid white; */
-      }
-
-      div.commentEditAndDelete {
-        display: flex;
-        align-items: center;
-
-        /* outline: 1px solid white; */
-
-        button {
-          /* outline: 1px solid red; */
-          outline: none;
-          border: none;
-          background: none;
-          color: #444;
-
-          transition: color 0.2s;
-
-          cursor: pointer;
-
-          &.commentEdit:hover {
-            color: #00bdee;
-          }
-          &.commentDelete:hover {
-            color: #ff6633;
-          }
-        }
-      }
-    }
-
-    p.commentText {
-      font-weight: normal;
-      white-space: pre-line;
-      line-height: 24px;
-      text-align: left;
-
-      width: 100%;
-
-      /* outline: 1px solid white; */
-    }
-
-    button.commentLike {
-    }
+  /* div.comentEditWrap {
   }
+
+  div.commentWrap {
+  } */
 `;
 
 export default CommentStyle;

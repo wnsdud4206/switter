@@ -80,7 +80,7 @@ const SweetEdit = ({
               <FontAwesomeIcon icon={faPencil} />
               <input type="submit" value="Update Sweet" />
             </label>
-            <button onClick={offEditing}>
+            <button className="sweetEditCancel" onClick={offEditing}>
               <FontAwesomeIcon icon={faXmark} />
             </button>
           </div>

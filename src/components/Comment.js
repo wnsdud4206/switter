@@ -1,15 +1,10 @@
-import { faPencil, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  dbService,
-  doc,
-  getDoc,
-  deleteDoc,
-  updateDoc,
-  arrayRemove,
-} from "fbase";
+import { dbService, doc, getDoc } from "fbase";
 import { useEffect, useState } from "react";
 import CommentStyle from "styles/CommentStyle";
+import CommentContent from "./CommentContent";
+import CommentEdit from "./CommentEdit";
 
 // 20221011, comment 를 edit과 content로 분리하기
 
@@ -18,13 +13,12 @@ const Comment = ({
   isOwner,
   userObj,
   sweetObj,
-  onCommentEditing,
-  offCommentEditing,
-  commentEditing,
+  onCommentEditResize,
+  offCommentEditResize,
 }) => {
   const [commentName, setCommentName] = useState("");
   const [commentAttachmentUrl, setCommentAttachmentUrl] = useState("");
-  const [newCommentText, setNewCommentText] = useState("");
+  const [commentEditing, setCommentEditing] = useState(false);
 
   const getCommentUser = async () => {
     const d = doc(dbService(), "users", `${commentObj.creatorId}`);
@@ -39,31 +33,14 @@ const Comment = ({
     getCommentUser();
   });
 
-  const onDeleteComment = async () => {
-    const ok = window.confirm("Are you sure you want to delete this comment?");
-    if (ok) {
-      try {
-        // setTimeout(async () => {
-        const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-        await updateDoc(d, { comments: arrayRemove(commentObj.id) });
-
-        const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
-        await deleteDoc(commentDoc);
-        // }, 250);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+  const onCommentEditing = () => {
+    setCommentEditing(true);
+    onCommentEditResize();
   };
-
-  const onChange = ({ target: { value } }) => {
-    setNewCommentText(value);
+  const offCommentEditing = () => {
+    setCommentEditing(false);
+    offCommentEditResize();
   };
-
-  useEffect(() => {
-    setNewCommentText(commentObj.text);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commentEditing]);
 
   return (
     <CommentStyle>
@@ -81,56 +58,20 @@ const Comment = ({
       </div>
 
       {commentEditing ? (
-        <>
-          {/* CommentEdit */}
-          <div className="commentEditWrap">
-            <div className="commentEditHeader">
-              <span className="commentEditUserName">{commentName}</span>
-              {isOwner && (
-                <div className="commentEditAndDelete">
-                  <button className="commentEdit" onClick={offCommentEditing}>
-                    <FontAwesomeIcon icon={faPencil} />
-                  </button>
-                  <button className="commentDelete" onClick={onDeleteComment}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <input
-              className="newCommentText"
-              value={newCommentText}
-              onChange={onChange}
-              required
-              autoFocus
-            />
-          </div>
-        </>
+        <CommentEdit
+          commentObj={commentObj}
+          commentName={commentName}
+          offCommentEditing={offCommentEditing}
+          commentEditing={commentEditing}
+        />
       ) : (
-        <>
-          {/* CommentContent */}
-          <div className="commentWrap">
-            <div className="commentHeader">
-              <span className="commentUserName">{commentName}</span>
-              {isOwner && (
-                <div className="commentEditAndDelete">
-                  {/* <button className="commentEdit" onClick={onCommentEditing}> */}
-                  <button className="commentEdit">
-                    <FontAwesomeIcon icon={faPencil} />
-                  </button>
-                  <button className="commentDelete" onClick={onDeleteComment}>
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <p className="commentText">{commentObj.text}</p>
-
-            <button className="commentLike">like btn</button>
-          </div>
-        </>
+        <CommentContent
+          commentObj={commentObj}
+          sweetObj={sweetObj}
+          isOwner={isOwner}
+          onCommentEditing={onCommentEditing}
+          commentName={commentName}
+        />
       )}
     </CommentStyle>
   );

@@ -16,8 +16,6 @@ const SweetCommentStyle = styled.div`
   form {
     display: flex;
 
-    padding-bottom: 36px;
-
     /* outline: 1px solid white; */
 
     div.userImage {

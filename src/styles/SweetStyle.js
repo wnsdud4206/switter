@@ -29,7 +29,7 @@ const SweetStyle = styled.div`
   }
 
   &.fadeout {
-    $height-value: ${({ sweetPaddingSize }) => sweetPaddingSize}px;
+    /* $height-value: ${({ sweetPaddingSize }) => sweetPaddingSize}px; */
     animation: boxFadeOut 0.2s ease-out forwards;
 
     @keyframes boxFadeOut {
@@ -65,7 +65,7 @@ const SweetStyle = styled.div`
 
       transition: height 0.2s ease-out;
 
-      div.sweetContainer {
+      div.sweetBox {
         color: white;
 
         display: flex;

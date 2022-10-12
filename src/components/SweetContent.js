@@ -20,9 +20,8 @@ const SweetContent = ({
   scrollComment,
   showComment,
   comments,
-  onCommentEditing,
-  offCommentEditing,
-  commentEditing
+  onCommentEditResize,
+  offCommentEditResize
 }) => {
   const [imgError, setImgError] = useState(false);
 
@@ -33,7 +32,7 @@ const SweetContent = ({
 
   return (
     <>
-      <SweetContentStyle ref={sweetContentRef}>
+      <SweetContentStyle className="sweetContent" ref={sweetContentRef}>
         <div className="sweetHeader">
           <div className="userWrap">
             <div className="sweetUserImage">
@@ -93,9 +92,8 @@ const SweetContent = ({
           sweetObj={sweetObj}
           userObj={userObj}
           comments={comments}
-          onCommentEditing={onCommentEditing}
-          offCommentEditing={offCommentEditing}
-          commentEditing={commentEditing}
+          onCommentEditResize={onCommentEditResize}
+          offCommentEditResize={offCommentEditResize}
         />
       )}
     </>

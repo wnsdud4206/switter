@@ -73,7 +73,7 @@ const SweetActoins = ({
       console.error(error);
     }
   };
-  const onHate = async () => {
+  const onNotLike = async () => {
     try {
       const { uid } = authService().currentUser;
 
@@ -87,7 +87,7 @@ const SweetActoins = ({
 
   const onLikeToggle = () => {
     if (!currentUserLike) onLike();
-    else if (currentUserLike) onHate();
+    else if (currentUserLike) onNotLike();
   };
 
   return (
@@ -103,17 +103,17 @@ const SweetActoins = ({
               <button className="like" onClick={onLike}>
                 <FontAwesomeIcon icon={like} />
               </button>
-              <button className="hate" onClick={onHate}>
+              <button className="notLike" onClick={onNotLike}>
                 <FontAwesomeIcon icon={faHeartCrack} />
               </button>
             </div>
           </div>
-          <button className="emptyLike" onClick={onLikeToggle}>
+          <button className="likeToggle" onClick={onLikeToggle}>
             {/* 싫어요도 추가, 다시 누르먄 좋아요&싫어요 취소 */}
             {currentUserLike ? (
               <FontAwesomeIcon className="userLike" icon={like} />
             ) : (
-              <FontAwesomeIcon className="userEmpty" icon={faRegHeart} />
+              <FontAwesomeIcon className="userNotLike" icon={faRegHeart} />
             )}
           </button>
         </div>

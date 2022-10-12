@@ -18,8 +18,8 @@ const SweetComment = ({
   sweetObj,
   userObj,
   comments,
-  onCommentEditing,
-  offCommentEditing,
+  onCommentEditResize,
+  offCommentEditResize,
   commentEditing,
 }) => {
   const [comment, setComment] = useState("");
@@ -66,8 +66,6 @@ const SweetComment = ({
 
   return (
     <SweetCommentStyle>
-      <p style={{textAlign: "center", margin: 0}}>아직 댓글 수정&좋아요는 안돼용~</p>
-      {/* SweetCommentFactory, form */}
       <form onSubmit={onSubmit}>
         <div className="userImage">
           {userObj.photoURL ? (
@@ -98,7 +96,7 @@ const SweetComment = ({
       </form>
       {/* SweetCommentList, div */}
       <div id="commentList">
-        {comments.length &&
+        {comments.length ? (
           comments
             .sort((a, b) => {
               if (a.createdAt < b.createdAt) return -1;
@@ -112,11 +110,13 @@ const SweetComment = ({
                 isOwner={comment.creatorId === userObj.uid}
                 userObj={userObj}
                 sweetObj={sweetObj}
-                onCommentEditing={onCommentEditing}
-                offCommentEditing={offCommentEditing}
-                commentEditing={commentEditing}
+                onCommentEditResize={onCommentEditResize}
+                offCommentEditResize={offCommentEditResize}
               />
-            ))}
+            ))
+        ) : (
+          <></>
+        )}
       </div>
     </SweetCommentStyle>
   );

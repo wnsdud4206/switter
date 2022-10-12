@@ -19,11 +19,18 @@ import CloseUpImgContainer from "./CloseUpImgContainer";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
-const Sweet = ({ sweetObj, isOwner, userObj }) => {
+const Sweet = ({
+  sweetObj,
+  isOwner,
+  userObj,
+  onlyEditing,
+  onOnlyEditing,
+  offOnlyEditing,
+}) => {
   const [userName, setUserName] = useState("");
   const [userAttachmentUrl, setUserAttachmentUrl] = useState("");
   const [editing, setEditing] = useState(false);
-  const [commentEditing, setCommentEditing] = useState(false);
+  const [commentEditResize, setCommentEditResize] = useState(false);
   const [newSweetText, setNewSweetText] = useState(sweetObj.text);
   const [deleteBox, setDeleteBox] = useState(false);
   const [sweetSize, setSweetSize] = useState(0);
@@ -33,7 +40,7 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
   const [showComment, setShowComment] = useState(false);
   const [comments, setComments] = useState(0);
 
-  const sweetContainerRef = useRef();
+  const sweetBoxRef = useRef();
   const sweetContentRef = useRef();
 
   const getUserName = async () => {
@@ -47,32 +54,34 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
 
   const getComments = async () => {
     try {
-      const q = query(collection(dbService(), "comments"),
-      where("sweetId", "==", sweetObj.id))
-      
-    onSnapshot(q, (snapshot) => {
-      const commentArr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // creatorId, createdAt, text
-      }));
-      // console.log(commentArr);
-      setComments(commentArr);
-    });
+      const q = query(
+        collection(dbService(), "comments"),
+        where("sweetId", "==", sweetObj.id),
+      );
+
+      onSnapshot(q, (snapshot) => {
+        const commentArr = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(), // creatorId, createdAt, text
+        }));
+        // console.log(commentArr);
+        setComments(commentArr);
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
   const sweetSizing = useCallback(() => {
-    // console.log(`${sweetObj.text}: ${sweetContainerRef.current.offsetHeight}`);
+    // console.log(`${sweetObj.text}: ${sweetBoxRef.current.offsetHeight}`);
     if (editing) {
-      setSweetSize(sweetContainerRef.current.offsetHeight);
+      setSweetSize(sweetBoxRef.current.offsetHeight);
     } else if (!editing) {
       let height;
       if (scrollComment) {
         setShowComment(true);
-        height = sweetContainerRef.current.clientHeight;
-        // console.log(sweetContainerRef.current.clientHeight);
+        height = sweetBoxRef.current.clientHeight;
+        // console.log(sweetBoxRef.current.clientHeight);
       } else if (!scrollComment) {
         height = sweetContentRef.current.clientHeight;
         // console.log(sweetContentRef.current.clientHeight);
@@ -88,7 +97,7 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     getComments();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, scrollComment, showComment, comments.length]);
+  }, [editing, scrollComment, showComment, comments.length, commentEditResize]);
 
   useEffect(() => {
     getUserName();
@@ -121,22 +130,31 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     setNewSweetText(value);
   };
 
+  // edit모드 하나만 켜기 어렵다... comment도 해줘야함
+  // useEffect(() => {
+  //   if (!onlyEditing && editing) {
+  //     setEditing(false);
+  //     onOnlyEditing();
+  //   }
+  // }, [onlyEditing])
+
   // 수정, updateDoc
   const onEditing = () => {
+    onOnlyEditing();
     setEditing(true);
     setNewSweetText(sweetObj.text);
   };
   const offEditing = () => {
+    offOnlyEditing();
     setEditing(false);
-    setNewSweetText(sweetObj.text);
   };
 
-  const onCommentEditing = () => {
-    setCommentEditing(true);
+  const onCommentEditResize = () => {
+    setCommentEditResize(true);
   };
-  const offCommentEditing = () => {
-    setCommentEditing(false);
-  }
+  const offCommentEditResize = () => {
+    setCommentEditResize(false);
+  };
 
   const onCloseUpImg = (e) => {
     if (!showCloseUpImg) {
@@ -158,7 +176,7 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
     <SweetStyle className={deleteBox ? "fadeout" : ""} sweetSize={sweetSize}>
       <div className="sweetPadding">
         <div className="sweetSize">
-          <div className="sweetContainer" ref={sweetContainerRef}>
+          <div className="sweetBox" ref={sweetBoxRef}>
             {editing ? (
               <SweetEdit
                 sweetObj={sweetObj}
@@ -183,9 +201,8 @@ const Sweet = ({ sweetObj, isOwner, userObj }) => {
                 scrollComment={scrollComment}
                 showComment={showComment}
                 comments={comments}
-                onCommentEditing={onCommentEditing}
-                offCommentEditing={offCommentEditing}
-                commentEditing={commentEditing}
+                onCommentEditResize={onCommentEditResize}
+                offCommentEditResize={offCommentEditResize}
               />
             )}
           </div>
