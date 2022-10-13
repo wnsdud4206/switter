@@ -13,8 +13,10 @@ const Comment = ({
   isOwner,
   userObj,
   sweetObj,
-  onCommentEditResize,
-  offCommentEditResize,
+  onlyCommentEditing,
+  onOnlyCommentEditing,
+  onCommentEditResizeToggle,
+  // offCommentEditResize,
 }) => {
   const [commentName, setCommentName] = useState("");
   const [commentAttachmentUrl, setCommentAttachmentUrl] = useState("");
@@ -33,13 +35,23 @@ const Comment = ({
     getCommentUser();
   });
 
+  useEffect(() => {
+    if (onlyCommentEditing !== commentObj.id && commentEditing) {
+      setCommentEditing(false);
+      onCommentEditResizeToggle();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onlyCommentEditing]);
+
   const onCommentEditing = () => {
+    onOnlyCommentEditing(commentObj.id);
     setCommentEditing(true);
-    onCommentEditResize();
+    onCommentEditResizeToggle();
   };
   const offCommentEditing = () => {
     setCommentEditing(false);
-    offCommentEditResize();
+    onOnlyCommentEditing("");
+    onCommentEditResizeToggle();
   };
 
   return (

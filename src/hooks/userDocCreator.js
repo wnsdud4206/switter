@@ -11,6 +11,10 @@ const userDocCreator = async (data) => {
     email,
     attachmentUrl,
     uid,
+    // notification: {
+    //   unconfirmed: [],
+    //   confirmed: [],
+    // },
   };
   // addDoc으로 문서이름을 랜덤으로 만들지 않고 setDoc으로 이름을 지정, 그럼 기존 문서에 덮어씌우는 불필요한 동작이 되지 않도록 공식문서를 참고해 setDoc의 capitla, merge를 사용?
   const newUser = doc(dbService(), "users", uid);

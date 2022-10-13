@@ -35,6 +35,12 @@ const Profile = ({ userObj }) => {
   const [attachment, setAttachment] = useState(
     authService().currentUser.photoURL,
   );
+  const [imgError, setImgError] = useState(false);
+
+  const onError = () => {
+    // 이미지 깨지면 대체
+    setImgError(true);
+  };
 
   const onLogOutClick = () => {
     signOut(authService());
@@ -232,13 +238,14 @@ const Profile = ({ userObj }) => {
             ref={fileInput}
           />
         </label>
-        {attachment && (
+        {attachment && !imgError && (
           <div id="selectImage">
             <img
               src={attachment}
               width="70px"
               height="70px"
               alt="uploadImage"
+              onError={onError}
             />
             <button onClick={onClearAttachmentClick}>
               <FontAwesomeIcon icon={faXmark} />

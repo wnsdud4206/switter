@@ -10,6 +10,12 @@ import NavigationProfileImage from "styles/NavigationProfileImage";
 const Navigation = ({ userObj }) => {
   const [userName, setUserName] = useState(userObj.displayName);
   const [userProfileImage, setUserProfileImage] = useState(userObj.photoURL);
+  const [imgError, setImgError] = useState(false);
+
+  const onError = () => {
+    // 이미지 깨지면 대체
+    setImgError(true);
+  };
 
   useEffect(() => {
     const q = query(collection(dbService(), "users"));
@@ -39,7 +45,7 @@ const Navigation = ({ userObj }) => {
           </li>
           <li id="profileLink">
             <Link id="myProfile" to="/profile">
-              {userProfileImage ? (
+              {userProfileImage && !imgError ? (
                 <NavigationProfileImage>
                   <img
                     src={userProfileImage}
@@ -47,6 +53,7 @@ const Navigation = ({ userObj }) => {
                     height="50px"
                     style={{ borderRadius: "50%" }}
                     alt="profileImage"
+                    onError={onError}
                   />
                 </NavigationProfileImage>
               ) : (

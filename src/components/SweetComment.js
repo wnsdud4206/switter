@@ -18,11 +18,15 @@ const SweetComment = ({
   sweetObj,
   userObj,
   comments,
-  onCommentEditResize,
-  offCommentEditResize,
-  commentEditing,
+  onCommentEditResizeToggle,
+  // offCommentEditResize,
 }) => {
   const [comment, setComment] = useState("");
+  const [onlyCommentEditing, setOnlyCommentEditing] = useState("");
+
+  const onOnlyCommentEditing = (commentId) => {
+    setOnlyCommentEditing(commentId);
+  };
 
   // 쓰기, 데이터 추가
   const onSubmit = async (event) => {
@@ -110,8 +114,10 @@ const SweetComment = ({
                 isOwner={comment.creatorId === userObj.uid}
                 userObj={userObj}
                 sweetObj={sweetObj}
-                onCommentEditResize={onCommentEditResize}
-                offCommentEditResize={offCommentEditResize}
+                onlyCommentEditing={onlyCommentEditing}
+                onOnlyCommentEditing={onOnlyCommentEditing}
+                onCommentEditResizeToggle={onCommentEditResizeToggle}
+                // offCommentEditResize={offCommentEditResize}
               />
             ))
         ) : (

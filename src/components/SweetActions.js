@@ -21,6 +21,7 @@ import {
   collection,
   onSnapshot,
 } from "fbase";
+import notification from "utils/notification";
 
 /*
 하트의 색이 여러개(깨진하트(1개)포함)로 하거나 얼굴 이모티콘 여러개로 해도 될듯, 일단 지금은 좋아요&안좋아요(싫어요처럼 -1은 안하거나 나중에 나누거나)
@@ -69,6 +70,8 @@ const SweetActoins = ({
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await updateDoc(d, { like: arrayUnion(uid) });
+
+      // notification(uid);
     } catch (error) {
       console.error(error);
     }

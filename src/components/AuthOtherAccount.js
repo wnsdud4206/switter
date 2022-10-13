@@ -8,7 +8,7 @@ import {
   updateProfile,
 } from "fbase";
 import React, { useState } from "react";
-import userDocCreator from "services/userDocCreator";
+import userDocCreator from "hooks/userDocCreator";
 import AuthOtherAccountStyle from "styles/AuthOtherAccountStyle";
 
 const AuthOtherAccount = () => {

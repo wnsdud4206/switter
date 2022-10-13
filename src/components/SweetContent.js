@@ -20,12 +20,12 @@ const SweetContent = ({
   scrollComment,
   showComment,
   comments,
-  onCommentEditResize,
-  offCommentEditResize
+  onCommentEditResizeToggle,
+  // offCommentEditResize,
 }) => {
   const [imgError, setImgError] = useState(false);
 
-  const onErorr = () => {
+  const onError = () => {
     // 이미지 깨지면 대체
     setImgError(true);
   };
@@ -44,7 +44,7 @@ const SweetContent = ({
                   width="40"
                   height="40"
                   alt="sweetUserImage"
-                  onError={onErorr}
+                  onError={onError}
                 />
               ) : (
                 <FontAwesomeIcon id="profileicon" icon={faUser} />
@@ -92,8 +92,8 @@ const SweetContent = ({
           sweetObj={sweetObj}
           userObj={userObj}
           comments={comments}
-          onCommentEditResize={onCommentEditResize}
-          offCommentEditResize={offCommentEditResize}
+          onCommentEditResizeToggle={onCommentEditResizeToggle}
+          // offCommentEditResize={offCommentEditResize}
         />
       )}
     </>

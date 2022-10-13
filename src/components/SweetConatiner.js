@@ -3,13 +3,10 @@ import React, { useState } from "react";
 import SweetContainerStyle from "styles/SweetContainerStyle";
 
 const SweetConatiner = ({ sweets, userObj }) => {
-  const [onlyEditing, setOnlyEditing] = useState(false);
+  const [onlyEditing, setOnlyEditing] = useState("");
 
-  const onOnlyEditing = () => {
-    setOnlyEditing(true);
-  };
-  const offOnlyEditing = () => {
-    setOnlyEditing(false);
+  const onOnlyEditing = (sweetId) => {
+    setOnlyEditing(sweetId);
   };
 
   return (
@@ -29,7 +26,6 @@ const SweetConatiner = ({ sweets, userObj }) => {
                 isOwner={sweet.creatorId === userObj.uid}
                 userObj={userObj}
                 onOnlyEditing={onOnlyEditing}
-                offOnlyEditing={offOnlyEditing}
                 onlyEditing={onlyEditing}
               />
             ))

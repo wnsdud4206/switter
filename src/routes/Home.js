@@ -9,6 +9,7 @@ import {
 } from "fbase";
 import SweetFactory from "components/SweetFactory";
 import SweetConatiner from "components/SweetConatiner";
+import notification from "utils/notification";
 
 const Home = ({ userObj, init }) => {
   const [sweets, setSweets] = useState([]);
@@ -35,9 +36,6 @@ const Home = ({ userObj, init }) => {
     }
   };
   useEffect(() => {
-    // console.log(sweets)
-    // console.log(userObj);
-
     getSweets();
     const q = query(
       collection(dbService(), "sweets"),
@@ -69,6 +67,11 @@ const Home = ({ userObj, init }) => {
   //     window.addEventListener("resize", onResizeHandler);
   //   };
   // }, [onResizeHandler, innerSize]);
+
+  // useEffect(() => {
+  //   notification(null, 123, "sweetLikes");
+  //   // notification(null, null, "confirmed");
+  // })
 
   return (
     <>

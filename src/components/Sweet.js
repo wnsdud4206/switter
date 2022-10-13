@@ -19,14 +19,7 @@ import CloseUpImgContainer from "./CloseUpImgContainer";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
-const Sweet = ({
-  sweetObj,
-  isOwner,
-  userObj,
-  onlyEditing,
-  onOnlyEditing,
-  offOnlyEditing,
-}) => {
+const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   const [userName, setUserName] = useState("");
   const [userAttachmentUrl, setUserAttachmentUrl] = useState("");
   const [editing, setEditing] = useState(false);
@@ -97,7 +90,13 @@ const Sweet = ({
     getComments();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editing, scrollComment, showComment, comments.length, commentEditResize]);
+  }, [
+    editing,
+    scrollComment,
+    showComment,
+    comments.length,
+    commentEditResize,
+  ]);
 
   useEffect(() => {
     getUserName();
@@ -131,30 +130,31 @@ const Sweet = ({
   };
 
   // edit모드 하나만 켜기 어렵다... comment도 해줘야함
-  // useEffect(() => {
-  //   if (!onlyEditing && editing) {
-  //     setEditing(false);
-  //     onOnlyEditing();
-  //   }
-  // }, [onlyEditing])
+  useEffect(() => {
+    if (onlyEditing !== sweetObj.id && editing) {
+      setEditing(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onlyEditing]);
 
   // 수정, updateDoc
   const onEditing = () => {
-    onOnlyEditing();
+    onOnlyEditing(sweetObj.id);
     setEditing(true);
     setNewSweetText(sweetObj.text);
   };
   const offEditing = () => {
-    offOnlyEditing();
     setEditing(false);
+    onOnlyEditing("");
   };
 
-  const onCommentEditResize = () => {
-    setCommentEditResize(true);
+
+  const onCommentEditResizeToggle = () => {
+    setCommentEditResize((prev) => !prev);
   };
-  const offCommentEditResize = () => {
-    setCommentEditResize(false);
-  };
+  // const offCommentEditResize = () => {
+  //   setCommentEditResize(false);
+  // };
 
   const onCloseUpImg = (e) => {
     if (!showCloseUpImg) {
@@ -201,8 +201,8 @@ const Sweet = ({
                 scrollComment={scrollComment}
                 showComment={showComment}
                 comments={comments}
-                onCommentEditResize={onCommentEditResize}
-                offCommentEditResize={offCommentEditResize}
+                onCommentEditResizeToggle={onCommentEditResizeToggle}
+                // offCommentEditResize={offCommentEditResize}
               />
             )}
           </div>
