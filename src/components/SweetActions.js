@@ -71,7 +71,9 @@ const SweetActoins = ({
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await updateDoc(d, { like: arrayUnion(uid) });
 
-      // notification(uid);
+      // notification(category, field, creatorId, activeId, commentIdOrLikeId);
+      // console.log(sweetObj.creatorId, sweetObj.id, uid);
+      notification("ADD", "sweetLikes", sweetObj.creatorId, sweetObj.id, uid);
     } catch (error) {
       console.error(error);
     }
@@ -83,6 +85,8 @@ const SweetActoins = ({
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await updateDoc(d, { like: arrayRemove(uid) });
+      
+      notification("REMOVE", "sweetLikes", sweetObj.creatorId, sweetObj.id, uid);
     } catch (error) {
       console.error(error);
     }

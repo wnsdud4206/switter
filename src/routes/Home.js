@@ -9,7 +9,6 @@ import {
 } from "fbase";
 import SweetFactory from "components/SweetFactory";
 import SweetConatiner from "components/SweetConatiner";
-import notification from "utils/notification";
 
 const Home = ({ userObj, init }) => {
   const [sweets, setSweets] = useState([]);
@@ -68,10 +67,18 @@ const Home = ({ userObj, init }) => {
   //   };
   // }, [onResizeHandler, innerSize]);
 
+
   // useEffect(() => {
-  //   notification(null, 123, "sweetLikes");
-  //   // notification(null, null, "confirmed");
-  // })
+  //   // notification("ADD", "sweetComments", "creatorId", "", "commentId5");
+  //   // notification("REMOVE", "commentLikes", "creatorId", "activeId2", "commentId1");
+  //   notification("CONFIRM", "all", "creatorId", "", ""); 
+
+  // }, []);
+
+  // useEffect(() => {
+  //   testSwitch("bb");
+  // }, []);
+
 
   return (
     <>

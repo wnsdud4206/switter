@@ -1,7 +1,15 @@
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { dbService, doc, updateDoc, arrayRemove, deleteDoc } from "fbase";
+import {
+  dbService,
+  doc,
+  updateDoc,
+  arrayRemove,
+  deleteDoc,
+  authService,
+} from "fbase";
 import CommentContentStyle from "styles/CommentContentStyle";
+import notification from "utils/notification";
 import CommentActions from "./CommentActions";
 
 const CommentContent = ({
@@ -21,6 +29,22 @@ const CommentContent = ({
 
         const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
         await deleteDoc(commentDoc);
+
+        const { uid } = authService().currentUser;
+        notification(
+          "REMOVE",
+          "commentLikes",
+          commentObj.creatorId,
+          commentObj.id,
+          uid,
+        );
+        notification(
+          "REMOVE",
+          "sweetComments",
+          sweetObj.creatorId,
+          sweetObj.id,
+          commentObj.id,
+        );
         // }, 250);
       } catch (error) {
         console.error(error);

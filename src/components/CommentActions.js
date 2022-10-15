@@ -14,6 +14,7 @@ import {
   arrayRemove,
 } from "fbase";
 import { useEffect, useState } from "react";
+import notification from "utils/notification";
 
 const CommentActions = ({ commentObj }) => {
   const [commentLikeCount, setCommentLikeCount] = useState(commentObj.like);
@@ -49,8 +50,23 @@ const CommentActions = ({ commentObj }) => {
 
       if (!currentUserCommentLike) {
         await updateDoc(d, { like: arrayUnion(uid) });
+
+        notification(
+          "ADD",
+          "commentLikes",
+          commentObj.creatorId,
+          commentObj.id,
+          uid,
+        );
       } else if (currentUserCommentLike) {
         await updateDoc(d, { like: arrayRemove(uid) });
+        notification(
+          "REMOVE",
+          "commentLikes",
+          commentObj.creatorId,
+          commentObj.id,
+          uid,
+        );
       }
     } catch (error) {
       console.error(error);

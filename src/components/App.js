@@ -43,6 +43,12 @@ function App() {
   //   // setUserObj(Object.assign({}, user));
   // };
 
+  // useEffect(() => {
+  //   window.addEventListener("click", (e) => {
+  //     console.log(e.target);
+  //   })
+  // }, [])
+
   return (
     <>
       <MyHelmet />

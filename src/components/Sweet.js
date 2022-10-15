@@ -139,6 +139,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
 
   // 수정, updateDoc
   const onEditing = () => {
+    console.log("onEditing");
     onOnlyEditing(sweetObj.id);
     setEditing(true);
     setNewSweetText(sweetObj.text);

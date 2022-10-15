@@ -11,6 +11,7 @@ import {
 import Comment from "./Comment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faUser } from "@fortawesome/free-solid-svg-icons";
+import notification from "utils/notification";
 
 // sweets 콜렉션에 comments([]) 추가, comments 콜렉션 추가
 
@@ -53,6 +54,14 @@ const SweetComment = ({
 
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       await updateDoc(d, { comments: arrayUnion(docRef.id) });
+
+      notification(
+        "ADD",
+        "sweetComments",
+        sweetObj.creatorId,
+        sweetObj.id,
+        docRef.id,
+      );
 
       setComment("");
     } catch (error) {

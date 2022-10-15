@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell as faBellActivate,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-regular-svg-icons";
 import NavigationStyle from "styles/NavigationStyle";
 import NavigationProfileImage from "styles/NavigationProfileImage";
 
@@ -33,15 +37,36 @@ const Navigation = ({ userObj }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
+  // const [test, setTest] = useState("");
+  // useEffect(() => {
+  //   const q = query(collection(dbService(), "testCollection"));
+  //   console.log(q);
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     console.log(querySnapshot);
+  //     const notice = [];
+  //     querySnapshot.forEach((doc) => {
+  //       notice.push(doc.data().notification.confirmed.sweetLikes);
+  //     });
+  //     setTest(notice);
+  //     console.log(notice);
+  //   });
+  //   console.log(test);
+  // }, []);
 
   return (
     <>
       <NavigationStyle>
-        <ul>
+        <ul id="navContainer">
           <li id="homeLink">
             <Link to="/">
               <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
             </Link>
+          </li>
+          <li id="notification">
+            {/* not Link */}
+            <FontAwesomeIcon icon={faBellActivate} />
+            {/* <FontAwesomeIcon icon={faBell} /> */}
           </li>
           <li id="profileLink">
             <Link id="myProfile" to="/profile">
@@ -61,6 +86,72 @@ const Navigation = ({ userObj }) => {
               )}
               <span>{userName}'s Profile</span>
             </Link>
+          </li>
+        </ul>
+
+        <ul id="notificationList">
+          {/* map */}
+          {/* {true && <li>notification item</li>} */}
+          {/* noticeBtn의 옵션은 알림확인&알림삭제 */}
+          <li>
+            <div className="noticeProfileImage">image</div>
+            <div className="noticeTextContainer">
+              <span>
+                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
+              </span>
+              <span>
+                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
+              </span>
+            </div>
+            <div className="noticeBtn">Button</div>
+          </li>
+          <li>
+            <div className="noticeProfileImage">image</div>
+            <div className="noticeTextContainer">
+              <span>
+                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
+              </span>
+              <span>
+                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
+              </span>
+            </div>
+            <div className="noticeBtn">Button</div>
+          </li>
+          <li>
+            <div className="noticeProfileImage">image</div>
+            <div className="noticeTextContainer">
+              <span>
+                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
+              </span>
+              <span>
+                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
+              </span>
+            </div>
+            <div className="noticeBtn">Button</div>
+          </li>
+          <li>
+            <div className="noticeProfileImage">image</div>
+            <div className="noticeTextContainer">
+              <span>
+                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
+              </span>
+              <span>
+                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
+              </span>
+            </div>
+            <div className="noticeBtn">Button</div>
+          </li>
+          <li>
+            <div className="noticeProfileImage">image</div>
+            <div className="noticeTextContainer">
+              <span>
+                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
+              </span>
+              <span>
+                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
+              </span>
+            </div>
+            <div className="noticeBtn">Button</div>
           </li>
         </ul>
       </NavigationStyle>
