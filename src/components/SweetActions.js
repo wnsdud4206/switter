@@ -30,6 +30,7 @@ import notification from "utils/notification";
 const SweetActoins = ({
   sweetObj,
   onScrollComment,
+  offScrollComment,
   scrollComment,
   commentCount,
 }) => {
@@ -45,12 +46,12 @@ const SweetActoins = ({
       // eslint-disable-next-line no-unused-vars
       const sweetArr = snapshot.docs.forEach((doc) => {
         if (doc.id === sweetObj.id) {
-          const like = doc.data().like;
+          const likes = doc.data().likes;
           // console.log(like)  // 없으면 undefined 반환
-          setLikeCount(like);
+          setLikeCount(likes);
 
-          if (like !== undefined) {
-            const userLike = like.includes(authService().currentUser.uid);
+          if (likes !== undefined) {
+            const userLike = likes.includes(authService().currentUser.uid);
             setCurrentUserLike(userLike);
           }
           return;
@@ -69,11 +70,18 @@ const SweetActoins = ({
 
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
-      await updateDoc(d, { like: arrayUnion(uid) });
+      await updateDoc(d, { likes: arrayUnion(uid) });
 
       // notification(category, field, creatorId, activeId, commentIdOrLikeId);
       // console.log(sweetObj.creatorId, sweetObj.id, uid);
-      notification("ADD", "sweetLikes", sweetObj.creatorId, sweetObj.id, uid);
+      notification(
+        "ADD",
+        "sweetLikes",
+        sweetObj.creatorId,
+        sweetObj.id,
+        uid,
+        null,
+      );
     } catch (error) {
       console.error(error);
     }
@@ -84,9 +92,16 @@ const SweetActoins = ({
 
       const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
-      await updateDoc(d, { like: arrayRemove(uid) });
-      
-      notification("REMOVE", "sweetLikes", sweetObj.creatorId, sweetObj.id, uid);
+      await updateDoc(d, { likes: arrayRemove(uid) });
+
+      notification(
+        "REMOVE",
+        "sweetLikes",
+        sweetObj.creatorId,
+        sweetObj.id,
+        uid,
+        null,
+      );
     } catch (error) {
       console.error(error);
     }
@@ -132,13 +147,15 @@ const SweetActoins = ({
 
       <div className="commentWrap">
         <span className="commentCounter">{commentCount}</span>
-        <button className="commentBtn" onClick={onScrollComment}>
-          {scrollComment ? (
+        {scrollComment ? (
+          <button className="commentBtn" onClick={offScrollComment}>
             <FontAwesomeIcon className="commentShow" icon={faComment} />
-          ) : (
+          </button>
+        ) : (
+          <button className="commentBtn" onClick={onScrollComment}>
             <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
-          )}
-        </button>
+          </button>
+        )}
       </div>
     </SweetActionsStyle>
   );

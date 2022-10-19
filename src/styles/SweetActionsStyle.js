@@ -25,7 +25,7 @@ const SweetActionsStyle = styled.div`
 
     position: relative;
 
-    outline: 1px solid red;
+    /* outline: 1px solid red; */
 
     button {
       outline: none;

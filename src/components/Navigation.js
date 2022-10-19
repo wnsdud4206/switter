@@ -1,5 +1,14 @@
-import { dbService, collection, query, onSnapshot } from "fbase";
-import { useEffect, useState } from "react";
+import {
+  doc,
+  getDoc,
+  dbService,
+  collection,
+  query,
+  onSnapshot,
+  where,
+  authService,
+} from "fbase";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
@@ -10,10 +19,13 @@ import {
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import NavigationStyle from "styles/NavigationStyle";
 import NavigationProfileImage from "styles/NavigationProfileImage";
+import NotificationList from "./NotificationList";
 
 const Navigation = ({ userObj }) => {
   const [userName, setUserName] = useState(userObj.displayName);
   const [userProfileImage, setUserProfileImage] = useState(userObj.photoURL);
+  const [notice, setNotice] = useState({});
+  const [allNotice, setAllNotice] = useState({});
   const [imgError, setImgError] = useState(false);
 
   const onError = () => {
@@ -21,38 +33,92 @@ const Navigation = ({ userObj }) => {
     setImgError(true);
   };
 
+  const getNotification = async () => {
+    const d = doc(dbService(), "users", authService().currentUser.uid);
+    const get = await getDoc(d);
+    console.log(get.data().notification);
+    console.log(
+      Object.assign(
+        get.data().notification.confirmed || {},
+        get.data().notification.unConfirmed || {},
+      ),
+    );
+    /*
+    sweetId >
+        sweetComments(~님이 게시글에 댓글을~),
+        sweetLikes(~님이 게시글에 좋아요를~),
+        commentLikes(~님이 댓글에 좋아요를~),
+    */
+  };
+
   useEffect(() => {
-    const q = query(collection(dbService(), "users"));
-    onSnapshot(q, (snapshot) => {
-      // console.log(snapshot.docs[0].data());
-      // eslint-disable-next-line no-unused-vars
-      const sweetArr = snapshot.docs.forEach((doc) => {
-        if (doc.id === userObj.uid) {
-          setUserName(doc.data().displayName);
-          setUserProfileImage(doc.data().attachmentUrl);
-          return;
-        }
-      });
-    });
+    getNotification();
+
+    // const q = query(
+    //   collection(dbService(), "users"),
+    //   where("uid", "==", authService().currentUser.uid),
+    // );
+    // // 이제 Date.now()가 있으니까 굳이 어렵게 나눌필요는 없을듯
+    // onSnapshot(q, (snapshot) => {
+    //   // eslint-disable-next-line no-unused-vars
+    //   const sweetArr = snapshot.docs.forEach((doc) => {
+    //     let sweetIdObj = doc.data().notification?.confirmed || {};
+    //     setUserName(doc.data().displayName);
+    //     setUserProfileImage(doc.data().attachmentUrl);
+    //     // console.log(doc.data().notification);
+    //     setNotice(doc.data().notification);
+
+    //     for (const [key, value] of Object.entries(
+    //       doc.data().notification?.unConfirmed || {},
+    //     )) {
+    //       console.log(value.sweetLikes);
+    //       sweetIdObj[key] = {
+    //         ...(sweetIdObj[key] || {}),
+    //         sweetComments: { ...(value.sweetComments || {}) },
+    //         sweetLikes: { ...(value.sweetLikes || {}) },
+    //       };
+
+    //       for (const [commentKey, commentValue] of Object.entries(
+    //         doc.data().notification?.unConfirmed[key].commentLikes || {},
+    //       )) {
+    //         sweetIdObj[key].commentLikes = {
+    //           ...(sweetIdObj[key].commentLikes || {}),
+    //           [commentKey]: commentValue || [],
+    //         };
+    //       }
+    //     }
+
+    //     console.log(sweetIdObj);
+    //     setAllNotice(sweetIdObj);
+    //     return;
+    //   });
+    // });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
-  // const [test, setTest] = useState("");
-  // useEffect(() => {
-  //   const q = query(collection(dbService(), "testCollection"));
-  //   console.log(q);
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     console.log(querySnapshot);
-  //     const notice = [];
-  //     querySnapshot.forEach((doc) => {
-  //       notice.push(doc.data().notification.confirmed.sweetLikes);
-  //     });
-  //     setTest(notice);
-  //     console.log(notice);
-  //   });
-  //   console.log(test);
-  // }, []);
+
+  // 임시로 useEffect, 나중에 notice 를 열면 가져오게끔 해보기(느리면 걍 useEffect로?)
+  const getNotice = useCallback(() => {
+    const q = query(collection(dbService(), "sweets"));
+    onSnapshot(q, (snapshot) => {
+      // eslint-disable-next-line no-unused-vars
+      const sweetArr = snapshot.docs.forEach((doc) => {
+        // console.log(doc.data());
+        return;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    getNotice();
+
+    // console.log(allNotice);
+    // for (const [key, value] of Object.entries(allNotice || {})) {
+    //   console.log(key); // sweetId
+    // }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allNotice]);
 
   return (
     <>
@@ -89,71 +155,7 @@ const Navigation = ({ userObj }) => {
           </li>
         </ul>
 
-        <ul id="notificationList">
-          {/* map */}
-          {/* {true && <li>notification item</li>} */}
-          {/* noticeBtn의 옵션은 알림확인&알림삭제 */}
-          <li>
-            <div className="noticeProfileImage">image</div>
-            <div className="noticeTextContainer">
-              <span>
-                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
-              </span>
-              <span>
-                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
-              </span>
-            </div>
-            <div className="noticeBtn">Button</div>
-          </li>
-          <li>
-            <div className="noticeProfileImage">image</div>
-            <div className="noticeTextContainer">
-              <span>
-                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
-              </span>
-              <span>
-                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
-              </span>
-            </div>
-            <div className="noticeBtn">Button</div>
-          </li>
-          <li>
-            <div className="noticeProfileImage">image</div>
-            <div className="noticeTextContainer">
-              <span>
-                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
-              </span>
-              <span>
-                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
-              </span>
-            </div>
-            <div className="noticeBtn">Button</div>
-          </li>
-          <li>
-            <div className="noticeProfileImage">image</div>
-            <div className="noticeTextContainer">
-              <span>
-                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
-              </span>
-              <span>
-                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
-              </span>
-            </div>
-            <div className="noticeBtn">Button</div>
-          </li>
-          <li>
-            <div className="noticeProfileImage">image</div>
-            <div className="noticeTextContainer">
-              <span>
-                <b>nickName</b>님이 <b>/게시글&댓글/</b>에
-              </span>
-              <span>
-                <b>/좋아요&댓글/</b>를 /눌렀&달았/습니다.
-              </span>
-            </div>
-            <div className="noticeBtn">Button</div>
-          </li>
-        </ul>
+        <NotificationList notice={notice} />
       </NavigationStyle>
     </>
   );

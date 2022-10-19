@@ -17,6 +17,7 @@ const SweetContent = ({
   onCloseUpImg,
   sweetContentRef,
   onScrollComment,
+  offScrollComment,
   scrollComment,
   showComment,
   comments,
@@ -81,6 +82,7 @@ const SweetContent = ({
         <SweetActoins
           sweetObj={sweetObj}
           onScrollComment={onScrollComment}
+          offScrollComment={offScrollComment}
           scrollComment={scrollComment}
           commentCount={comments.length}
         />

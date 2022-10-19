@@ -33,18 +33,19 @@ const CommentContent = ({
         const { uid } = authService().currentUser;
         notification(
           "REMOVE",
-          "commentLikes",
-          commentObj.creatorId,
-          commentObj.id,
-          uid,
-        );
-        notification(
-          "REMOVE",
           "sweetComments",
-          sweetObj.creatorId,
+          commentObj.creatorId,
           sweetObj.id,
+          uid,
           commentObj.id,
         );
+        // notification(
+        //   "REMOVE",
+        //   "sweetComments",
+        //   sweetObj.creatorId,
+        //   sweetObj.id,
+        //   commentObj.id,
+        // );
         // }, 250);
       } catch (error) {
         console.error(error);
@@ -70,7 +71,7 @@ const CommentContent = ({
 
       <p className="commentText">{commentObj.text}</p>
 
-      <CommentActions commentObj={commentObj} />
+      <CommentActions commentObj={commentObj} sweetObj={sweetObj} />
     </CommentContentStyle>
   );
 };

@@ -60,6 +60,7 @@ const SweetComment = ({
         "sweetComments",
         sweetObj.creatorId,
         sweetObj.id,
+        null,
         docRef.id,
       );
 

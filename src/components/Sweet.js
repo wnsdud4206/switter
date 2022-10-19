@@ -16,6 +16,7 @@ import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
 import SweetContent from "./SweetContent";
 import CloseUpImgContainer from "./CloseUpImgContainer";
+import notification from "utils/notification";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
@@ -90,13 +91,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
     getComments();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    editing,
-    scrollComment,
-    showComment,
-    comments.length,
-    commentEditResize,
-  ]);
+  }, [editing, scrollComment, showComment, comments.length, commentEditResize]);
 
   useEffect(() => {
     getUserName();
@@ -118,6 +113,15 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
           const r = ref(storageService(), sweetObj.attachmentUrl);
           await deleteObject(r);
         }
+
+        notification(
+          "REMOVE",
+          "all",
+          sweetObj.creatorId,
+          sweetObj.id,
+          null,
+          null,
+        );
       }, 250);
     }
     // } catch (error) {
@@ -133,6 +137,8 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   useEffect(() => {
     if (onlyEditing !== sweetObj.id && editing) {
       setEditing(false);
+    } else if (onlyEditing !== sweetObj.id && scrollComment) {
+      setScrollComment(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onlyEditing]);
@@ -148,7 +154,6 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
     setEditing(false);
     onOnlyEditing("");
   };
-
 
   const onCommentEditResizeToggle = () => {
     setCommentEditResize((prev) => !prev);
@@ -170,7 +175,12 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   };
 
   const onScrollComment = () => {
-    setScrollComment((prev) => (prev = !prev));
+    onOnlyEditing(sweetObj.id);
+    setScrollComment(true);
+  };
+  const offScrollComment = () => {
+    onOnlyEditing("");
+    setScrollComment(false);
   };
 
   return (
@@ -199,6 +209,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
                 onCloseUpImg={onCloseUpImg}
                 sweetContentRef={sweetContentRef}
                 onScrollComment={onScrollComment}
+                offScrollComment={offScrollComment}
                 scrollComment={scrollComment}
                 showComment={showComment}
                 comments={comments}

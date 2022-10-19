@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import notification from "utils/notification";
 
-const CommentActions = ({ commentObj }) => {
+const CommentActions = ({ commentObj, sweetObj }) => {
   const [commentLikeCount, setCommentLikeCount] = useState(commentObj.like);
   const [currentUserCommentLike, setCurrentUserCommentLike] = useState(false);
 
@@ -27,12 +27,12 @@ const CommentActions = ({ commentObj }) => {
       // eslint-disable-next-line no-unused-vars
       const sweetArr = snapshot.docs.forEach((doc) => {
         if (doc.id === commentObj.id) {
-          const like = doc.data().like;
+          const likes = doc.data().likes;
           // console.log(like)  // 없으면 undefined 반환
-          setCommentLikeCount(like);
+          setCommentLikeCount(likes);
 
-          if (like !== undefined) {
-            const userLike = like.includes(authService().currentUser.uid);
+          if (likes !== undefined) {
+            const userLike = likes.includes(authService().currentUser.uid);
             setCurrentUserCommentLike(userLike);
           }
           return;
@@ -49,23 +49,26 @@ const CommentActions = ({ commentObj }) => {
       const d = doc(dbService(), "comments", `${commentObj.id}`);
 
       if (!currentUserCommentLike) {
-        await updateDoc(d, { like: arrayUnion(uid) });
+        await updateDoc(d, { likes: arrayUnion(uid) });
 
         notification(
           "ADD",
           "commentLikes",
           commentObj.creatorId,
-          commentObj.id,
+          sweetObj.id,
           uid,
+          commentObj.id
         );
       } else if (currentUserCommentLike) {
-        await updateDoc(d, { like: arrayRemove(uid) });
+        await updateDoc(d, { likes: arrayRemove(uid) });
+
         notification(
           "REMOVE",
           "commentLikes",
           commentObj.creatorId,
-          commentObj.id,
+          sweetObj.id,
           uid,
+          commentObj.id
         );
       }
     } catch (error) {
