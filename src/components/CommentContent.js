@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   dbService,
   doc,
+  setDoc,
+  deleteField,
+  deleteDoc,
   updateDoc,
   arrayRemove,
-  deleteDoc,
-  authService,
 } from "fbase";
 import CommentContentStyle from "styles/CommentContentStyle";
-import notification from "utils/notification";
 import CommentActions from "./CommentActions";
 
 const CommentContent = ({
@@ -24,21 +24,33 @@ const CommentContent = ({
     if (ok) {
       try {
         // setTimeout(async () => {
-        const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-        await updateDoc(d, { comments: arrayRemove(commentObj.id) });
+        const sweetDoc = doc(dbService(), "sweets", `${sweetObj.id}`);
+        await updateDoc(sweetDoc, { comments: arrayRemove(commentObj.id) });
+
+        const noticeDoc = doc(dbService(), "notifications", `${sweetObj.id}`);
+        await setDoc(
+          noticeDoc,
+          {
+            sweetComments: { [commentObj.id]: deleteField() },
+            commentLikes: {
+              [commentObj.id]: deleteField(),
+            },
+          },
+          { merge: true },
+        );
 
         const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
         await deleteDoc(commentDoc);
 
-        const { uid } = authService().currentUser;
-        notification(
-          "REMOVE",
-          "sweetComments",
-          commentObj.creatorId,
-          sweetObj.id,
-          uid,
-          commentObj.id,
-        );
+        // const { uid } = authService().currentUser;
+        // notification(
+        //   "REMOVE",
+        //   "sweetComments",
+        //   commentObj.creatorId,
+        //   sweetObj.id,
+        //   uid,
+        //   commentObj.id,
+        // );
         // notification(
         //   "REMOVE",
         //   "sweetComments",

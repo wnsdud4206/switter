@@ -210,11 +210,25 @@ const notification = async (
         {
           unConfirmed: {
             [sweetId]: {
-              [field]: {
-                [field === "sweetLikes" ? id : commentId]:
-                  field === "commentLikes" ? { [id]: Date.now() } : Date.now(),
-              },
+              [field]:
+                field === "commentLikes"
+                  ? {
+                      [commentId]: {
+                        id: arrayUnion(id),
+                        lastUpdate: Date.now(),
+                      },
+                    }
+                  : {
+                      id: arrayUnion(
+                        field === "sweetComments" ? commentId : id,
+                      ),
+                      lastUpdate: Date.now(),
+                    },
             },
+            // {
+            //   [field === "sweetLikes" ? id : commentId]:
+            //     field === "commentLikes" ? { [id]: Date.now() } : Date.now(),
+            // },
           },
         },
         { merge: true },
@@ -225,7 +239,8 @@ const notification = async (
         field === "sweetComments"
           ? {
               [field]: {
-                [commentId]: deleteField(),
+                id: arrayRemove(commentId),
+                // lastUpdate: Date.now()
               },
               commentLikes: {
                 [commentId]: deleteField(),
@@ -234,8 +249,8 @@ const notification = async (
           : {
               [field]:
                 field === "sweetLikes"
-                  ? { [id]: deleteField() }
-                  : { [commentId]: { [id]: deleteField() } },
+                  ? { id: arrayRemove(id) }
+                  : { [commentId]: { id: arrayRemove(id) } },
             };
 
       await setDoc(
@@ -271,10 +286,16 @@ const notification = async (
         field === "all"
           ? get.data().unConfirmed
           : field === "commentLikes"
-          ? get.data().unConfirmed[sweetId][field][commentId][id]
-          : get.data().unConfirmed[sweetId][field][
-              field === "sweetLikes" ? id : commentId
-            ];
+          ? get.data().unConfirmed[sweetId][field][commentId]
+          : get.data().unConfirmed[sweetId][field];
+      // const data =
+      //   field === "all"
+      //     ? get.data().unConfirmed
+      //     : field === "commentLikes"
+      //     ? get.data().unConfirmed[sweetId][field][commentId][id]
+      //     : get.data().unConfirmed[sweetId][field][
+      //         field === "sweetLikes" ? id : commentId
+      //       ];
 
       await setDoc(
         d,
@@ -283,20 +304,20 @@ const notification = async (
           : {
               unConfirmed: {
                 [sweetId]: {
-                  [field]: {
-                    [field === "sweetLikes" ? id : commentId]:
-                      field === "commentLikes"
-                        ? { [id]: deleteField() }
-                        : deleteField(),
-                  },
+                  [field]:
+                    field === "commentLikes"
+                      ? { [commentId]: deleteField() }
+                      : deleteField(),
                 },
               },
               confirmed: {
                 [sweetId]: {
-                  [field]: {
-                    [field === "sweetLikes" ? id : commentId]:
-                      field === "commentLikes" ? { [id]: data } : data,
-                  },
+                  [field]:
+                    field === "commentLikes" ? { [commentId]: arrayUnion(data) } : arrayUnion(data),
+                  // {
+                  //   [field === "sweetLikes" ? id : commentId]:
+                  //     field === "commentLikes" ? { [id]: data } : data,
+                  // },
                 },
               },
             },
@@ -306,6 +327,109 @@ const notification = async (
     default:
       return console.log(`${category} is not available.`);
   }
+  // switch (category) {
+  //   case "ADD":
+  //     await setDoc(
+  //       d,
+  //       {
+  //         unConfirmed: {
+  //           [sweetId]: {
+  //             [field]: {
+  //               [field === "sweetLikes" ? id : commentId]:
+  //                 field === "commentLikes" ? { [id]: Date.now() } : Date.now(),
+  //             },
+  //           },
+  //         },
+  //       },
+  //       { merge: true },
+  //     );
+  //     return;
+  //   case "REMOVE":
+  //     const deleteRoute =
+  //       field === "sweetComments"
+  //         ? {
+  //             [field]: {
+  //               [commentId]: deleteField(),
+  //             },
+  //             commentLikes: {
+  //               [commentId]: deleteField(),
+  //             },
+  //           }
+  //         : {
+  //             [field]:
+  //               field === "sweetLikes"
+  //                 ? { [id]: deleteField() }
+  //                 : { [commentId]: { [id]: deleteField() } },
+  //           };
+
+  //     await setDoc(
+  //       d,
+  //       field === "all"
+  //         ? sweetId
+  //           ? {
+  //               unConfirmed: {
+  //                 [sweetId]: deleteField(),
+  //               },
+  //               confirmed: {
+  //                 [sweetId]: deleteField(),
+  //               },
+  //             }
+  //           : {
+  //               unConfirmed: deleteField(),
+  //               confirmed: deleteField(),
+  //             }
+  //         : {
+  //             unConfirmed: {
+  //               [sweetId]: deleteRoute,
+  //             },
+  //             confirmed: {
+  //               [sweetId]: deleteRoute,
+  //             },
+  //           },
+  //       { merge: true },
+  //     );
+  //     return;
+  //   case "CONFIRM":
+  //     const get = await getDoc(d);
+  //     const data =
+  //       field === "all"
+  //         ? get.data().unConfirmed
+  //         : field === "commentLikes"
+  //         ? get.data().unConfirmed[sweetId][field][commentId][id]
+  //         : get.data().unConfirmed[sweetId][field][
+  //             field === "sweetLikes" ? id : commentId
+  //           ];
+
+  //     await setDoc(
+  //       d,
+  //       field === "all"
+  //         ? { unConfirmed: deleteField(), confirmed: data }
+  //         : {
+  //             unConfirmed: {
+  //               [sweetId]: {
+  //                 [field]: {
+  //                   [field === "sweetLikes" ? id : commentId]:
+  //                     field === "commentLikes"
+  //                       ? { [id]: deleteField() }
+  //                       : deleteField(),
+  //                 },
+  //               },
+  //             },
+  //             confirmed: {
+  //               [sweetId]: {
+  //                 [field]: {
+  //                   [field === "sweetLikes" ? id : commentId]:
+  //                     field === "commentLikes" ? { [id]: data } : data,
+  //                 },
+  //               },
+  //             },
+  //           },
+  //       { merge: true },
+  //     );
+  //     return;
+  //   default:
+  //     return console.log(`${category} is not available.`);
+  // }
 };
 
 export default notification;

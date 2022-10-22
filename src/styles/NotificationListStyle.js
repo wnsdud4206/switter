@@ -9,6 +9,7 @@ const NotificationListStyle = styled.ul`
   background-color: #222;
 
   width: 85%;
+  max-height: 80vh;
 
   margin: 0;
   padding: 0 8px;

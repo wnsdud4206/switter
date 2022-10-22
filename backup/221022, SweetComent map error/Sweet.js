@@ -11,7 +11,6 @@ import {
   collection,
   where,
   onSnapshot,
-  getDocs,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
@@ -90,11 +89,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
       setSweetSize(height);
     }
   }, [editing, scrollComment]);
-
   useEffect(() => {
-    // if (sweetObj.likes || sweetObj.comment) {
-    //   console.log(sweetObj);
-    // }
     getComments();
     sweetSizing();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,53 +105,33 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
     // try {
     const ok = window.confirm("Are you sure you want to delete this sweet?");
     if (ok) {
-      try {
-        setDeleteBox(true);
-        setTimeout(async () => {
-          const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-          const get = await getDoc(d);
+      setDeleteBox(true);
+      setTimeout(async () => {
+        const d = doc(dbService(), "sweets", `${sweetObj.id}`);
+        const get = await getDoc(d);
+        const commentObj = Object.keys(get.data().comments);
+        for (let comment of commentObj) {
+          let commentDoc = doc(dbService(), "comments", `${comment}`);
+          await deleteDoc(commentDoc);
+        }
 
-          const commentObj = get.data().comments;
-          for (let comment of commentObj) {
-            let commentDoc = doc(dbService(), "comments", `${comment}`);
-            await deleteDoc(commentDoc);
-          }
+        await deleteDoc(d);
 
-          // const commentQuery = query(
-          //   collection(dbService(), "comments"),
-          //   where("creatorId", "==", sweetObj.id),
-          // );
-          // const commentDoc = await getDocs(commentQuery);
-          // commentDoc.forEach(async (doc) => {
-          //   const comment = doc(dbService(), "comments", doc.id);
-          //   console.log(comment);
-          //   await deleteDoc(comment);
-          // });
+        if (sweetObj.attachmentUrl) {
+          // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 sweet을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
+          const r = ref(storageService(), sweetObj.attachmentUrl);
+          await deleteObject(r);
+        }
 
-          // new
-          const noticeDoc = doc(dbService(), "notifications", `${sweetObj.id}`);
-
-          await deleteDoc(noticeDoc);
-          await deleteDoc(d);
-
-          if (sweetObj.attachmentUrl) {
-            // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 sweet을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
-            const r = ref(storageService(), sweetObj.attachmentUrl);
-            await deleteObject(r);
-          }
-
-          // notification(
-          //   "REMOVE",
-          //   "all",
-          //   sweetObj.creatorId,
-          //   sweetObj.id,
-          //   null,
-          //   null,
-          // );
-        }, 250);
-      } catch (error) {
-        console.error(error);
-      }
+        // notification(
+        //   "REMOVE",
+        //   "all",
+        //   sweetObj.creatorId,
+        //   sweetObj.id,
+        //   null,
+        //   null,
+        // );
+      }, 250);
     }
     // } catch (error) {
     //   console.error(error);

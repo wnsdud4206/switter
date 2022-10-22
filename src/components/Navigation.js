@@ -33,26 +33,27 @@ const Navigation = ({ userObj }) => {
     setImgError(true);
   };
 
-  const getNotification = async () => {
-    const d = doc(dbService(), "users", authService().currentUser.uid);
-    const get = await getDoc(d);
-    console.log(get.data().notification);
-    console.log(
-      Object.assign(
-        get.data().notification.confirmed || {},
-        get.data().notification.unConfirmed || {},
-      ),
-    );
-    /*
-    sweetId >
-        sweetComments(~님이 게시글에 댓글을~),
-        sweetLikes(~님이 게시글에 좋아요를~),
-        commentLikes(~님이 댓글에 좋아요를~),
-    */
-  };
+  // const getNotification = async () => {
+  //   const userDoc = doc(dbService(), "users", authService().currentUser.uid);
+  //   const get = await getDoc(userDoc);
+  //   const notification = Object.assign(
+  //     get.data().notification.confirmed || {},
+  //     get.data().notification.unConfirmed || {},
+  //   );
+  //   console.log(notification);
+  //   /*
+  //   확인 하고 안하고의 여부를 나눠야 하나?
+  //   삭제&확인으로 나누지 말고 확인하면 삭제하도록?
+    
+  //   sweetId(각각 sweet마다, 한 sweet에서 나올 수 있는 알림 2개, comment는 1개) >
+  //     sweetComments(n명이 내 게시글에 댓글을~),
+  //     sweetLikes(n명이 내 게시글에 좋아요를~),
+  //     commentLikes(n명이 내 댓글에 좋아요를~),
+  //   */
+  // };
 
   useEffect(() => {
-    getNotification();
+    // getNotification();
 
     // const q = query(
     //   collection(dbService(), "users"),

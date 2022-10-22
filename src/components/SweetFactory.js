@@ -48,11 +48,17 @@ const SweetFactory = ({ userObj }) => {
         // image url 다운
         attachmentUrl = await getDownloadURL(attachmentRef);
       }
+
+      
+      
       const sweetObj = {
         text: sweet,
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
+        comments: [],
+        // likes: {},
+        // notificationId
         // displayName: authService().currentUser.displayName,
         // id: uuidv4()
       };

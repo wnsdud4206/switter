@@ -9,33 +9,49 @@ import {
   onSnapshot,
   authService,
   doc,
+  setDoc,
   updateDoc,
-  arrayUnion,
-  arrayRemove,
+  deleteField,
 } from "fbase";
 import { useEffect, useState } from "react";
-import notification from "utils/notification";
 
 const CommentActions = ({ commentObj, sweetObj }) => {
-  const [commentLikeCount, setCommentLikeCount] = useState(commentObj.like);
+  const [commentLikeCount, setCommentLikeCount] = useState([]);
   const [currentUserCommentLike, setCurrentUserCommentLike] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(dbService(), "comments"));
+    const q = query(collection(dbService(), "notifications"));
     onSnapshot(q, (snapshot) => {
       // console.log(snapshot.docs[0].data());
       // eslint-disable-next-line no-unused-vars
-      const sweetArr = snapshot.docs.forEach((doc) => {
-        if (doc.id === commentObj.id) {
-          const likes = doc.data().likes;
-          // console.log(like)  // 없으면 undefined 반환
-          setCommentLikeCount(likes);
-
-          if (likes !== undefined) {
+      snapshot.docs.forEach((doc) => {
+        if (doc.id === sweetObj.id) {
+          /* --------------20221022------------------ */
+          if (
+            doc.data().commentLikes !== undefined &&
+            doc.data().commentLikes !== null
+          ) {
+            const likes =
+              Object.keys(doc.data()?.commentLikes[commentObj.id]) || []; // array로
+            console.log(likes);
             const userLike = likes.includes(authService().currentUser.uid);
+
+            setCommentLikeCount(likes);
             setCurrentUserCommentLike(userLike);
+            /* ------------------------------ */
+            
+            // const likes = doc.data().likes || {};
+            // // console.log(like)  // 없으면 undefined 반환
+            // setCommentLikeCount(Object.keys(likes).length);
+
+            // if (likes !== undefined) {
+            //   const userLike = Object.keys(likes).includes(
+            //     authService().currentUser.uid,
+            //   );
+            //   setCurrentUserCommentLike(userLike);
+            // }
+            return;
           }
-          return;
         }
       });
     });
@@ -46,30 +62,57 @@ const CommentActions = ({ commentObj, sweetObj }) => {
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "comments", `${commentObj.id}`);
+      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
 
       if (!currentUserCommentLike) {
-        await updateDoc(d, { likes: arrayUnion(uid) });
-
-        notification(
-          "ADD",
-          "commentLikes",
-          commentObj.creatorId,
-          sweetObj.id,
-          uid,
-          commentObj.id
+        await setDoc(
+          d,
+          {
+            commentLikes: {
+              [commentObj.id]: {
+                [uid]: { confirmed: false, lastUpdate: Date.now() },
+              },
+            },
+          },
+          { merge: true },
         );
+        // await updateDoc(
+        //   d,
+        //   {
+        //     likes: { [uid]: { confirmed: false, lastUpdate: Date.now() } },
+        //   },
+        //   { merge: true },
+        // );
+
+        // notification(
+        //   "ADD",
+        //   "commentLikes",
+        //   commentObj.creatorId,
+        //   sweetObj.id,
+        //   uid,
+        //   commentObj.id,
+        // );
       } else if (currentUserCommentLike) {
-        await updateDoc(d, { likes: arrayRemove(uid) });
-
-        notification(
-          "REMOVE",
-          "commentLikes",
-          commentObj.creatorId,
-          sweetObj.id,
-          uid,
-          commentObj.id
+        await setDoc(
+          d,
+          {
+            commentLikes: {
+              [commentObj.id]: {
+                [uid]: deleteField(),
+              },
+            },
+          },
+          { merge: true },
         );
+
+        // notification(
+        //   "REMOVE",
+        //   "commentLikes",
+        //   commentObj.creatorId,
+        //   sweetObj.id,
+        //   uid,
+        //   commentObj.id,
+        // );
       }
     } catch (error) {
       console.error(error);
@@ -86,9 +129,7 @@ const CommentActions = ({ commentObj, sweetObj }) => {
         )}
       </button>
 
-      <span className="commentLikeCounter">
-        {commentLikeCount && commentLikeCount.length}
-      </span>
+      <span className="commentLikeCounter">{commentLikeCount.length}</span>
     </CommentActionsStyle>
   );
 };

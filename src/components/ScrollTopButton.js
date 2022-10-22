@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import ScrollTopButtonStyle from "styles/ScrollTopButtonStyle";
 
 const ScrollTopButton = () => {
-  const [scrollY, setScrollY] = useState(window.scrollY);
+  // const [scrollY, setScrollY] = useState(window.scrollY);
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   const onScrollTop = () => {
@@ -35,7 +35,7 @@ const ScrollTopButton = () => {
     return () => {
       window.addEventListener("scroll", onShowTopBtn, true);
     };
-  }, [onShowTopBtn, scrollY]);
+  }, [onShowTopBtn]);
 
   return (
     <>

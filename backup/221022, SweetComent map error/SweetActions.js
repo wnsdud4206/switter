@@ -17,12 +17,8 @@ import {
   deleteField,
   authService,
   query,
-  where,
   collection,
   onSnapshot,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
 } from "fbase";
 
 /*
@@ -36,48 +32,36 @@ const SweetActoins = ({
   scrollComment,
   commentCount,
 }) => {
-  const [likeCount, setLikeCount] = useState([]);
+  const [likeCount, setLikeCount] = useState(sweetObj.likes || {});
   const [currentUserLike, setCurrentUserLike] = useState(false);
 
   // console.log(useSnapshot(sweetObj));
 
-  // sweetLikes read
   useEffect(() => {
-    // const q = query(collection(dbService(), "sweets"));
-    // onSnapshot(q, (snapshot) => {
-    //   // eslint-disable-next-line no-unused-vars
-    //   const sweetArr = snapshot.docs.forEach((doc) => {
-    //     if (doc.id === sweetObj.id) {
-    //       const likes = doc.data().likes;
-    //       // console.log(likes); // 없으면 undefined 반환
-    //       setLikeCount(likes);
-
-    //       if (likes?.length) {
-    //         const userLike = likes?.includes(authService().currentUser.uid);
-    //         setCurrentUserLike(userLike);
-    //       }
-    //       return;
-    //     }
-    //   });
-    // });
-
-    const q = query(collection(dbService(), "notifications"));
+    const q = query(collection(dbService(), "sweets"));
     onSnapshot(q, (snapshot) => {
+      // console.log(snapshot.docs[0].data());
       // eslint-disable-next-line no-unused-vars
       const sweetArr = snapshot.docs.forEach((doc) => {
         if (doc.id === sweetObj.id) {
-          const likes = doc.data()?.sweetLikes
-            ? Object.keys(doc.data().sweetLikes)
-            : []; // array로
-          const userLike = likes.includes(authService().currentUser.uid);
-
+          const likes = doc.data().likes || {};
           // console.log(likes); // 없으면 undefined 반환
+          // console.log(doc.id)
+          // console.log(sweetObj.id)
           setLikeCount(likes);
-          setCurrentUserLike(userLike);
+
+          if (likes !== undefined && likes !== null) {
+            const userLike = Object.keys(likes).includes(
+              authService().currentUser.uid,
+            );
+            setCurrentUserLike(userLike);
+          }
           return;
         }
       });
     });
+
+    // 이거랑 setCurrentUserLike랑 무한하게 불려짐, 끊기는느낌, 한박자느린느낌, deps 때문인것 같긴 한데 없으면 제대로 작동하지 않음 - https://kr.coderbridge.com/questions/ee895ba7bea54f5bba2fbdd1036d9a82 참고해보기
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -86,11 +70,11 @@ const SweetActoins = ({
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
+      const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await setDoc(
         d,
-        { sweetLikes: { [uid]: { confirmed: false, lastUpdate: Date.now() } } },
+        { likes: { [uid]: { confirmed: false, lastUpdate: Date.now() } } },
         { merge: true },
       );
       // await updateDoc(d, { likes: arrayUnion(uid) });
@@ -113,13 +97,9 @@ const SweetActoins = ({
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
+      const d = doc(dbService(), "sweets", `${sweetObj.id}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
-      await setDoc(
-        d,
-        { sweetLikes: { [uid]: deleteField() } },
-        { merge: true },
-      );
+      await setDoc(d, { likes: { [uid]: deleteField() } }, { merge: true });
       // await updateDoc(d, { likes: arrayRemove(uid) });
 
       // notification(
@@ -168,7 +148,7 @@ const SweetActoins = ({
           </button>
         </div>
 
-        <span className="likeCounter">{likeCount.length}</span>
+        <span className="likeCounter">{Object.keys(likeCount).length}</span>
       </div>
 
       {/* 여기에 상태창 나타났다 지워지는 로직 구현하기(ex. 좋아요를 눌렀습니다., 댓글 보는중...) */}

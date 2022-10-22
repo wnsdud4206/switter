@@ -25,6 +25,8 @@ const Comment = ({
   const getCommentUser = async () => {
     const d = doc(dbService(), "users", `${commentObj.creatorId}`);
     const docSnap = await getDoc(d);
+    // console.log(docSnap.data().displayName);
+    // console.log(docSnap.data().attachmentUrl);
     setCommentName(docSnap.data().displayName);
     setCommentAttachmentUrl(docSnap.data().attachmentUrl);
   };

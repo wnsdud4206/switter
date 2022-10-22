@@ -16,6 +16,8 @@ const SweetContainerStyle = styled.div`
 
   /* height: 550px; */
 
+  padding-bottom: 30vh;
+
   /* outline: 1px solid white; */
 
   div#sweetList {
