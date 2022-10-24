@@ -1,14 +1,4 @@
-import {
-  doc,
-  getDoc,
-  dbService,
-  collection,
-  query,
-  onSnapshot,
-  where,
-  authService,
-} from "fbase";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
@@ -16,110 +6,16 @@ import {
   faBell as faBellActivate,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBell } from "@fortawesome/free-regular-svg-icons";
 import NavigationStyle from "styles/NavigationStyle";
 import NavigationProfileImage from "styles/NavigationProfileImage";
 import NotificationList from "./NotificationList";
 
 const Navigation = ({ userObj }) => {
-  const [userName, setUserName] = useState(userObj.displayName);
-  const [userProfileImage, setUserProfileImage] = useState(userObj.photoURL);
-  const [notice, setNotice] = useState({});
-  const [allNotice, setAllNotice] = useState({});
   const [imgError, setImgError] = useState(false);
 
   const onError = () => {
-    // 이미지 깨지면 대체
     setImgError(true);
   };
-
-  // const getNotification = async () => {
-  //   const userDoc = doc(dbService(), "users", authService().currentUser.uid);
-  //   const get = await getDoc(userDoc);
-  //   const notification = Object.assign(
-  //     get.data().notification.confirmed || {},
-  //     get.data().notification.unConfirmed || {},
-  //   );
-  //   console.log(notification);
-  //   /*
-  //   확인 하고 안하고의 여부를 나눠야 하나?
-  //   삭제&확인으로 나누지 말고 확인하면 삭제하도록?
-    
-  //   sweetId(각각 sweet마다, 한 sweet에서 나올 수 있는 알림 2개, comment는 1개) >
-  //     sweetComments(n명이 내 게시글에 댓글을~),
-  //     sweetLikes(n명이 내 게시글에 좋아요를~),
-  //     commentLikes(n명이 내 댓글에 좋아요를~),
-  //   */
-  // };
-
-  useEffect(() => {
-    // getNotification();
-
-    // const q = query(
-    //   collection(dbService(), "users"),
-    //   where("uid", "==", authService().currentUser.uid),
-    // );
-    // // 이제 Date.now()가 있으니까 굳이 어렵게 나눌필요는 없을듯
-    // onSnapshot(q, (snapshot) => {
-    //   // eslint-disable-next-line no-unused-vars
-    //   const sweetArr = snapshot.docs.forEach((doc) => {
-    //     let sweetIdObj = doc.data().notification?.confirmed || {};
-    //     setUserName(doc.data().displayName);
-    //     setUserProfileImage(doc.data().attachmentUrl);
-    //     // console.log(doc.data().notification);
-    //     setNotice(doc.data().notification);
-
-    //     for (const [key, value] of Object.entries(
-    //       doc.data().notification?.unConfirmed || {},
-    //     )) {
-    //       console.log(value.sweetLikes);
-    //       sweetIdObj[key] = {
-    //         ...(sweetIdObj[key] || {}),
-    //         sweetComments: { ...(value.sweetComments || {}) },
-    //         sweetLikes: { ...(value.sweetLikes || {}) },
-    //       };
-
-    //       for (const [commentKey, commentValue] of Object.entries(
-    //         doc.data().notification?.unConfirmed[key].commentLikes || {},
-    //       )) {
-    //         sweetIdObj[key].commentLikes = {
-    //           ...(sweetIdObj[key].commentLikes || {}),
-    //           [commentKey]: commentValue || [],
-    //         };
-    //       }
-    //     }
-
-    //     console.log(sweetIdObj);
-    //     setAllNotice(sweetIdObj);
-    //     return;
-    //   });
-    // });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // 임시로 useEffect, 나중에 notice 를 열면 가져오게끔 해보기(느리면 걍 useEffect로?)
-  const getNotice = useCallback(() => {
-    const q = query(collection(dbService(), "sweets"));
-    onSnapshot(q, (snapshot) => {
-      // eslint-disable-next-line no-unused-vars
-      const sweetArr = snapshot.docs.forEach((doc) => {
-        // console.log(doc.data());
-        return;
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    getNotice();
-
-    // console.log(allNotice);
-    // for (const [key, value] of Object.entries(allNotice || {})) {
-    //   console.log(key); // sweetId
-    // }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allNotice]);
 
   return (
     <>
@@ -137,10 +33,10 @@ const Navigation = ({ userObj }) => {
           </li>
           <li id="profileLink">
             <Link id="myProfile" to="/profile">
-              {userProfileImage && !imgError ? (
+              {userObj.photoURL && !imgError ? (
                 <NavigationProfileImage>
                   <img
-                    src={userProfileImage}
+                    src={userObj.photoURL}
                     width="50px"
                     height="50px"
                     style={{ borderRadius: "50%" }}
@@ -151,12 +47,12 @@ const Navigation = ({ userObj }) => {
               ) : (
                 <FontAwesomeIcon id="profileicon" icon={faUser} />
               )}
-              <span>{userName}'s Profile</span>
+              <span>{userObj.displayName}'s Profile</span>
             </Link>
           </li>
         </ul>
 
-        <NotificationList notice={notice} />
+        <NotificationList userObj={userObj} />
       </NavigationStyle>
     </>
   );

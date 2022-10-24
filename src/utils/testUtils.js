@@ -1,6 +1,7 @@
 import { getNodeText } from "@testing-library/react";
 import { dbService } from "fbase";
 import {
+  authService,
   deleteField,
   doc,
   setDoc,
@@ -14,23 +15,32 @@ import {
   where,
   onSnapshot,
   addDoc,
-  deleteDoc
+  deleteDoc,
 } from "fbase";
 
 const testUtils = async () => {
   try {
+    // const sweetObj = { id: "JjnDCtwHnrXb83r4XEen" };
 
-    // orN87t69Rl9SGu8OQfFv
-    // eW6c1fOtG9bFy7Ktkb01
+    // const commentQuery = query(
+    //   collection(dbService(), "comments"),
+    //   where("sweetId", "==", sweetObj.id),
+    // );
+    // const commentDocs = await getDocs(commentQuery);
+    //   commentDocs.docs.forEach(async (commentDoc) => {
+    //   const d = doc(dbService(), "comments", commentDoc.id);
+    //   await deleteDoc(d);
+    // });
 
-    const comment = doc(dbService(), "comments", `"eW6c1fOtG9bFy7Ktkb01"`);
-    console.log(comment);
-    // const get = await getDoc(comment);
-    // console.log(get);
-    await deleteDoc(comment);
+    // const d = doc(dbService(), "testCollection", "test1");
+    // await setDoc(
+    //   d,
+    //   {
+    //     good: deleteField(),
+    //   },
+    //   { merge: true },
+    // );
 
-    // const commentQuery = query(collection(dbService(), "testCollection"), where("creatorId", "==", "3"));
-    // const commentDoc = await getDocs(commentQuery);
     // commentDoc.forEach(async (doc) => {
     //   // const comment = doc(dbService(), "comments", `${doc.id}`);
     //   // const get = getDoc(comment);
@@ -43,11 +53,8 @@ const testUtils = async () => {
     //   await deleteDoc(commentDoc);
     // }
 
-
-    
-    
     // const d = doc(dbService(), "testCollection", "testDocument2");
-      // const d = await addDoc(collection(dbService(), "testCollection"));
+    // const d = await addDoc(collection(dbService(), "testCollection"));
     // const get = await getDoc(d);
     // // console.log(get.data().id);  // XXX
     // console.log(get.id);

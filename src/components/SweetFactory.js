@@ -49,14 +49,12 @@ const SweetFactory = ({ userObj }) => {
         attachmentUrl = await getDownloadURL(attachmentRef);
       }
 
-      
-      
       const sweetObj = {
         text: sweet,
         createdAt: Date.now(),
         creatorId: userObj.uid,
         attachmentUrl,
-        comments: [],
+        // comments: [],
         // likes: {},
         // notificationId
         // displayName: authService().currentUser.displayName,
@@ -65,6 +63,14 @@ const SweetFactory = ({ userObj }) => {
       // firestore에 추가
       // eslint-disable-next-line no-unused-vars
       const docRef = await addDoc(collection(dbService(), "sweets"), sweetObj);
+
+      // const userDoc = doc(dbService(), "users", authService().currentUser.uid);
+      // await setDoc(
+      //   userDoc,
+      //   { sweets: arrayUnion(docRef.id) },
+      //   { merge: true },
+      // );
+
       setSweet("");
       setAttachment(""); // 미리보기 사진 제거
       fileInput.current.value = ""; // 올리고 선택된 파일 해제
@@ -112,7 +118,7 @@ const SweetFactory = ({ userObj }) => {
     setAttachment(null);
     fileInput.current.value = "";
   };
-  
+
   return (
     <SweetFactoryStyle onSubmit={onSubmit}>
       <fieldset>

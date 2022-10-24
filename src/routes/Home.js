@@ -76,9 +76,9 @@ const Home = ({ userObj, init }) => {
   //   notification("CONFIRM", "all", "1AMsq8Dcpld9BqbH6b3VAsChLCq2", "", "", "");
   // }, []);
 
-  // useEffect(() => {
-  //   testUtils();
-  // }, []);
+  useEffect(() => {
+    testUtils();
+  }, []);
 
 
   return (

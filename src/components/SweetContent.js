@@ -80,6 +80,7 @@ const SweetContent = ({
           </div>
         )}
         <SweetActoins
+          userObj={userObj}
           sweetObj={sweetObj}
           onScrollComment={onScrollComment}
           offScrollComment={offScrollComment}

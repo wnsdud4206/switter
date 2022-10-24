@@ -76,6 +76,7 @@ const Comment = ({
         />
       ) : (
         <CommentContent
+          userObj={userObj}
           commentObj={commentObj}
           sweetObj={sweetObj}
           isOwner={isOwner}

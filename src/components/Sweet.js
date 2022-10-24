@@ -12,6 +12,8 @@ import {
   where,
   onSnapshot,
   getDocs,
+  setDoc,
+  deleteField,
 } from "fbase";
 import SweetStyle from "styles/SweetStyle";
 import SweetEdit from "./SweetEdit";
@@ -106,38 +108,41 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   });
 
   // 삭제, deleteDoc
-  const onDeleteClick = async () => {
+  const onDeleteClick = () => {
     // try {
     const ok = window.confirm("Are you sure you want to delete this sweet?");
     if (ok) {
-      try {
-        setDeleteBox(true);
-        setTimeout(async () => {
-          const d = doc(dbService(), "sweets", `${sweetObj.id}`);
-          const get = await getDoc(d);
+      setDeleteBox(true);
+      setTimeout(async () => {
+        try {
+          const sweetDoc = doc(dbService(), "sweets", `${sweetObj.id}`);
 
-          const commentObj = get.data().comments;
-          for (let comment of commentObj) {
-            let commentDoc = doc(dbService(), "comments", `${comment}`);
-            await deleteDoc(commentDoc);
-          }
+          const commentQuery = query(
+            collection(dbService(), "comments"),
+            where("sweetId", "==", sweetObj.id),
+          );
+          const commentDocs = await getDocs(commentQuery);
+          commentDocs.docs.forEach(async (commentDoc) => {
+            const d = doc(dbService(), "comments", commentDoc.id);
+            await deleteDoc(d);
+          });
 
-          // const commentQuery = query(
-          //   collection(dbService(), "comments"),
-          //   where("creatorId", "==", sweetObj.id),
-          // );
-          // const commentDoc = await getDocs(commentQuery);
-          // commentDoc.forEach(async (doc) => {
-          //   const comment = doc(dbService(), "comments", doc.id);
-          //   console.log(comment);
-          //   await deleteDoc(comment);
-          // });
+          const noticeQuery = query(collection(dbService(), "notifications"));
+          const noticeDocs = await getDocs(noticeQuery);
+          noticeDocs.docs.forEach(async (noticeDoc) => {
+            if (Object.keys(noticeDoc.data()).includes(sweetObj.id)) {
+              const notice = doc(dbService(), "notifications", noticeDoc.id);
+              await setDoc(
+                notice,
+                {
+                  [sweetObj.id]: deleteField(),
+                },
+                { merge: true },
+              );
+            }
+          });
 
-          // new
-          const noticeDoc = doc(dbService(), "notifications", `${sweetObj.id}`);
-
-          await deleteDoc(noticeDoc);
-          await deleteDoc(d);
+          await deleteDoc(sweetDoc);
 
           if (sweetObj.attachmentUrl) {
             // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 sweet을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
@@ -153,10 +158,10 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
           //   null,
           //   null,
           // );
-        }, 250);
-      } catch (error) {
-        console.error(error);
-      }
+        } catch (error) {
+          console.error(error);
+        }
+      }, 250);
     }
     // } catch (error) {
     //   console.error(error);

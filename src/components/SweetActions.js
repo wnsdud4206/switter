@@ -17,12 +17,8 @@ import {
   deleteField,
   authService,
   query,
-  where,
   collection,
   onSnapshot,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
 } from "fbase";
 
 /*
@@ -30,6 +26,7 @@ import {
 */
 
 const SweetActoins = ({
+  userObj,
   sweetObj,
   onScrollComment,
   offScrollComment,
@@ -63,13 +60,12 @@ const SweetActoins = ({
 
     const q = query(collection(dbService(), "notifications"));
     onSnapshot(q, (snapshot) => {
-      // eslint-disable-next-line no-unused-vars
-      const sweetArr = snapshot.docs.forEach((doc) => {
-        if (doc.id === sweetObj.id) {
-          const likes = doc.data()?.sweetLikes
-            ? Object.keys(doc.data().sweetLikes)
+      snapshot.docs.forEach((doc) => {
+        if (doc.id === sweetObj.creatorId) {
+          const likes = doc.data()[sweetObj.id]?.sweetLikes
+            ? Object.keys(doc.data()[sweetObj.id].sweetLikes)
             : []; // array로
-          const userLike = likes.includes(authService().currentUser.uid);
+          const userLike = likes.includes(userObj?.uid);
 
           // console.log(likes); // 없으면 undefined 반환
           setLikeCount(likes);
@@ -86,11 +82,15 @@ const SweetActoins = ({
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
+      const d = doc(dbService(), "notifications", `${sweetObj.creatorId}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await setDoc(
         d,
-        { sweetLikes: { [uid]: { confirmed: false, lastUpdate: Date.now() } } },
+        {
+          [sweetObj.id]: {
+            sweetLikes: { [uid]: { confirmed: false, lastUpdate: Date.now() } },
+          },
+        },
         { merge: true },
       );
       // await updateDoc(d, { likes: arrayUnion(uid) });
@@ -113,11 +113,11 @@ const SweetActoins = ({
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
+      const d = doc(dbService(), "notifications", `${sweetObj.creatorId}`);
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await setDoc(
         d,
-        { sweetLikes: { [uid]: deleteField() } },
+        { [sweetObj.id]: { sweetLikes: { [uid]: deleteField() } } },
         { merge: true },
       );
       // await updateDoc(d, { likes: arrayRemove(uid) });

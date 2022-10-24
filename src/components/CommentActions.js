@@ -10,51 +10,37 @@ import {
   authService,
   doc,
   setDoc,
-  updateDoc,
   deleteField,
 } from "fbase";
 import { useEffect, useState } from "react";
 
-const CommentActions = ({ commentObj, sweetObj }) => {
+const CommentActions = ({ userObj, commentObj, sweetObj }) => {
   const [commentLikeCount, setCommentLikeCount] = useState([]);
   const [currentUserCommentLike, setCurrentUserCommentLike] = useState(false);
 
   useEffect(() => {
     const q = query(collection(dbService(), "notifications"));
     onSnapshot(q, (snapshot) => {
-      // console.log(snapshot.docs[0].data());
-      // eslint-disable-next-line no-unused-vars
       snapshot.docs.forEach((doc) => {
-        if (doc.id === sweetObj.id) {
-          /* --------------20221022------------------ */
-          if (
-            doc.data().commentLikes !== undefined &&
-            doc.data().commentLikes !== null
-          ) {
-            const likes =
-              Object.keys(doc.data()?.commentLikes[commentObj.id]) || []; // array로
-            console.log(likes);
-            const userLike = likes.includes(authService().currentUser.uid);
+        if (
+          doc.id === commentObj.creatorId &&
+          doc.data()[sweetObj.id]?.commentLikes !== undefined
+        ) {
+          const likes = Object.keys(
+            doc.data()[sweetObj.id]?.commentLikes[commentObj.id] || {},
+          ); // array로
 
-            setCommentLikeCount(likes);
-            setCurrentUserCommentLike(userLike);
-            /* ------------------------------ */
-            
-            // const likes = doc.data().likes || {};
-            // // console.log(like)  // 없으면 undefined 반환
-            // setCommentLikeCount(Object.keys(likes).length);
+          // const userLike = likes.includes(authService().currentUser.uid);
+          const userLike = likes.includes(userObj?.uid);
 
-            // if (likes !== undefined) {
-            //   const userLike = Object.keys(likes).includes(
-            //     authService().currentUser.uid,
-            //   );
-            //   setCurrentUserCommentLike(userLike);
-            // }
-            return;
-          }
+          setCommentLikeCount(likes);
+          setCurrentUserCommentLike(userLike);
+          return;
         }
       });
+      // }
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -62,43 +48,33 @@ const CommentActions = ({ commentObj, sweetObj }) => {
     try {
       const { uid } = authService().currentUser;
 
-      const d = doc(dbService(), "notifications", `${sweetObj.id}`);
+      // commentObj.id X, 지울 때 복잡해짐, 한 곳에 넣고 where 같은 걸로 필터링해서 commentlikes는 따로 가져와야 할듯?? - XXX
+      // commentLikes는 따로 넣고 찾아서 지우는게 나을듯
+      const d = doc(dbService(), "notifications", `${commentObj.creatorId}`);
 
       if (!currentUserCommentLike) {
         await setDoc(
           d,
           {
-            commentLikes: {
-              [commentObj.id]: {
-                [uid]: { confirmed: false, lastUpdate: Date.now() },
+            [sweetObj.id]: {
+              commentLikes: {
+                [commentObj.id]: {
+                  [uid]: { confirmed: false, lastUpdate: Date.now() },
+                },
               },
             },
           },
           { merge: true },
         );
-        // await updateDoc(
-        //   d,
-        //   {
-        //     likes: { [uid]: { confirmed: false, lastUpdate: Date.now() } },
-        //   },
-        //   { merge: true },
-        // );
-
-        // notification(
-        //   "ADD",
-        //   "commentLikes",
-        //   commentObj.creatorId,
-        //   sweetObj.id,
-        //   uid,
-        //   commentObj.id,
-        // );
       } else if (currentUserCommentLike) {
         await setDoc(
           d,
           {
-            commentLikes: {
-              [commentObj.id]: {
-                [uid]: deleteField(),
+            [sweetObj.id]: {
+              commentLikes: {
+                [commentObj.id]: {
+                  [uid]: deleteField(),
+                },
               },
             },
           },

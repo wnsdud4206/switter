@@ -3,16 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   dbService,
   doc,
+  getDocs,
   setDoc,
   deleteField,
   deleteDoc,
-  updateDoc,
-  arrayRemove,
+  query,
+  collection,
 } from "fbase";
 import CommentContentStyle from "styles/CommentContentStyle";
 import CommentActions from "./CommentActions";
 
 const CommentContent = ({
+  userObj,
   commentObj,
   sweetObj,
   isOwner,
@@ -20,27 +22,95 @@ const CommentContent = ({
   commentName,
 }) => {
   const onDeleteComment = async () => {
-    const ok = window.confirm("Are you sure you want to delete this comment?");
-    if (ok) {
-      try {
+    try {
+      const ok = window.confirm(
+        "Are you sure you want to delete this comment?",
+      );
+      if (ok) {
         // setTimeout(async () => {
-        const sweetDoc = doc(dbService(), "sweets", `${sweetObj.id}`);
-        await updateDoc(sweetDoc, { comments: arrayRemove(commentObj.id) });
+        // const noticeDoc = doc(
+        //   dbService(),
+        //   "notifications",
+        //   `${sweetObj.creatorId}`,
+        // );
+        // await setDoc(
+        //   noticeDoc,
+        //   {
+        //     [sweetObj.id]: {
+        //       sweetComments: { [commentObj.id]: deleteField() },
+        //       commentLikes: {
+        //         [commentObj.id]: deleteField(),
+        //       },
+        //     },
+        //   },
+        //   { merge: true },
+        // );
+        // const noticeQuery = query(collection(dbService(), "notifications"));
+        // const noticeDocs = await getDocs(noticeQuery);
+        // noticeDocs.docs.forEach(async (noticeDoc) => {
+        //   if (Object.keys(noticeDoc.data()).includes(sweetObj.id)) {
+        //     const notice = doc(dbService(), "notifications", noticeDoc.id);
+        //     await setDoc(
+        //       notice,
+        //       {
+        //         [sweetObj.id]: deleteField(),
+        //       },
+        //       { merge: true },
+        //     );
+        //   }
+        // });
 
-        const noticeDoc = doc(dbService(), "notifications", `${sweetObj.id}`);
-        await setDoc(
-          noticeDoc,
-          {
-            sweetComments: { [commentObj.id]: deleteField() },
-            commentLikes: {
-              [commentObj.id]: deleteField(),
-            },
-          },
-          { merge: true },
-        );
+        const noticeQuery = query(collection(dbService(), "notifications"));
+        const noticeDocs = await getDocs(noticeQuery);
+        noticeDocs.docs.forEach(async (noticeDoc) => {
+          if (Object.keys(noticeDoc.data()).includes(sweetObj.id)) {
+            const notice = doc(
+              dbService(),
+              "notifications",
+              noticeDoc.id,
+            );
+            await setDoc(
+              notice,
+              {
+                [sweetObj.id]: {
+                  sweetComments: {
+                    [commentObj.id]: deleteField(),
+                  },
+                  commentLikes: {
+                    [commentObj.id]: deleteField(),
+                  },
+                },
+              },
+              { merge: true },
+            );
+          }
+        });
 
         const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
         await deleteDoc(commentDoc);
+
+        // const userDoc = doc(
+        //   dbService(),
+        //   "users",
+        //   authService().currentUser.uid,
+        // );
+        // await setDoc(
+        //   userDoc,
+        //   {
+        //     comments: { [sweetObj.id]: arrayRemove(commentObj.id) },
+        //   },
+        //   { merge: true },
+        // );
+        // const getUserDoc = await getDoc(userDoc);
+        // if (getUserDoc.data()?.comments[sweetObj.id].length === 0) {
+        //   await setDoc(
+        //     userDoc,
+        //     {
+        //       comments: { [sweetObj.id]: deleteField() },
+        //     },
+        //     { merge: true },
+        //   );
+        // }
 
         // const { uid } = authService().currentUser;
         // notification(
@@ -59,9 +129,9 @@ const CommentContent = ({
         //   commentObj.id,
         // );
         // }, 250);
-      } catch (error) {
-        console.error(error);
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -83,7 +153,7 @@ const CommentContent = ({
 
       <p className="commentText">{commentObj.text}</p>
 
-      <CommentActions commentObj={commentObj} sweetObj={sweetObj} />
+      <CommentActions userObj={userObj} commentObj={commentObj} sweetObj={sweetObj} />
     </CommentContentStyle>
   );
 };
