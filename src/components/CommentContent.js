@@ -27,38 +27,8 @@ const CommentContent = ({
         "Are you sure you want to delete this comment?",
       );
       if (ok) {
-        // setTimeout(async () => {
-        // const noticeDoc = doc(
-        //   dbService(),
-        //   "notifications",
-        //   `${sweetObj.creatorId}`,
-        // );
-        // await setDoc(
-        //   noticeDoc,
-        //   {
-        //     [sweetObj.id]: {
-        //       sweetComments: { [commentObj.id]: deleteField() },
-        //       commentLikes: {
-        //         [commentObj.id]: deleteField(),
-        //       },
-        //     },
-        //   },
-        //   { merge: true },
-        // );
-        // const noticeQuery = query(collection(dbService(), "notifications"));
-        // const noticeDocs = await getDocs(noticeQuery);
-        // noticeDocs.docs.forEach(async (noticeDoc) => {
-        //   if (Object.keys(noticeDoc.data()).includes(sweetObj.id)) {
-        //     const notice = doc(dbService(), "notifications", noticeDoc.id);
-        //     await setDoc(
-        //       notice,
-        //       {
-        //         [sweetObj.id]: deleteField(),
-        //       },
-        //       { merge: true },
-        //     );
-        //   }
-        // });
+        const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
+        await deleteDoc(commentDoc);
 
         const noticeQuery = query(collection(dbService(), "notifications"));
         const noticeDocs = await getDocs(noticeQuery);
@@ -74,7 +44,7 @@ const CommentContent = ({
               {
                 [sweetObj.id]: {
                   sweetComments: {
-                    [commentObj.id]: deleteField(),
+                    [sweetObj.id + "/" + commentObj.id]: deleteField(),
                   },
                   commentLikes: {
                     [commentObj.id]: deleteField(),
@@ -85,9 +55,6 @@ const CommentContent = ({
             );
           }
         });
-
-        const commentDoc = doc(dbService(), "comments", `${commentObj.id}`);
-        await deleteDoc(commentDoc);
 
         // const userDoc = doc(
         //   dbService(),

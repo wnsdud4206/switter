@@ -55,9 +55,10 @@ const SweetComment = ({
         {
           [sweetObj.id]: {
             sweetComments: {
-              [docRef.id]: {
+              [sweetObj.id + "/" + docRef.id]: {
                 confirmed: false,
                 lastUpdate: Date.now(),
+                category: "sweetComments"
               },
             },
           },

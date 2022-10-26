@@ -65,7 +65,7 @@ const SweetActoins = ({
           const likes = doc.data()[sweetObj.id]?.sweetLikes
             ? Object.keys(doc.data()[sweetObj.id].sweetLikes)
             : []; // array로
-          const userLike = likes.includes(userObj?.uid);
+          const userLike = likes.includes(sweetObj.id + "/" + userObj?.uid);
 
           // console.log(likes); // 없으면 undefined 반환
           setLikeCount(likes);
@@ -88,7 +88,7 @@ const SweetActoins = ({
         d,
         {
           [sweetObj.id]: {
-            sweetLikes: { [uid]: { confirmed: false, lastUpdate: Date.now() } },
+            sweetLikes: { [sweetObj.id + "/" + uid]: { confirmed: false, lastUpdate: Date.now(), category: "sweetLikes" } },
           },
         },
         { merge: true },
@@ -117,7 +117,7 @@ const SweetActoins = ({
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await setDoc(
         d,
-        { [sweetObj.id]: { sweetLikes: { [uid]: deleteField() } } },
+        { [sweetObj.id]: { sweetLikes: { [sweetObj.id + "/" + uid]: deleteField() } } },
         { merge: true },
       );
       // await updateDoc(d, { likes: arrayRemove(uid) });

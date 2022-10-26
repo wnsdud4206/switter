@@ -20,6 +20,8 @@ import {
 
 const testUtils = async () => {
   try {
+    // const d = doc(query(collection(dbService(), "testCollection"), where("creatorId", "==", "3")), "test1")
+    
     // const sweetObj = { id: "JjnDCtwHnrXb83r4XEen" };
 
     // const commentQuery = query(
