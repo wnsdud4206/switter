@@ -1,9 +1,9 @@
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AuthForm from "components/AuthForm";
-import AuthOtherAccount from "components/AuthOtherAccount";
+import AuthForm from "components/auth/AuthForm";
+import AuthOtherAccount from "components/auth/AuthOtherAccount";
 import React from "react";
-import AuthStyle from "styles/AuthStyle";
+import AuthStyle from "styles/auth/AuthStyle";
 // 회원탈퇴는?
 
 const Auth = () => {

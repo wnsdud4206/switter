@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import NavScrollProgressStyle from "styles/NavScrollProgressStyle";
+import NavScrollProgressStyle from "styles/nav/NavScrollProgressStyle";
 
 const NavScrollProgress = () => {
   const [scroll, setScroll] = useState(0);

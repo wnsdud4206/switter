@@ -1,7 +1,7 @@
 import { faHeart as like } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CommentActionsStyle from "styles/CommentActionsStyle";
+import CommentActionsStyle from "styles/sweet/comment/CommentActionsStyle";
 import {
   query,
   collection,
@@ -31,7 +31,7 @@ const CommentActions = ({ userObj, commentObj, sweetObj }) => {
           ); // array로
 
           // const userLike = likes.includes(authService().currentUser.uid);
-          const userLike = likes.includes(commentObj.id + "/" + userObj?.uid);
+          const userLike = likes.includes(sweetObj.id + "/" + commentObj.id + "/" + userObj?.uid);
 
           setCommentLikeCount(likes);
           setCurrentUserCommentLike(userLike);
@@ -58,7 +58,7 @@ const CommentActions = ({ userObj, commentObj, sweetObj }) => {
             [sweetObj.id]: {
               commentLikes: {
                 [commentObj.id]: {
-                  [commentObj.id + "/" + uid]: {
+                  [sweetObj.id + "/" + commentObj.id + "/" + uid]: {
                     confirmed: false,
                     lastUpdate: Date.now(),
                     category: "commentLikes"
@@ -76,7 +76,7 @@ const CommentActions = ({ userObj, commentObj, sweetObj }) => {
             [sweetObj.id]: {
               commentLikes: {
                 [commentObj.id]: {
-                  [commentObj.id + "/" + uid]: deleteField(),
+                  [sweetObj.id + "/" + commentObj.id + "/" + uid]: deleteField(),
                 },
               },
             },

@@ -3,8 +3,8 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
 import Profile from "routes/Profile";
-import Navigation from "./Navigation";
-import NavScrollProgress from "./NavScrollProgress";
+import Navigation from "./nav/Navigation";
+import NavScrollProgress from "./nav/NavScrollProgress";
 import ScrollTopButton from "./ScrollTopButton";
 
 const AppRouter = ({ isLoggedIn, userObj, init }) => {

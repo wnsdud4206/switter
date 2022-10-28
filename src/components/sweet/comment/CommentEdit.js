@@ -2,7 +2,7 @@ import { faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dbService, doc, updateDoc } from "fbase";
 import { useEffect, useState } from "react";
-import CommentEditStyle from "styles/CommentEditStyle";
+import CommentEditStyle from "styles/sweet/comment/CommentEditStyle";
 
 const CommentEdit = ({
   commentName,

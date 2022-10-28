@@ -9,7 +9,7 @@ import {
 } from "fbase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import SweetEditStyle from "styles/SweetEditStyle";
+import SweetEditStyle from "styles/sweet/SweetEditStyle";
 
 const SweetEdit = ({
   sweetObj,

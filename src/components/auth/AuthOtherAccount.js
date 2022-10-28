@@ -9,7 +9,7 @@ import {
 } from "fbase";
 import React, { useState } from "react";
 import userDocCreator from "hooks/userDocCreator";
-import AuthOtherAccountStyle from "styles/AuthOtherAccountStyle";
+import AuthOtherAccountStyle from "styles/auth/AuthOtherAccountStyle";
 
 const AuthOtherAccount = () => {
   const [error, setError] = useState("");
@@ -34,6 +34,7 @@ const AuthOtherAccount = () => {
         });
       }
 
+      console.log(data);
       userDocCreator(data);
     } catch (e) {
       setError(e.code);

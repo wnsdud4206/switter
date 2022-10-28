@@ -2,7 +2,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dbService, doc, getDoc } from "fbase";
 import { useEffect, useState } from "react";
-import CommentStyle from "styles/CommentStyle";
+import CommentStyle from "styles/sweet/comment/CommentStyle";
 import CommentContent from "./CommentContent";
 import CommentEdit from "./CommentEdit";
 

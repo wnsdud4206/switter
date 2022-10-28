@@ -15,7 +15,7 @@ import {
   setDoc,
   deleteField,
 } from "fbase";
-import SweetStyle from "styles/SweetStyle";
+import SweetStyle from "styles/sweet/SweetStyle";
 import SweetEdit from "./SweetEdit";
 import SweetContent from "./SweetContent";
 import CloseUpImgContainer from "./CloseUpImgContainer";

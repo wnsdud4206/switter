@@ -7,8 +7,8 @@ import {
   onSnapshot,
   orderBy,
 } from "fbase";
-import SweetFactory from "components/SweetFactory";
-import SweetConatiner from "components/SweetConatiner";
+import SweetFactory from "components/sweet/SweetFactory";
+import SweetConatiner from "components/sweet/SweetConatiner";
 import testUtils from "utils/testUtils";
 import notification from "utils/notification";
 

@@ -9,7 +9,7 @@ import {
   collection,
   dbService,
 } from "fbase";
-import SweetFactoryStyle from "styles/SweetFactoryStyle";
+import SweetFactoryStyle from "styles/sweet/SweetFactoryStyle";
 import {
   faArrowRight,
   faPlus,

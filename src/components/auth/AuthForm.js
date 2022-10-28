@@ -18,7 +18,7 @@ import {
 } from "fbase";
 import React, { useEffect, useRef, useState } from "react";
 import userDocCreator from "hooks/userDocCreator";
-import { AuthFormSpanStyle, AuthFormStyle } from "styles/AuthFormStyle";
+import { AuthFormSpanStyle, AuthFormStyle } from "styles/auth/AuthFormStyle";
 
 const AuthForm = () => {
   // displayName, photoURL(attachmentUrl) 추가하기
@@ -105,7 +105,7 @@ const AuthForm = () => {
       }
 
       // email/password는 displayName 등등 유저 정보가 null로 생성되는 문제
-      userDocCreator(data);
+      userDocCreator(data, form.password);
     } catch (error) {
       console.dir(error);
       setError(error.message);

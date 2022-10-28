@@ -10,7 +10,7 @@ import {
   query,
   collection,
 } from "fbase";
-import CommentContentStyle from "styles/CommentContentStyle";
+import CommentContentStyle from "styles/sweet/comment/CommentContentStyle";
 import CommentActions from "./CommentActions";
 
 const CommentContent = ({

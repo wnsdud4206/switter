@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
@@ -6,16 +6,39 @@ import {
   faBell as faBellActivate,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import NavigationStyle from "styles/NavigationStyle";
-import NavigationProfileImage from "styles/NavigationProfileImage";
-import NotificationList from "./NotificationList";
+import NavigationStyle from "styles/nav/NavigationStyle";
+import NavigationProfileImage from "styles/nav/NavigationProfileImage";
+import NotificationContainer from "./notice/NotificationContainer";
 
 const Navigation = ({ userObj }) => {
   const [imgError, setImgError] = useState(false);
+  const [activeNotice, setActiveNotice] = useState(false);
 
   const onError = () => {
     setImgError(true);
   };
+
+  const onNotification = () => {
+    setActiveNotice((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const noticeEnable = (e) => {
+      if (e.target.classList.contains("notice")) {
+        return;
+      } else {
+        setActiveNotice(false);
+        return;
+      }
+    };
+
+    if (activeNotice) {
+      window.addEventListener("click", noticeEnable);
+    } else {
+      window.removeEventListener("click", noticeEnable);
+    }
+    // 이벤트 없어지도록 하기
+  }, [activeNotice]);
 
   return (
     <>
@@ -26,7 +49,7 @@ const Navigation = ({ userObj }) => {
               <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
             </Link>
           </li>
-          <li id="notification">
+          <li id="notification" className="notice" onClick={onNotification}>
             {/* not Link */}
             <FontAwesomeIcon icon={faBellActivate} />
             {/* <FontAwesomeIcon icon={faBell} /> */}
@@ -52,7 +75,7 @@ const Navigation = ({ userObj }) => {
           </li>
         </ul>
 
-        <NotificationList userObj={userObj} />
+        <NotificationContainer userObj={userObj} activeNotice={activeNotice} />
       </NavigationStyle>
     </>
   );

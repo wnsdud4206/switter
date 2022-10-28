@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SweetCommentStyle from "styles/SweetCommentStyle";
+import SweetCommentStyle from "styles/sweet/comment/SweetCommentStyle";
 import {
   dbService,
   addDoc,

@@ -1,6 +1,6 @@
-import Sweet from "components/Sweet";
+import Sweet from "components/sweet/Sweet";
 import React, { useState } from "react";
-import SweetContainerStyle from "styles/SweetContainerStyle";
+import SweetContainerStyle from "styles/sweet/SweetContainerStyle";
 
 const SweetConatiner = ({ sweets, userObj }) => {
   const [onlyEditing, setOnlyEditing] = useState("");

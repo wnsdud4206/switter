@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import SweetActoins from "./SweetActions";
-import SweetComment from "./SweetComment";
-import SweetContentStyle from "styles/SweetContentStyle";
+import SweetComment from "./comment/SweetComment";
+import SweetContentStyle from "styles/sweet/SweetContentStyle";
 
 const SweetContent = ({
   userName,

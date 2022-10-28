@@ -8,7 +8,7 @@ import {
   faComment as faRegCommnet,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SweetActionsStyle from "styles/SweetActionsStyle";
+import SweetActionsStyle from "styles/sweet/SweetActionsStyle";
 import { useState, useEffect } from "react";
 import {
   dbService,

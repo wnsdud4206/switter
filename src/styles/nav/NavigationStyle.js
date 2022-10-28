@@ -15,7 +15,7 @@ const NavigationStyle = styled.nav`
   /* bottom: 869px; */
   z-index: 1;
 
-  outline: 1px solid #777;
+  /* outline: 1px solid #777; */
 
   ul {
     list-style: none;
@@ -36,7 +36,7 @@ const NavigationStyle = styled.nav`
 
       width: 120px;
 
-      outline: 1px solid white;
+      /* outline: 1px solid white; */
 
       &:first-child {
         justify-content: flex-end;
@@ -51,6 +51,8 @@ const NavigationStyle = styled.nav`
         svg {
           color: #00acee;
           font-size: 50px;
+
+          pointer-events: none;
         }
       }
 
@@ -65,7 +67,7 @@ const NavigationStyle = styled.nav`
         align-items: center;
         width: 100%;
 
-        outline: 1px solid orange;
+        /* outline: 1px solid orange; */
       }
 
       a:not(#myProfile) {
