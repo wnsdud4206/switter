@@ -19,6 +19,11 @@ const CommentContentStyle = styled.div`
     width: 100%;
     height: 21px;
 
+    a {
+      text-decoration: none;
+      color: white;
+    }
+    
     span.commentUserName {
     }
 

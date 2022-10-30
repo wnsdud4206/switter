@@ -12,7 +12,7 @@ import SweetConatiner from "components/sweet/SweetConatiner";
 import testUtils from "utils/testUtils";
 import notification from "utils/notification";
 
-const Home = ({ userObj, init }) => {
+const Home = ({ userObj, init, getId }) => {
   const [sweets, setSweets] = useState([]);
 
   // 읽기, 데이터 받아오기
@@ -84,7 +84,7 @@ const Home = ({ userObj, init }) => {
   return (
     <>
       <SweetFactory userObj={userObj} />
-      <SweetConatiner sweets={sweets} userObj={userObj} />
+      <SweetConatiner sweets={sweets} userObj={userObj} getId={getId} />
     </>
   );
 };

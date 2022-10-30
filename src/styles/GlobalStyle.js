@@ -17,9 +17,9 @@ const GlobalStyle = createGlobalStyle`
     flex-direction: column;
     align-items: center;
 
-    width: 100vw;
-
-    overflow-x: hidden;
+    /* width: 100vw;
+    overflow-x: hidden; */
+    width: 100%;
     
     color: white;
 

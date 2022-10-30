@@ -10,7 +10,6 @@ const CommentStyle = styled.div`
 
   box-sizing: border-box;
 
-  /* outline: 1px solid red; */
   &:first-child {
     margin-top: 36px;
   }
@@ -21,6 +20,10 @@ const CommentStyle = styled.div`
     padding-bottom: 16px;
     margin-bottom: 16px;
     border-bottom: 2px solid #444;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   div.commentUserImage {

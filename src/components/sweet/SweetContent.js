@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import SweetActoins from "./SweetActions";
 import SweetComment from "./comment/SweetComment";
 import SweetContentStyle from "styles/sweet/SweetContentStyle";
+import { Link } from "react-router-dom";
 
 const SweetContent = ({
   userName,
@@ -23,6 +24,8 @@ const SweetContent = ({
   comments,
   onCommentEditResizeToggle,
   // offCommentEditResize,
+  getId,
+  // onOnlySweet,
 }) => {
   const [imgError, setImgError] = useState(false);
 
@@ -36,23 +39,33 @@ const SweetContent = ({
       <SweetContentStyle className="sweetContent" ref={sweetContentRef}>
         <div className="sweetHeader">
           <div className="userWrap">
-            <div className="sweetUserImage">
-              {userAttachmentUrl && !imgError ? (
-                <img
-                  src={userAttachmentUrl}
-                  // width="100%"
-                  // height="100%"
-                  width="40"
-                  height="40"
-                  alt="sweetUserImage"
-                  onError={onError}
-                />
-              ) : (
-                <FontAwesomeIcon id="profileicon" icon={faUser} />
-              )}
-            </div>
+            <Link
+              to={`/${isOwner ? "profile" : sweetObj.creatorId}`}
+              onClick={() => {
+                if (isOwner) {
+                  return;
+                }
+                getId(sweetObj.creatorId);
+              }}
+            >
+              <div className="sweetUserImage">
+                {userAttachmentUrl && !imgError ? (
+                  <img
+                    src={userAttachmentUrl}
+                    // width="100%"
+                    // height="100%"
+                    width="40"
+                    height="40"
+                    alt="sweetUserImage"
+                    onError={onError}
+                  />
+                ) : (
+                  <FontAwesomeIcon id="profileicon" icon={faUser} />
+                )}
+              </div>
 
-            <span>{userName}</span>
+              <span>{userName}</span>
+            </Link>
           </div>
 
           {isOwner && (
@@ -66,7 +79,10 @@ const SweetContent = ({
             </div>
           )}
         </div>
-        <p>{sweetObj.text}</p>
+        {/* <div className="sweetText" onClick={onOnlySweet}> */}
+        <div className="sweetText">
+          <p>{sweetObj.text}</p>
+        </div>
         {sweetObj.attachmentUrl && (
           <div className="sweetImg">
             <img
@@ -97,6 +113,7 @@ const SweetContent = ({
           comments={comments}
           onCommentEditResizeToggle={onCommentEditResizeToggle}
           // offCommentEditResize={offCommentEditResize}
+          getId={getId}
         />
       )}
     </>

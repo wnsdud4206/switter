@@ -2,6 +2,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { dbService, doc, getDoc } from "fbase";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import CommentStyle from "styles/sweet/comment/CommentStyle";
 import CommentContent from "./CommentContent";
 import CommentEdit from "./CommentEdit";
@@ -17,6 +18,7 @@ const Comment = ({
   onOnlyCommentEditing,
   onCommentEditResizeToggle,
   // offCommentEditResize,
+  getId,
 }) => {
   const [commentName, setCommentName] = useState("");
   const [commentAttachmentUrl, setCommentAttachmentUrl] = useState("");
@@ -54,18 +56,28 @@ const Comment = ({
 
   return (
     <CommentStyle>
-      <div className="commentUserImage">
-        {commentAttachmentUrl ? (
-          <img
-            src={commentAttachmentUrl}
-            width="100%"
-            height="100%"
-            alt="commentUserImage"
-          />
-        ) : (
-          <FontAwesomeIcon id="profileicon" icon={faUser} />
-        )}
-      </div>
+      <Link
+        to={`/${isOwner ? "profile" : commentObj.creatorId}`}
+        onClick={() => {
+          if (isOwner) {
+            return;
+          }
+          getId(commentObj.creatorId);
+        }}
+      >
+        <div className="commentUserImage">
+          {commentAttachmentUrl ? (
+            <img
+              src={commentAttachmentUrl}
+              width="100%"
+              height="100%"
+              alt="commentUserImage"
+            />
+          ) : (
+            <FontAwesomeIcon id="profileicon" icon={faUser} />
+          )}
+        </div>
+      </Link>
 
       {commentEditing ? (
         <CommentEdit
@@ -82,6 +94,7 @@ const Comment = ({
           isOwner={isOwner}
           onCommentEditing={onCommentEditing}
           commentName={commentName}
+          getId={getId}
         />
       )}
     </CommentStyle>

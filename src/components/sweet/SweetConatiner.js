@@ -2,7 +2,7 @@ import Sweet from "components/sweet/Sweet";
 import React, { useState } from "react";
 import SweetContainerStyle from "styles/sweet/SweetContainerStyle";
 
-const SweetConatiner = ({ sweets, userObj }) => {
+const SweetConatiner = ({ sweets, userObj, getId }) => {
   const [onlyEditing, setOnlyEditing] = useState("");
 
   const onOnlyEditing = (sweetId) => {
@@ -27,6 +27,7 @@ const SweetConatiner = ({ sweets, userObj }) => {
                 userObj={userObj}
                 onOnlyEditing={onOnlyEditing}
                 onlyEditing={onlyEditing}
+                getId={getId}
               />
             ))
         ) : (

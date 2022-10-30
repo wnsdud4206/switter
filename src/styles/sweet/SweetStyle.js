@@ -78,6 +78,47 @@ const SweetStyle = styled.div`
       }
     }
   }
+/* 
+  div#onlySweet {
+    width: 100%;
+    height: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: 11;
+
+    div#onlySweetBack {
+      background-color: rgba(0, 0, 0, 0.5);
+
+      width: 100%;
+      height: 100%;
+
+      cursor: pointer;
+    }
+
+    div#sweetBox {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+
+      background-color: #222;
+
+      border: 2px solid #444;
+      border-radius: 8px;
+      box-sizing: border-box;
+      
+      width: 500px;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+    }
+  } */
 `;
 
 export default SweetStyle;

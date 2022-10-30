@@ -1,27 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
+import OtherUserProfile from "routes/OtherUserProfile";
 import Profile from "routes/Profile";
 import Navigation from "./nav/Navigation";
 import NavScrollProgress from "./nav/NavScrollProgress";
 import ScrollTopButton from "./ScrollTopButton";
 
 const AppRouter = ({ isLoggedIn, userObj, init }) => {
+  const [otherUserId, setOtherUserId] = useState("");
+
+  const getId = (id) => {
+    setOtherUserId(id);
+  };
+
   return (
     <Router>
-      {isLoggedIn && <Navigation userObj={userObj} />}
+      {isLoggedIn && (
+        <>
+          <Navigation userObj={userObj} />
+          <NavScrollProgress />
+          <ScrollTopButton />
+        </>
+      )}
       <Routes>
         {isLoggedIn ? (
           <>
             <Route
               path="/"
+              element={<Home userObj={userObj} init={init} getId={getId} />}
+            />
+            <Route
+              path={`/${otherUserId}`}
               element={
-                <>
-                  <NavScrollProgress />
-                  <Home userObj={userObj} init={init} />
-                  <ScrollTopButton />
-                </>
+                <OtherUserProfile userObj={userObj} otherUserId={otherUserId} />
               }
             />
             <Route path="/profile" element={<Profile userObj={userObj} />} />

@@ -10,6 +10,7 @@ import {
   query,
   collection,
 } from "fbase";
+import { Link } from "react-router-dom";
 import CommentContentStyle from "styles/sweet/comment/CommentContentStyle";
 import CommentActions from "./CommentActions";
 
@@ -20,6 +21,7 @@ const CommentContent = ({
   isOwner,
   onCommentEditing,
   commentName,
+  getId,
 }) => {
   const onDeleteComment = async () => {
     try {
@@ -34,11 +36,7 @@ const CommentContent = ({
         const noticeDocs = await getDocs(noticeQuery);
         noticeDocs.docs.forEach(async (noticeDoc) => {
           if (Object.keys(noticeDoc.data()).includes(sweetObj.id)) {
-            const notice = doc(
-              dbService(),
-              "notifications",
-              noticeDoc.id,
-            );
+            const notice = doc(dbService(), "notifications", noticeDoc.id);
             await setDoc(
               notice,
               {
@@ -105,7 +103,17 @@ const CommentContent = ({
   return (
     <CommentContentStyle>
       <div className="commentHeader">
-        <span className="commentUserName">{commentName}</span>
+        <Link
+          to={`/${isOwner ? "profile" : commentObj.creatorId}`}
+          onClick={() => {
+            if (isOwner) {
+              return;
+            }
+            getId(commentObj.creatorId);
+          }}
+        >
+          <span className="commentUserName">{commentName}</span>
+        </Link>
         {isOwner && (
           <div className="commentEditAndDelete">
             <button className="commentEdit" onClick={onCommentEditing}>
@@ -120,7 +128,11 @@ const CommentContent = ({
 
       <p className="commentText">{commentObj.text}</p>
 
-      <CommentActions userObj={userObj} commentObj={commentObj} sweetObj={sweetObj} />
+      <CommentActions
+        userObj={userObj}
+        commentObj={commentObj}
+        sweetObj={sweetObj}
+      />
     </CommentContentStyle>
   );
 };

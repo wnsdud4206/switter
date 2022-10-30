@@ -44,12 +44,17 @@ const NotificationStyle = styled.li`
     }
   }
 
-  div.noticeTextWrap {
+  a.noticeTextWrap {
+    text-decoration: none;
+    color: white;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
 
     width: 100%;
+
+    cursor: pointer;
 
     span {
     }

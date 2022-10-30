@@ -19,6 +19,7 @@ const SweetComment = ({
   comments,
   onCommentEditResizeToggle,
   // offCommentEditResize,
+  getId
 }) => {
   const [commentText, setCommentText] = useState("");
   const [onlyCommentEditing, setOnlyCommentEditing] = useState("");
@@ -139,6 +140,7 @@ const SweetComment = ({
                 onOnlyCommentEditing={onOnlyCommentEditing}
                 onCommentEditResizeToggle={onCommentEditResizeToggle}
                 // offCommentEditResize={offCommentEditResize}
+                getId={getId}
               />
             ))
         ) : (

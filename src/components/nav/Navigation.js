@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTwitter } from "@fortawesome/free-brands-svg-icons";
@@ -19,7 +19,15 @@ const Navigation = ({ userObj }) => {
   };
 
   const onNotification = () => {
-    setActiveNotice((prev) => !prev);
+    setActiveNotice(true);
+  };
+  const offNotification = () => {
+    setActiveNotice(false);
+  };
+
+  const toggleNotification = () => {
+    // setActiveNotice((prev) => !prev);
+    activeNotice ? offNotification() : onNotification();
   };
 
   useEffect(() => {
@@ -37,6 +45,8 @@ const Navigation = ({ userObj }) => {
     } else {
       window.removeEventListener("click", noticeEnable);
     }
+
+    // console.log(userObj.photoURL);
     // 이벤트 없어지도록 하기
   }, [activeNotice]);
 
@@ -49,7 +59,7 @@ const Navigation = ({ userObj }) => {
               <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
             </Link>
           </li>
-          <li id="notification" className="notice" onClick={onNotification}>
+          <li id="notification" className="notice" onClick={toggleNotification}>
             {/* not Link */}
             <FontAwesomeIcon icon={faBellActivate} />
             {/* <FontAwesomeIcon icon={faBell} /> */}
@@ -75,7 +85,7 @@ const Navigation = ({ userObj }) => {
           </li>
         </ul>
 
-        <NotificationContainer userObj={userObj} activeNotice={activeNotice} />
+        <NotificationContainer userObj={userObj} activeNotice={activeNotice} offNotification={offNotification} />
       </NavigationStyle>
     </>
   );

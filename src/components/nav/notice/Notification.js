@@ -2,9 +2,10 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { authService, dbService, doc, getDoc } from "fbase";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import NotificationStyle from "styles/nav/notice/NotificationStyle";
 
-const Notification = ({ noticeObj }) => {
+const Notification = ({ noticeObj, offNotification }) => {
   const [noticeKey, noticeData] = noticeObj;
   const [contentText, getContentText] = useState("");
   const [userName, getUserName] = useState("");
@@ -64,9 +65,9 @@ const Notification = ({ noticeObj }) => {
   const onConfirm = async () => {
     const d = doc(dbService(), "notifications", authService().currentUser.uid);
     const get = await getDoc(d);
-    console.log(get.data());
+    // console.log(get.data());
 
-    console.log(noticeKey);
+    // console.log(noticeKey);
   };
 
   useEffect(() => {
@@ -89,7 +90,8 @@ const Notification = ({ noticeObj }) => {
           <FontAwesomeIcon id="profileicon" icon={faUser} />
         )}
       </div>
-      <div className="noticeTextWrap notice">
+      {/* <div className="noticeTextWrap notice"> */}
+      <Link to="/profile" className="noticeTextWrap notice" onClick={offNotification}>
         <span className="notice">
           "{contentText}"{" "}
           {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
@@ -101,7 +103,7 @@ const Notification = ({ noticeObj }) => {
             ? " 댓글을 남겼습니다."
             : " 좋아합니다."}
         </span>
-      </div>
+      </Link>
       <div className="noticeBtnWrap">
         <button className="confirm">확인</button>
         <button className="delete">삭제</button>

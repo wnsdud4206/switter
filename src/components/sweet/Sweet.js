@@ -22,7 +22,14 @@ import CloseUpImgContainer from "./CloseUpImgContainer";
 
 // edit모드와 아닐때의 컴포넌트를 각각 만들어서 넣어야할듯
 
-const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
+const Sweet = ({
+  sweetObj,
+  isOwner,
+  userObj,
+  onlyEditing,
+  onOnlyEditing,
+  getId,
+}) => {
   const [userName, setUserName] = useState("");
   const [userAttachmentUrl, setUserAttachmentUrl] = useState("");
   const [editing, setEditing] = useState(false);
@@ -35,6 +42,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   const [scrollComment, setScrollComment] = useState(false);
   const [showComment, setShowComment] = useState(false);
   const [comments, setComments] = useState({});
+  // const [only, setOnly] = useState(false);
 
   const sweetBoxRef = useRef();
   const sweetContentRef = useRef();
@@ -184,7 +192,7 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
 
   // 수정, updateDoc
   const onEditing = () => {
-    console.log("onEditing");
+    // console.log("onEditing");
     onOnlyEditing(sweetObj.id);
     setEditing(true);
     setNewSweetText(sweetObj.text);
@@ -201,6 +209,19 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
   //   setCommentEditResize(false);
   // };
 
+  const onScrollComment = () => {
+    onOnlyEditing(sweetObj.id);
+    setScrollComment(true);
+  };
+  const offScrollComment = () => {
+    onOnlyEditing("");
+    setScrollComment(false);
+  };
+
+  // const onOnlySweet = () => {
+  //   setOnly((prev) => !prev);
+  // };
+
   const onCloseUpImg = (e) => {
     if (!showCloseUpImg) {
       // img closeUp
@@ -211,15 +232,6 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
       setShowCloseUpImg(false);
       setTimeout(() => setCloseUpImg(""), 260);
     }
-  };
-
-  const onScrollComment = () => {
-    onOnlyEditing(sweetObj.id);
-    setScrollComment(true);
-  };
-  const offScrollComment = () => {
-    onOnlyEditing("");
-    setScrollComment(false);
   };
 
   return (
@@ -254,11 +266,42 @@ const Sweet = ({ sweetObj, isOwner, userObj, onlyEditing, onOnlyEditing }) => {
                 comments={comments}
                 onCommentEditResizeToggle={onCommentEditResizeToggle}
                 // offCommentEditResize={offCommentEditResize}
+                getId={getId}
+                // onOnlySweet={onOnlySweet}
               />
             )}
           </div>
         </div>
       </div>
+
+      {/* {only && (
+        <div id="onlySweet">
+          <div id="onlySweetBack"></div>
+          <div id="sweetBox">
+            <SweetContent
+              userName={userName}
+              userAttachmentUrl={userAttachmentUrl}
+              isOwner={isOwner}
+              onEditing={onEditing}
+              onDeleteClick={onDeleteClick}
+              sweetObj={sweetObj}
+              userObj={userObj}
+              sweetSizing={sweetSizing}
+              onCloseUpImg={onCloseUpImg}
+              sweetContentRef={sweetContentRef}
+              onScrollComment={onScrollComment}
+              offScrollComment={offScrollComment}
+              scrollComment={scrollComment}
+              showComment={showComment}
+              comments={comments}
+              onCommentEditResizeToggle={onCommentEditResizeToggle}
+              // offCommentEditResize={offCommentEditResize}
+              getId={getId}
+              onOnlySweet={onOnlySweet}
+            />
+          </div>
+        </div>
+      )} */}
 
       {closeUpImg && (
         <CloseUpImgContainer

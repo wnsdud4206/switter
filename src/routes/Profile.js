@@ -8,12 +8,15 @@ import {
   getDocs,
   orderBy,
 } from "fbase";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileEdit from "components/profile/ProfileEdit";
 import LogOutBtnStyle from "styles/profile/LogOutBtnStyle";
+import SweetConatiner from "components/sweet/SweetConatiner";
 
 const Profile = ({ userObj }) => {
+  const [mySweets, setMySweets] = useState([]);
+
   const navigate = useNavigate();
 
   const onLogOutClick = () => {
@@ -35,12 +38,20 @@ const Profile = ({ userObj }) => {
       // querySnapshot.forEach((doc) => {
       //   console.log(doc.id, "=>", doc.data());
       // });
+
+      const mySweetArr = Object.values(querySnapshot.docs).map((doc) => ({
+        id: doc.id,
+        ...doc.data(), // creatorId, createdAt, text
+      }));
+      // console.log(mySweetArr);
+      setMySweets(mySweetArr);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
     getMySweets();
+    // console.log(mySweets);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -53,13 +64,19 @@ const Profile = ({ userObj }) => {
 
   return (
     <>
-      <div>
+      {/* <div>
         profileHeader
           <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(mySweets, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>
-      </div>
-    
-      <ProfileEdit userObj={userObj} />
+      </div> */}
 
+      <ProfileEdit userObj={userObj} />
+      <SweetConatiner sweets={mySweets} userObj={userObj} />
+
+      {/* {true ? (
+        <SweetConatiner sweets={mySweets} userObj={userObj} />
+      ) : (
+        <ProfileEdit userObj={userObj} />
+      )} */}
 
       <LogOutBtnStyle>
         <button onClick={onLogOutClick}>Log Out</button>

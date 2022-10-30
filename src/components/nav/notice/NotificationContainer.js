@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
 
-const NotificationContainer = ({ userObj, activeNotice }) => {
+const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
   const [unConfirm, setUnConfirm] = useState({});
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
@@ -71,7 +71,7 @@ const NotificationContainer = ({ userObj, activeNotice }) => {
           <ul id="notificationList" className="notice" ref={ulRef}>
             {unConfirm.length ? ( // key도 같이 가져와야 하는데..
               unConfirm.map((con) => {
-                return <Notification key={con[0]} noticeObj={con} />;
+                return <Notification key={con[0]} noticeObj={con} offNotification={offNotification} />;
               })
             ) : (
               <p id="noNotice" className="notice">

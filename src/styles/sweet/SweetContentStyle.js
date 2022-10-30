@@ -12,7 +12,6 @@ const SweetContentStyle = styled.div`
     /* height: 37px; */
     height: 50px;
 
-    margin-bottom: 8px;
     padding: 0 8px;
     border-bottom: 2px solid #444;
     border-bottom-left-radius: 8px;
@@ -22,6 +21,14 @@ const SweetContentStyle = styled.div`
     div.userWrap {
       display: flex;
       align-items: center;
+
+      a {
+        display: flex;
+        align-items: center;
+
+        text-decoration: none;
+        color: white;
+      }
 
       div.sweetUserImage {
         display: flex;
@@ -83,29 +90,36 @@ const SweetContentStyle = styled.div`
     }
   }
 
-  p {
-    /* display: flex; */
+  div.sweetText {
+    height: 100%;
 
-    font-weight: normal;
+    padding: 40px 0 24px;
+    cursor: pointer;
 
-    width: 100%;
-    /* height: ${({ textareaSize }) =>
-      textareaSize <= 60 ? 60 : textareaSize}px; */
+    p {
+      /* display: flex; */
 
-    margin: 32px 0 24px;
-    padding: 2px 12px;
-    /* padding: 0 12px;
+      font-weight: normal;
+
+      width: 100%;
+      /* height: ${({ textareaSize }) =>
+        textareaSize <= 60 ? 60 : textareaSize}px; */
+
+      margin: 0;
+      padding: 2px 12px;
+      /* padding: 0 12px;
 
     border-top: 2px solid #444;
     border-bottom: 2px solid #444; */
 
-    box-sizing: border-box;
+      box-sizing: border-box;
 
-    white-space: pre-line;
-    line-height: 24px;
+      white-space: pre-line;
+      line-height: 24px;
 
-    flex: auto;
-    flex-wrap: wrap;
+      flex: auto;
+      flex-wrap: wrap;
+    }
   }
 
   div.sweetImg {

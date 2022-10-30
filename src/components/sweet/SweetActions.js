@@ -88,7 +88,13 @@ const SweetActoins = ({
         d,
         {
           [sweetObj.id]: {
-            sweetLikes: { [sweetObj.id + "/" + uid]: { confirmed: false, lastUpdate: Date.now(), category: "sweetLikes" } },
+            sweetLikes: {
+              [sweetObj.id + "/" + uid]: {
+                confirmed: false,
+                lastUpdate: Date.now(),
+                category: "sweetLikes",
+              },
+            },
           },
         },
         { merge: true },
@@ -117,7 +123,11 @@ const SweetActoins = ({
       // 숫자가 아니라 배열안에 uid(creatorId)를 넣어야할듯, 한 유저당 한 번씩
       await setDoc(
         d,
-        { [sweetObj.id]: { sweetLikes: { [sweetObj.id + "/" + uid]: deleteField() } } },
+        {
+          [sweetObj.id]: {
+            sweetLikes: { [sweetObj.id + "/" + uid]: deleteField() },
+          },
+        },
         { merge: true },
       );
       // await updateDoc(d, { likes: arrayRemove(uid) });
@@ -176,11 +186,17 @@ const SweetActoins = ({
       <div className="commentWrap">
         <span className="commentCounter">{commentCount}</span>
         {scrollComment ? (
-          <button className="commentBtn" onClick={offScrollComment}>
+          <button
+            className="commentBtn"
+            onClick={offScrollComment}
+          >
             <FontAwesomeIcon className="commentShow" icon={faComment} />
           </button>
         ) : (
-          <button className="commentBtn" onClick={onScrollComment}>
+          <button
+            className="commentBtn"
+            onClick={onScrollComment}
+          >
             <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
           </button>
         )}
