@@ -29,26 +29,6 @@ function App() {
     });
   }, []);
 
-  // const refreshUser = () => {
-  //   const user = authService().currentUser;
-  //   // 5-2. 방법 1
-  //   setUserObj({
-  //     displayName: user.displayName,
-  //     uid: user.uid,
-  //     photoURL: user.photoURL,
-  //     email: user.email,
-  //     updateProfile: (args) => user.updateProfile(args),
-  //   });
-  //   // 5-2. 방법 2
-  //   // setUserObj(Object.assign({}, user));
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("click", (e) => {
-  //     console.log(e.target);
-  //   })
-  // }, [])
-
   return (
     <>
       <MyHelmet />

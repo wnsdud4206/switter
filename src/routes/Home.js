@@ -9,10 +9,9 @@ import {
 } from "fbase";
 import SweetFactory from "components/sweet/SweetFactory";
 import SweetConatiner from "components/sweet/SweetConatiner";
-import testUtils from "utils/testUtils";
-import notification from "utils/notification";
 
 const Home = ({ userObj, init, getId }) => {
+  // userObj와 sweets는 뭐가 다른지?
   const [sweets, setSweets] = useState([]);
 
   // 읽기, 데이터 받아오기
@@ -50,36 +49,6 @@ const Home = ({ userObj, init, getId }) => {
       setSweets(sweetArr);
     });
   }, []);
-
-  // dom 변경이 감지될까? event?
-  // const [innerSize, setInnerSize] = useState(false);
-  // const onResizeHandler = useCallback((e) => {
-  //   if (window.innerHeight >= window.innerWidth) {
-  //     setInnerSize(false);
-  //   } else if (window.innerHeight < window.innerWidth) {
-  //     setInnerSize(true);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log(innerSize);
-  //   window.addEventListener("resize", onResizeHandler);
-  //   return () => {
-  //     window.addEventListener("resize", onResizeHandler);
-  //   };
-  // }, [onResizeHandler, innerSize]);
-
-
-  // useEffect(() => {
-  //   // notification("ADD", "commentLikes", "1", "sweetId4", "commentLike4", "commentId4"); 
-  //   // notification("REMOVE", "commentLikes", "creatorId", "activeId2", "commentId1");
-  //   notification("CONFIRM", "all", "1AMsq8Dcpld9BqbH6b3VAsChLCq2", "", "", "");
-  // }, []);
-
-  useEffect(() => {
-    testUtils();
-  }, []);
-
 
   return (
     <>
