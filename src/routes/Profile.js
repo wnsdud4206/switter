@@ -10,9 +10,6 @@ import {
 } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProfileEdit from "components/profile/ProfileEdit";
-import LogOutBtnStyle from "styles/profile/LogOutBtnStyle";
-import SweetConatiner from "components/sweet/SweetConatiner";
 
 const Profile = ({ userObj }) => {
   const [mySweets, setMySweets] = useState([]);
@@ -69,8 +66,8 @@ const Profile = ({ userObj }) => {
           <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(mySweets, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>
       </div> */}
 
-      <ProfileEdit userObj={userObj} />
-      <SweetConatiner sweets={mySweets} userObj={userObj} />
+      {/* <ProfileEdit userObj={userObj} />
+      <SweetConatiner sweets={mySweets} userObj={userObj} /> */}
 
       {/* {true ? (
         <SweetConatiner sweets={mySweets} userObj={userObj} />
@@ -78,9 +75,10 @@ const Profile = ({ userObj }) => {
         <ProfileEdit userObj={userObj} />
       )} */}
 
-      <LogOutBtnStyle>
+      {/* <LogOutBtnStyle>
         <button onClick={onLogOutClick}>Log Out</button>
-      </LogOutBtnStyle>
+      </LogOutBtnStyle> */}
+
       {/* <button onClick={profileImageFormat}>profile image format button</button> */}
     </>
   );

@@ -1,59 +1,25 @@
-import React, { useEffect, useState } from "react";
-import {
-  dbService,
-  collection,
-  getDocs,
-  query,
-  onSnapshot,
-  orderBy,
-} from "fbase";
-import SweetFactory from "components/sweet/SweetFactory";
-import SweetConatiner from "components/sweet/SweetConatiner";
+import React, { useEffect } from "react";
+import ContentsBox from "components/home/ContentsBox";
+import SideMenu from "components/sideMenu/SideMenu";
+import styled from "styled-components";
+
+const HomeContainerStyle = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const Home = ({ userObj, init, getId }) => {
-  // userObj와 sweets는 뭐가 다른지?
-  const [sweets, setSweets] = useState([]);
-
-  // 읽기, 데이터 받아오기
-  const getSweets = async () => {
-    try {
-      const dbSweets = await getDocs(
-        collection(dbService(), "sweets"),
-        // orderBy("createdAt", "desc"),
-      );
-      setSweets([]);
-      dbSweets.forEach((doc) => {
-        const sweetObj = {
-          ...doc.data(),
-          id: doc.id,
-          // id, text, creatorId, createdAt
-        };
-        // 왜 자꾸 뒤죽박죽으로 받아오지?? 저장할 때 뒤죽박죽인건가? - orderBy 로 정리
-        setSweets((prev) => [sweetObj, ...prev]);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    getSweets();
-    const q = query(
-      collection(dbService(), "sweets"),
-      orderBy("createdAt", "desc"), // 순서 정렬, 최신 sweet이 위에서 쌓이게 하고 싶기 때문에 "desc" 추가
-    );
-    onSnapshot(q, (snapshot) => {
-      const sweetArr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // creatorId, createdAt, text
-      }));
-      setSweets(sweetArr);
-    });
-  }, []);
 
   return (
     <>
-      <SweetFactory userObj={userObj} />
-      <SweetConatiner sweets={sweets} userObj={userObj} getId={getId} />
+      <HomeContainerStyle>
+        <ContentsBox></ContentsBox>
+        <SideMenu />
+      </HomeContainerStyle>
+
+      {/* <div style={{backgroundColor: "white", width: "100px", height: "100px"}}></div> */}
+      {/* <SweetFactory userObj={userObj} />
+      <SweetConatiner sweets={sweets} userObj={userObj} getId={getId} /> */}
     </>
   );
 };

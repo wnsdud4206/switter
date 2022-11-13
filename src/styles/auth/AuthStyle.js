@@ -10,7 +10,8 @@ const AuthStyle = styled.div`
   height: 100vh;
 
   svg#twiterLogo {
-    color: #00acee;
+    /* color: #00acee; */
+    color: #9953e2;
     height: 70px;
     width: 70px;
 

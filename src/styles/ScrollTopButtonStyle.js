@@ -10,7 +10,8 @@ const ScrollTopButtonStyle = styled.button`
   display: flex;
   justify-content: center;
 
-  background-color: #00bdee;
+  /* background-color: #00bdee; */
+  background-color: #9953e2;
 
   width: 50px;
   height: 50px;

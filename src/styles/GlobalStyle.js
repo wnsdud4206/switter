@@ -11,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
 
   }
   body {
-    font-weight: bold;
+    /* font-weight: bold; */
     background-color: #000;
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
 
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background-color: #00bdee;
+      background-color: #9953e2;
     }
 
     &::-webkit-scrollbar-track {
@@ -37,9 +37,14 @@ const GlobalStyle = createGlobalStyle`
     }
 
     div#root {
-      width: 500px;
+      
+      width: 100%;
 
       position: relative;
+
+      outline: 3px solid red;
+
+      overflow-x: hidden;
       
       @media screen and (max-width: 500px) {
         width: 100%;

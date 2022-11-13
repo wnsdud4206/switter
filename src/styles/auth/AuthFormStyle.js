@@ -42,7 +42,8 @@ const AuthFormStyle = styled.form`
       box-sizing: border-box;
 
       &[type="submit"] {
-        background: #00acee;
+        /* background: #00acee; */
+        background: #9953e2;
         color: white;
 
         font-size: 1rem;
@@ -64,7 +65,8 @@ const AuthFormStyle = styled.form`
         img,
         div {
           border-radius: 50%;
-          border: 3px solid #00acee;
+          /* border: 3px solid #00acee; */
+          border: 3px solid #9953e2;
 
           box-sizing: border-box;
 
@@ -118,7 +120,8 @@ const AuthFormStyle = styled.form`
           svg {
             width: 25px;
             height: 25px;
-            color: #00acee;
+            /* color: #00acee; */
+            color: #9953e2;
           }
         }
 
@@ -143,7 +146,8 @@ const AuthFormStyle = styled.form`
 `;
 
 const AuthFormSpanStyle = styled.span`
-  color: #00acee;
+  /* color: #00acee; */
+  color: #9953e2;
   text-decoration-line: underline;
 
   margin-top: 32px;

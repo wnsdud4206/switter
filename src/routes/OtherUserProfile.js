@@ -12,10 +12,10 @@ import {
 } from "fbase";
 import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-import SweetConatiner from "components/sweet/SweetConatiner";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import OtherUserProfileStyle from "styles/profile/OtherUserProfileStyle";
+// import SweetConatiner from "components/sweet/SweetConatiner";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faUser } from "@fortawesome/free-solid-svg-icons";
+// import OtherUserProfileStyle from "styles/profile/OtherUserProfileStyle";
 
 const OtherUserProfile = ({ userObj, otherUserId }) => {
   const [otherUserSweets, setOtherUserSweets] = useState([]);
@@ -83,26 +83,26 @@ const OtherUserProfile = ({ userObj, otherUserId }) => {
   //   });
   // };
 
-  return (
-    <OtherUserProfileStyle>
-      <div id="otherUesrAttachment">
-        {attachment && !imgError ? (
-          <img
-            src={attachment}
-            width="80px"
-            height="80px"
-            alt="profileImage"
-            onError={onError}
-          />
-        ) : (
-          <FontAwesomeIcon id="profileicon" icon={faUser} />
-        )}
-      </div>
-      <span>{userObj.displayName}</span>
+  // return (
+  //   <OtherUserProfileStyle>
+  //     <div id="otherUesrAttachment">
+  //       {attachment && !imgError ? (
+  //         <img
+  //           src={attachment}
+  //           width="80px"
+  //           height="80px"
+  //           alt="profileImage"
+  //           onError={onError}
+  //         />
+  //       ) : (
+  //         <FontAwesomeIcon id="profileicon" icon={faUser} />
+  //       )}
+  //     </div>
+  //     <span>{userObj.displayName}</span>
 
-      <SweetConatiner sweets={otherUserSweets} userObj={userObj} />
-    </OtherUserProfileStyle>
-  );
+  //     <SweetConatiner sweets={otherUserSweets} userObj={userObj} />
+  //   </OtherUserProfileStyle>
+  // );
 };
 
 export default OtherUserProfile;

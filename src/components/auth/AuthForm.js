@@ -17,7 +17,7 @@ import {
   getDownloadURL,
 } from "fbase";
 import React, { useEffect, useRef, useState } from "react";
-import userDocCreator from "hooks/userDocCreator";
+import userDocCreator from "services/userDocCreator";
 import { AuthFormSpanStyle, AuthFormStyle } from "styles/auth/AuthFormStyle";
 
 const AuthForm = () => {
