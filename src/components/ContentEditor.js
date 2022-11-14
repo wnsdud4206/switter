@@ -69,7 +69,7 @@ const ContentEditorStyle = styled.div`
           }
 
           input[type="file"] {
-            /* display: none; */
+            display: none;
           }
 
           &.none {
@@ -79,7 +79,7 @@ const ContentEditorStyle = styled.div`
           }
         }
 
-        div#selectImage {
+        div#selectImageWrap {
           display: flex;
 
           width: 100%;
@@ -103,7 +103,7 @@ const ContentEditorStyle = styled.div`
 
           outline: 1px solid red;
 
-          div.selectImageWrap {
+          div.selectImage {
             position: relative;
 
             img {
@@ -206,6 +206,7 @@ const ContentEditor = ({ userObj }) => {
   const [text, setText] = useState("");
   const [attachment, setAttachment] = useState([]);
   const fileInput = useRef();
+  const imagesWrapRef = useRef();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -215,9 +216,9 @@ const ContentEditor = ({ userObj }) => {
       if (ok) {
         dispatch(
           editActions.editContent({
-            mode: false,
             attachment,
             text,
+            uid: userObj.uid,
             content,
           }),
         );
@@ -225,7 +226,6 @@ const ContentEditor = ({ userObj }) => {
     } else {
       dispatch(
         editActions.newContent({
-          mode: false,
           attachment,
           text,
           uid: userObj.uid,
@@ -269,7 +269,7 @@ const ContentEditor = ({ userObj }) => {
       };
       multiRead();
       // 이제 드레그앤드롭으로 순서 바꿀 수 있게
-      
+
       // for (let file of files) {
       //   reader.onload = (finishedEvent) => {
       //     // onloadend에 finishedEvent의 result를 setAttachment로 설정해주는 것
@@ -306,6 +306,59 @@ const ContentEditor = ({ userObj }) => {
     }
   }, []);
 
+  // drag&drop - https://inpa.tistory.com/entry/%EB%93%9C%EB%9E%98%EA%B7%B8-%EC%95%A4-%EB%93%9C%EB%A1%AD-Drag-Drop-%EA%B8%B0%EB%8A%A5
+  // attachment state<array> 순서도 바꿔줘야 함
+  // items event
+  const onDragStart = ({ target }) => {
+    target.classList.add("dragging");
+  };
+  const onDragEnd = ({ target }) => {
+    target.classList.remove("dragging");
+    // console.log(attachment);
+
+    // console.log(imagesWrapRef.current);
+    const wrapChild = [...imagesWrapRef.current.children];
+    setAttachment([]);
+    for (let child of wrapChild) {
+      setAttachment((prev) => [...prev, child.children[0].src]);
+    }
+  };
+  // container event
+  const getDragAfterElement = (wrap, x) => {
+    const draggableElements = [
+      // ...wrap.querySelectorAll(".draggable:not(.dragging)"),
+      ...wrap.children,
+    ];
+
+    // console.log(wrap.children.filter(el => !String(el).includes("dragging")));
+
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        // console.log(child);
+        // console.log(box);
+        // console.log(offset);
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      },
+      { offset: Number.NEGATIVE_INFINITY },
+    ).element;
+  };
+  const onDragOver = (e) => {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(e.currentTarget, e.clientX);
+    const draggable = document.querySelector(".dragging");
+    if (afterElement === undefined) {
+      e.currentTarget.appendChild(draggable);
+    } else {
+      e.currentTarget.insertBefore(draggable, afterElement);
+    }
+  };
+
   return (
     <ContentEditorStyle>
       <div id="bg" onClick={onEditCancel}>
@@ -326,11 +379,21 @@ const ContentEditor = ({ userObj }) => {
                 multiple
               />
             </label>
-            <div id="selectImage">
+            <div
+              id="selectImageWrap"
+              onDragOver={onDragOver}
+              ref={imagesWrapRef}
+            >
               {attachment.length ? (
                 <>
                   {attachment.map((att, i) => (
-                    <div key={i} className="selectImageWrap">
+                    <div
+                      key={i}
+                      className="selectImage"
+                      draggable
+                      onDragStart={onDragStart}
+                      onDragEnd={onDragEnd}
+                    >
                       <img
                         src={att}
                         width="100"
