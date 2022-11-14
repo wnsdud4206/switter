@@ -319,9 +319,11 @@ const Content = ({ content }) => {
 
       <ContentAction content={content} />
 
-      <div className="contentComments">
-        <b>{content.firstCommentName}</b>/{content.firstComment}
-      </div>
+      {content.firstComment && (
+        <div className="contentComments">
+          <b>{content.firstCommentName}</b>/{content.firstComment}
+        </div>
+      )}
     </ContentStyle>
   );
 };

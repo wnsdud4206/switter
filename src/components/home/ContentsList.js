@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { editActions } from "store/contentEditStore";
 import Content from "./Content";
 
-const ContentsBoxStyle = styled.div`
+const ContentsListStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -169,7 +169,7 @@ const ContentsBoxStyle = styled.div`
   }
 `;
 
-const ContentsBox = () => {
+const ContentsList = () => {
   const [contents, setContents] = useState([]);
   // slideIndex가 각각의 값이 있는게 아니라 모두에게 적용됨 - attachment 부분만 component화해서 나눠야 할듯
 
@@ -241,7 +241,7 @@ const ContentsBox = () => {
   // }, [slideIndex]);
 
   return (
-    <ContentsBoxStyle>
+    <ContentsListStyle>
       {contents.length &&
         contents
           .sort((a, b) => {
@@ -252,8 +252,8 @@ const ContentsBox = () => {
           .map((content, i) => (
             <Content key={i + content.id} content={content} />
           ))}
-    </ContentsBoxStyle>
+    </ContentsListStyle>
   );
 };
 
-export default ContentsBox;
+export default ContentsList;

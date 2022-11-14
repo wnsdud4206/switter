@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ContentsBox from "components/home/ContentsBox";
+import ContentsList from "components/home/ContentsList";
 import SideMenu from "components/sideMenu/SideMenu";
 import styled from "styled-components";
 
@@ -13,7 +13,7 @@ const Home = ({ userObj, init, getId }) => {
   return (
     <>
       <HomeContainerStyle>
-        <ContentsBox></ContentsBox>
+        <ContentsList />
         <SideMenu />
       </HomeContainerStyle>
 
@@ -24,4 +24,4 @@ const Home = ({ userObj, init, getId }) => {
   );
 };
 
-export default Home;
+export default React.memo(Home);

@@ -2,20 +2,21 @@ import React, { useState } from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
-import OtherUserProfile from "routes/OtherUserProfile";
+// import OtherUserProfile from "routes/OtherUserProfile";
 import Profile from "routes/Profile";
 import Header from "./header/Header";
 import ContentEditor from "components/ContentEditor";
 import { useSelector } from "react-redux";
+import ContentBox from "./ContentBox";
 
 const AppRouter = ({ isLoggedIn, userObj, init }) => {
-  const [otherUserId, setOtherUserId] = useState("");
+  // const [otherUserId, setOtherUserId] = useState("");
 
   const createMode = useSelector((state) => state.mode);
 
-  const getId = (id) => {
-    setOtherUserId(id);
-  };
+  // const getId = (id) => {
+  //   setOtherUserId(id);
+  // };
 
   return (
     <Router>
@@ -24,6 +25,7 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
           <Header userObj={userObj} />
           {createMode && <ContentEditor userObj={userObj} />}
           {/* <ContentCreate userObj={userObj} /> */}
+          <ContentBox />
         </>
       )}
       <Routes>
@@ -31,7 +33,13 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
           <>
             <Route
               path="/"
-              element={<Home userObj={userObj} init={init} getId={getId} />}
+              element={
+                <Home 
+                  userObj={userObj} 
+                  init={init} 
+                  // getId={getId} 
+                />
+              }
             />
             {/* <Route
               path={`/${otherUserId}`}

@@ -30,7 +30,7 @@ const ContentEditorStyle = styled.div`
 
   z-index: 2;
 
-  div#bg {
+  div#contentEditBackground {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -293,7 +293,7 @@ const ContentEditor = ({ userObj }) => {
   const onEditCancel = (e) => {
     // console.log(e.target);   // OOO
     // console.log(e.currentTarget);
-    e.target.id === "bg" &&
+    e.target.id === "contentEditBackground" &&
       dispatch(editActions.offEdit({ mode: false, content: null }));
   };
 
@@ -361,7 +361,7 @@ const ContentEditor = ({ userObj }) => {
 
   return (
     <ContentEditorStyle>
-      <div id="bg" onClick={onEditCancel}>
+      <div id="contentEditBackground" onClick={onEditCancel}>
         <div id="createBox">
           <form onSubmit={onSubmit}>
             <label
