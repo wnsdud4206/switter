@@ -10,7 +10,7 @@ import NavigationProfileImage from "styles/header/NavigationProfileImage";
 import NotificationContainer from "./notice/NotificationContainer";
 import NavStyle from "styles/header/nav/NavStyle";
 import { useDispatch } from "react-redux";
-import { editActions } from "../../../store/contentEditStore";
+import { editActions } from "../../../modules/contentEditReducer";
 
 const Nav = ({
   userObj,

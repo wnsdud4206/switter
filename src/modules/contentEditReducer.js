@@ -23,10 +23,10 @@ import {
 
 // getSweets를 어떻게 불러와서 state의 기본값으로 사용하지??
 
-const onEdit = createAction("ONEDIT");
-const newContent = createAction("NEWCONTENT");
-const editContent = createAction("EDITCONTENT");
-const offEdit = createAction("OFFEDIT");
+const onEdit = createAction("EDIT/ONEDIT");
+const newContent = createAction("EDIT/NEWCONTENT");
+const editContent = createAction("EDIT/EDITCONTENT");
+const offEdit = createAction("EDIT/OFFEDIT");
 // const newComment = createAction("NEWCOMMENT");
 
 let Initializing = {
@@ -35,7 +35,7 @@ let Initializing = {
 };
 
 // redux로 할 필요가 없었겠는데?
-const editReducer = createReducer(Initializing, {
+export const editReducer = createReducer(Initializing, {
   [onEdit.type]: (state, action) => {
     // A case reducer on a non-draftable value must not return undefined 에러는 아래처럼 return 해주지 않으면 나옴, state가 mutate하지 않았나?
     return (state = { mode: true, content: action.payload?.content });
@@ -134,10 +134,10 @@ const editReducer = createReducer(Initializing, {
 
 export const editActions = { onEdit, newContent, editContent, offEdit };
 
-export default configureStore({
-  reducer: editReducer,
-  // 편법인가?? - 참고: https://guiyomi.tistory.com/116
-  middleware: getDefaultMiddleware({
-    serializableCheck: false,
-  }),
-});
+// export default configureStore({
+//   reducer: editReducer,
+//   // 편법인가?? - 참고: https://guiyomi.tistory.com/116
+//   middleware: getDefaultMiddleware({
+//     serializableCheck: false,
+//   }),
+// });

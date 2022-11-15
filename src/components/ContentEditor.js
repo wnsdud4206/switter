@@ -17,7 +17,7 @@ import {
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { editActions } from "store/contentEditStore";
+import { editActions } from "modules/contentEditReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 const ContentEditorStyle = styled.div`
@@ -202,7 +202,7 @@ const ContentEditorStyle = styled.div`
 
 const ContentEditor = ({ userObj }) => {
   const dispatch = useDispatch();
-  const { content } = useSelector((state) => state);
+  const { content } = useSelector((state) => state.editState);
   const [text, setText] = useState("");
   const [attachment, setAttachment] = useState([]);
   const fileInput = useRef();

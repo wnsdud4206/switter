@@ -10,9 +10,9 @@ import {
   onSnapshot,
 } from "fbase";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { editActions } from "store/contentEditStore";
+import { editActions } from "modules/contentEditReducer";
 import Content from "./Content";
+import useGetContents from "hooks/useGetContents";
 
 const ContentsListStyle = styled.div`
   display: flex;
@@ -170,75 +170,7 @@ const ContentsListStyle = styled.div`
 `;
 
 const ContentsList = () => {
-  const [contents, setContents] = useState([]);
-  // slideIndex가 각각의 값이 있는게 아니라 모두에게 적용됨 - attachment 부분만 component화해서 나눠야 할듯
-
-  // 읽기, 데이터 받아오기
-  const getContents = async () => {
-    try {
-      // const dbContents = await getDocs(
-      //   collection(dbService(), "contents"),
-      //   // orderBy("createdAt", "desc"),
-      // );
-      // setContents([]);
-      // dbContents.forEach(async (content) => {
-      const contentsCollection = collection(dbService(), "contents");
-      onSnapshot(contentsCollection, (querySnapshot) => {
-        setContents([]);
-        querySnapshot.forEach(async (content) => {
-          const dbUser = await getDoc(
-            doc(dbService(), "users", content.data().creatorId),
-          );
-
-          const dbComment = await getDocs(
-            query(
-              collection(dbService(), "comments"),
-              where("sweetId", "==", content.id),
-            ),
-          );
-          // console.log(content.id);
-          // console.log(dbComment.docs[0].data());
-          // dbComment.forEach((comment) => {
-          //   console.log(comment.data());
-          // })
-
-          const creatorDisplayName = dbUser.data().displayName;
-          const creatorAttachmentUrl = dbUser.data().attachmentUrl;
-          const firstComment = dbComment.docs[0]?.data().text;
-          let firstCommentName;
-
-          if (dbComment.docs[0]?.data().creatorId) {
-            const dbCommentUser = await getDoc(
-              doc(dbService(), "users", dbComment.docs[0]?.data().creatorId),
-            );
-            firstCommentName = dbCommentUser.data().displayName;
-          }
-
-          const contentObj = {
-            ...content.data(),
-            creatorDisplayName,
-            creatorAttachmentUrl,
-            firstComment,
-            firstCommentName,
-            id: content.id,
-            // id, text, creatorId, createdAt
-          };
-          // 왜 자꾸 뒤죽박죽으로 받아오지?? 저장할 때 뒤죽박죽인건가? - orderBy 로 정리
-          setContents((prev) => [contentObj, ...prev]);
-        });
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    getContents();
-  }, []);
-
-  // useEffect(() => {
-  //   console.log(slideIndex);
-  // }, [slideIndex]);
+  const contents = useGetContents();
 
   return (
     <ContentsListStyle>

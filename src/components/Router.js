@@ -12,7 +12,8 @@ import ContentBox from "./ContentBox";
 const AppRouter = ({ isLoggedIn, userObj, init }) => {
   // const [otherUserId, setOtherUserId] = useState("");
 
-  const createMode = useSelector((state) => state.mode);
+  const editMode = useSelector((state) => state.editState.mode);
+  const boxMode = useSelector((state) => state.boxState.mode);
 
   // const getId = (id) => {
   //   setOtherUserId(id);
@@ -23,9 +24,8 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
       {isLoggedIn && (
         <>
           <Header userObj={userObj} />
-          {createMode && <ContentEditor userObj={userObj} />}
-          {/* <ContentCreate userObj={userObj} /> */}
-          <ContentBox />
+          {editMode && <ContentEditor userObj={userObj} />}
+          {boxMode && <ContentBox userObj={userObj} />}
         </>
       )}
       <Routes>
@@ -34,10 +34,10 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
             <Route
               path="/"
               element={
-                <Home 
-                  userObj={userObj} 
-                  init={init} 
-                  // getId={getId} 
+                <Home
+                  userObj={userObj}
+                  init={init}
+                  // getId={getId}
                 />
               }
             />

@@ -26,7 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ContentAction from "./ContentAction";
 import { useDispatch } from "react-redux";
-import { editActions } from "store/contentEditStore";
+import { editActions } from "modules/contentEditReducer";
 
 const ContentStyle = styled.div`
   width: 100%;
@@ -71,6 +71,7 @@ const ContentStyle = styled.div`
     }
   }
 
+  // ContentBox.js에서도 쓰니까 묶어놔도 좋을 듯
   div.contentImagesWrap {
     position: relative;
 
@@ -84,25 +85,19 @@ const ContentStyle = styled.div`
 
       background-color: #444;
 
-      transform: translateX(-468px);
+      /* transform: translateX(-468px); */
 
       outline: 1px solid red;
 
       // prev, next button
 
       div.contentImage {
-        /* display: none; */
-        display: block;
 
         // 하단 여백 제거하기
         // height 크기 고정 - display none으로 해서 그런듯
         // insta에서는 display flex row, translate로 줌
 
         img {
-        }
-
-        &.active {
-          display: block;
         }
       }
     }
@@ -126,6 +121,8 @@ const ContentStyle = styled.div`
 
       position: absolute;
       top: 50%;
+
+      transform: translateY(-100%);
 
       opacity: 0;
 

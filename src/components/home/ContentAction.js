@@ -23,6 +23,8 @@ import {
   faHeart as faRegHeart,
   faComment as faRegCommnet,
 } from "@fortawesome/free-regular-svg-icons";
+import { useDispatch } from "react-redux";
+import { boxActions } from "modules/contentBoxReducer";
 
 const ContentActionStyle = styled.div`
   display: flex;
@@ -35,7 +37,7 @@ const ContentActionStyle = styled.div`
   div {
     display: flex;
     justify-content: center;
-    
+
     button {
       background: none;
       outline: none;
@@ -81,6 +83,7 @@ const ContentAction = ({ content }) => {
   const [likeCount, setLikeCount] = useState([]);
   const [currentUserLike, setCurrentUserLike] = useState(false);
   const [commentCount, setCommentCount] = useState([]);
+  const dispatch = useDispatch();
 
   const getComments = async () => {
     try {
@@ -162,6 +165,10 @@ const ContentAction = ({ content }) => {
       );
   };
 
+  const onContentBox = () => {
+    dispatch(boxActions.onContentBox(content));
+  };
+
   return (
     <ContentActionStyle className="contentActions">
       <div className="likeWrap">
@@ -177,7 +184,7 @@ const ContentAction = ({ content }) => {
 
       <div className="commentWrap">
         {/* <span className="commentCounter">{commentCount.length}</span> */}
-        <button className="commentBtn">
+        <button className="commentBtn" onClick={onContentBox}>
           {/* 이전처럼 comment가 열리고 닫히는게 아니라 comment의 존재여부로 icon 다르게 주기 */}
           {commentCount.length ? (
             <FontAwesomeIcon className="commentShow" icon={comment} />
