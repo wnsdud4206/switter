@@ -1,43 +1,34 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AppRouter from "components/Router";
 import { authService, onAuth } from "fbase";
 import GlobalStyle from "styles/GlobalStyle";
 import LoadingBox from "styles/LoadingBoxStyle";
 import MyHelmet from "./components/MyHelmet";
 import useGetUser from "hooks/useGetUser";
+import { useSelector } from "react-redux";
 
 function App() {
-  // const [init, setInit] = useState(false);
-  // const [userObj, setUserObj] = useState(null);
-  // useEffect(() => {
-  //   onAuth(authService(), (user) => {
-  //     if (user) {
-  //       // setUserObj(user);
-  //       // 5-2. 방법 1
-  //       setUserObj({
-  //         displayName: user.displayName,
-  //         uid: user.uid,
-  //         photoURL: user.photoURL,
-  //         email: user.email,
-  //         updateProfile: (args) => user.updateProfile(args),
-  //       });
-  //       // 5-2. 방법 2
-  //       // setUserObj(user);
-  //     } else {
-  //       setUserObj(null);
-  //     }
-  //     setInit(true);
-  //   });
-
-  // }, []);
-
   const { init, userObj } = useGetUser();
+  const darkMode = useSelector((state) => state.darkModeState.mode);
+
+  // useEffect(() => {
+  //   console.log(darkMode);
+    
+  //   // 다크모드 여부
+  //   // if (window.localStorage.getItem("darkMode") !== null) {
+  //   //   const prefersDark =
+  //   //     window.matchMedia &&
+  //   //     window.matchMedia("(prefers-color-scheme: Dark)").matches;
+  //   //   window.localStorage.setItem("darkMode", prefersDark);
+  //   // }
+
+  // }, [darkMode]);
 
   return (
     <>
       <MyHelmet />
 
-      <GlobalStyle />
+      <GlobalStyle them={darkMode} />
       {/* Loading중 같은 */}
       {init ? (
         <AppRouter

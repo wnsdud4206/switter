@@ -4,13 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import {
   faBell as faBellActivate,
+  faCircleHalfStroke,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import NavigationProfileImage from "styles/header/NavigationProfileImage";
 import NotificationContainer from "./notice/NotificationContainer";
 import NavStyle from "styles/header/nav/NavStyle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { editActions } from "../../../modules/contentEditReducer";
+import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
+import { darkModeActions } from "modules/darkModeReducer";
 
 const Nav = ({
   userObj,
@@ -21,6 +24,7 @@ const Nav = ({
 }) => {
   const [imgError, setImgError] = useState(false);
   const dispatch = useDispatch();
+  const darkMode = useSelector((state) => state.darkModeState.mode);
 
   const contentCreate = () => {
     dispatch(editActions.onEdit({ mode: true, content: null }));
@@ -30,14 +34,24 @@ const Nav = ({
     setImgError(true);
   };
 
+  const onDarkModeToggle = () => {
+    darkMode
+      ? dispatch(darkModeActions.light({ mode: false }))
+      : dispatch(darkModeActions.dark({ mode: true }));
+  };
+
   return (
     <NavStyle>
       <ul id="navContainer">
         <li id="newContent">
-          <button onClick={contentCreate}>new</button>
+          <button onClick={contentCreate}>
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </button>
         </li>
         <li id="darkMode">
-          <button>dark</button>
+          <button onClick={onDarkModeToggle}>
+            <FontAwesomeIcon icon={faCircleHalfStroke} />
+          </button>
         </li>
         <li id="notification" className="notice" onClick={toggleNotification}>
           {/* not Link */}

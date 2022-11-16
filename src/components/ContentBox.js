@@ -8,7 +8,17 @@ import { boxActions } from "modules/contentBoxReducer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { dbService, doc, getDocs, query, collection, where } from "fbase";
+import {
+  dbService,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  setDoc,
+  query,
+  collection,
+  where,
+} from "fbase";
 
 const ContentBoxStyle = styled.div`
   width: 100%;
@@ -222,7 +232,7 @@ const ContentBoxStyle = styled.div`
               }
 
               svg {
-                color: #9953e2;
+                color: var(--personal-color);
 
                 width: 30px;
                 height: 30px;
@@ -248,7 +258,7 @@ const ContentBoxStyle = styled.div`
               align-items: center;
               justify-content: center;
 
-              background-color: #9953e2;
+              background-color: var(--personal-color);
 
               min-width: 36px;
               height: 36px;
@@ -299,15 +309,29 @@ const ContentBox = ({ userObj }) => {
     // const commentsDoc = doc(dbService(), "comments");
     const commentsQuery = query(
       collection(dbService(), "comments"),
-      where("sweetId", "==", content.id),
+      where("contentId", "==", content.id),
     );
-    const commentsGet = await getDocs(commentsQuery);
+    const commentsSnap = await getDocs(commentsQuery);
 
     setComments([]);
-    commentsGet.docs.forEach((comment) => {
-      // console.log(comment.data());
-      // 여기서 comment creator displayName 가져오기
-      setComments((prev) => [comment.data(), ...prev]);
+    commentsSnap.docs.forEach(async (comment) => {
+      try {
+        // console.log(comment.data());
+        // 여기서 comment creator displayName 가져오기
+        const usersRef = doc(dbService(), "users", comment.data().creatorId);
+        const usersSnap = await getDoc(usersRef);
+
+        const { attachmentUrl, displayName } = usersSnap.data();
+
+        const commentObj = {
+          ...comment.data(),
+          attachmentUrl,
+          displayName,
+        };
+        setComments((prev) => [commentObj, ...prev]);
+      } catch (error) {
+        console.error(error);
+      }
     });
   };
 
@@ -337,6 +361,59 @@ const ContentBox = ({ userObj }) => {
   const contentBoxCancel = (e) => {
     e.target.id === "contentBackground" && dispatch(boxActions.offContentBox());
   };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    console.log("submit");
+    try {
+      const commentObj = {
+        text: commentText,
+        createdAt: Date.now(),
+        creatorId: userObj.uid,
+        contentId: content.id,
+      };
+      // firestore에 추가
+      // eslint-disable-next-line no-unused-vars
+      const docRef = await addDoc(
+        collection(dbService(), "comments"),
+        commentObj,
+      );
+
+      const noticeDoc = doc(
+        dbService(),
+        "notifications",
+        `${content.creatorId}`,
+      );
+      await setDoc(
+        noticeDoc,
+        {
+          [content.id]: {
+            contentComments: {
+              [content.id + "/" + docRef.id]: {
+                confirmed: false,
+                lastUpdate: Date.now(),
+                category: "contentComments"
+              },
+            },
+          },
+        },
+        { merge: true },
+      );
+
+      // notification(
+      //   "ADD",
+      //   "contentComments",
+      //   content.creatorId,
+      //   content.id,
+      //   null,
+      //   docRef.id,
+      // );
+
+      setCommentText("");
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <ContentBoxStyle>
@@ -393,12 +470,12 @@ const ContentBox = ({ userObj }) => {
           <div id="CommentBox">
             <div id="contentBoxHeader">
               {/* <Link
-            to={`/${isOwner ? "profile" : sweetObj.creatorId}`}
+            to={`/${isOwner ? "profile" : content.creatorId}`}
             onClick={() => {
               if (isOwner) {
                 return;
               }
-              getId(sweetObj.creatorId);
+              getId(content.creatorId);
             }}
           > */}
               <div id="contentBoxCreatorAttachment">
@@ -407,7 +484,7 @@ const ContentBox = ({ userObj }) => {
                     src={content.creatorAttachmentUrl}
                     width="40"
                     height="40"
-                    alt="sweetUserImage"
+                    alt="contentUserImage"
                     onError={onError}
                   />
                 ) : (
@@ -426,7 +503,9 @@ const ContentBox = ({ userObj }) => {
                 {/* contents나 comments에 displayName도 저장하고 profile 수정할 때 contents, comments 의 displayName도 변경하게 끔 해야할 듯, 왜냐면 해당 content나 comment의 주인을 찾으려면 또 일일이 db를 가져오는 것이 번거로움(아래 댓글 작성자 부분) - 아냐 그럼 content랑 comment가 아주 많은 유저는 바꾸는 것이 너무 오래걸리거나 무거워 질 수도 있음 */}
                 {comments?.length ? (
                   comments.map((comment) => (
-                    <li key={comment.createdAt}>댓글작성자/{comment.text}</li>
+                    <li key={comment.createdAt}>
+                      {comment.displayName}/{comment.text}
+                    </li>
                   ))
                 ) : (
                   <li id="emptyComment">아직 댓글이 없어요😥</li>
@@ -435,7 +514,7 @@ const ContentBox = ({ userObj }) => {
             </div>
 
             <div id="commentFactory">
-              <form onSubmit={() => console.log("submit")}>
+              <form onSubmit={onSubmit}>
                 <div id="userImage">
                   {userObj.photoURL ? (
                     <img
@@ -466,6 +545,7 @@ const ContentBox = ({ userObj }) => {
                 </label>
               </form>
             </div>
+
           </div>
         </div>
       </div>

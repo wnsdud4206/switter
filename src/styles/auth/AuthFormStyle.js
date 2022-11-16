@@ -121,7 +121,7 @@ const AuthFormStyle = styled.form`
             width: 25px;
             height: 25px;
             /* color: #00acee; */
-            color: #9953e2;
+            color: var(--personal-color);
           }
         }
 
@@ -147,7 +147,7 @@ const AuthFormStyle = styled.form`
 
 const AuthFormSpanStyle = styled.span`
   /* color: #00acee; */
-  color: #9953e2;
+  color: var(--personal-color);
   text-decoration-line: underline;
 
   margin-top: 32px;

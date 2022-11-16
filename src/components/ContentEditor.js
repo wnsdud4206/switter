@@ -94,7 +94,7 @@ const ContentEditorStyle = styled.div`
 
           &::-webkit-scrollbar-thumb {
             border-radius: 4px;
-            background-color: #9953e2;
+            background-color: var(--personal-color);
           }
 
           &::-webkit-scrollbar-track {
@@ -180,7 +180,7 @@ const ContentEditorStyle = styled.div`
             justify-content: center;
             align-items: center;
 
-            background-color: #9953e2;
+            background-color: var(--personal-color);
             border-radius: 50%;
             padding: 8px;
 
@@ -212,7 +212,7 @@ const ContentEditor = ({ userObj }) => {
     e.preventDefault();
 
     if (content) {
-      const ok = window.confirm("Are you sure you want to delete this sweet?");
+      const ok = window.confirm("Are you sure you want to delete this content?");
       if (ok) {
         dispatch(
           editActions.editContent({

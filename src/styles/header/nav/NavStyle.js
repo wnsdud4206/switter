@@ -5,12 +5,12 @@ const NavStyle = styled.nav`
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 24px;
+    gap: 22px;
 
     padding: 0;
     margin: 0;
 
-    outline: 1px solid white;
+    /* outline: 1px solid white; */
 
     li {
       display: flex;
@@ -28,7 +28,7 @@ const NavStyle = styled.nav`
         color: white;
         width: 25px;
         height: 25px;
-        outline: 1px solid red;
+        /* outline: 1px solid red; */
 
         cursor: pointer;
       }
@@ -48,7 +48,7 @@ const NavStyle = styled.nav`
 
         svg {
           /* color: #00acee; */
-          color: #9953e2;
+          /* color: var(--personal-color); */
           /* font-size: 50px; */
 
           pointer-events: none;

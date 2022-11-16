@@ -195,14 +195,14 @@ const Content = ({ content }) => {
 
   const onDeleteClick = async () => {
     // try {
-    const ok = window.confirm("Are you sure you want to delete this sweet?");
+    const ok = window.confirm("Are you sure you want to delete this content?");
     if (ok) {
       try {
         const contentDoc = doc(dbService(), "contents", `${content.id}`);
 
         const commentQuery = query(
           collection(dbService(), "comments"),
-          where("sweetId", "==", content.id),
+          where("contentId", "==", content.id),
         );
         const commentDocs = await getDocs(commentQuery);
         commentDocs.docs.forEach(async (commentDoc) => {
@@ -228,7 +228,7 @@ const Content = ({ content }) => {
         await deleteDoc(contentDoc);
 
         if (content.attachmentUrl) {
-          // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 sweet을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
+          // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 content을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
           const r = ref(storageService(), content.attachmentUrl);
           await deleteObject(r);
         }
@@ -245,12 +245,12 @@ const Content = ({ content }) => {
     <ContentStyle className="content">
       <div className="contentHeader">
         {/* <Link
-            to={`/${isOwner ? "profile" : sweetObj.creatorId}`}
+            to={`/${isOwner ? "profile" : contentObj.creatorId}`}
             onClick={() => {
               if (isOwner) {
                 return;
               }
-              getId(sweetObj.creatorId);
+              getId(contentObj.creatorId);
             }}
           > */}
         <div className="creatorAttachment">
@@ -259,7 +259,7 @@ const Content = ({ content }) => {
               src={content.creatorAttachmentUrl}
               width="40"
               height="40"
-              alt="sweetUserImage"
+              alt="contentUserImage"
               onError={onError}
             />
           ) : (

@@ -28,7 +28,7 @@ const useGetContents = () => {
           const dbComment = await getDocs(
             query(
               collection(dbService(), "comments"),
-              where("sweetId", "==", content.id),
+              where("contentId", "==", content.id),
             ),
           );
 
@@ -53,7 +53,7 @@ const useGetContents = () => {
             id: content.id,
             // id, text, creatorId, createdAt
           };
-          
+
           setContents((prev) => [contentObj, ...prev]);
         });
       });

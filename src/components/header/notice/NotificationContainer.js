@@ -12,7 +12,7 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
     // const d = doc(dbService(), "notifications", "noData");  // undefined
     const d = doc(dbService(), "notifications", userObj.uid);
     onSnapshot(d, (snapshot) => {
-      // 각 sweetComments, sweetLikes, commentLikes 안의 모든 갯수를 더한 만큼 출력
+      // 각 contentComments, contentLikes, commentLikes 안의 모든 갯수를 더한 만큼 출력
       let data = snapshot.data() || {};
       let unConfirmAll = {};
       for (let docValue of Object.values(data)) {
@@ -55,7 +55,7 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
         <div id="noticeHeader">
           <div id="categoryTab">
             {/* 친구 새글도 추가? */}
-            <button id="sweetNotice">Sweets</button>
+            <button id="contentNotice">contents</button>
             <button id="commentNotice">Comments</button>
           </div>
           <div id="noticeAction">

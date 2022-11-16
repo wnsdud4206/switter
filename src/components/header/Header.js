@@ -65,7 +65,7 @@ const Header = ({ userObj }) => {
           offNotification={offNotification}
         />
       </HeaderStyle>
-      
+
       <ScrollProgress />
       <ScrollTopButton />
     </>

@@ -18,20 +18,20 @@ const Notification = ({ noticeObj, offNotification }) => {
   };
 
   const getContentAndUser = async () => {
-    // const [contentId, userId] = noticeKey.split("/");
+    // const [secondId, userId] = noticeKey.split("/");
 
-    let sweetId, contentId, userId;
+    let contentId, secondId, userId;
     let collection;
     if (noticeData.category === "commentLikes") {
-      [sweetId, contentId, userId] = noticeKey.split("/");
+      [contentId, secondId, userId] = noticeKey.split("/");
       collection = "comments";
     } else {
-      [contentId, userId] = noticeKey.split("/");
-      collection = "sweets";
+      [secondId, userId] = noticeKey.split("/");
+      collection = "contents";
     }
 
     // getContent
-    const contentDoc = doc(dbService(), collection, contentId);
+    const contentDoc = doc(dbService(), collection, secondId);
 
     const contentGet = await getDoc(contentDoc);
 
@@ -45,7 +45,7 @@ const Notification = ({ noticeObj, offNotification }) => {
 
     // getUser
     let userDoc;
-    if (noticeData.category === "sweetComments") {
+    if (noticeData.category === "contentComments") {
       const commentDoc = doc(dbService(), "comments", userId);
       const commentGet = await getDoc(commentDoc);
 
@@ -83,7 +83,7 @@ const Notification = ({ noticeObj, offNotification }) => {
             src={userImage}
             width="50"
             height="50"
-            alt="sweetUserImage"
+            alt="contentUserImage"
             onError={onError}
           />
         ) : (
@@ -95,11 +95,11 @@ const Notification = ({ noticeObj, offNotification }) => {
         <span className="notice">
           "{contentText}"{" "}
           {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
-          {noticeData.category === "sweetComments" ? "에 " : "을 "}
+          {noticeData.category === "contentComments" ? "에 " : "을 "}
         </span>
         <span className="notice">
           "{userName}"님이
-          {noticeData.category === "sweetComments"
+          {noticeData.category === "contentComments"
             ? " 댓글을 남겼습니다."
             : " 좋아합니다."}
         </span>

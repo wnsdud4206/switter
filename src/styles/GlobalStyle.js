@@ -1,6 +1,28 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+  // props 받아와서 다크모드 여부
+  ${({them}) =>
+    them
+      ? css`
+          :root {
+            --personal-color: black;
+          }
+        `
+      : css`
+          :root {
+            --personal-color: white;
+          }
+        `}
+  /* :root {
+    --personal-color: black;
+  } */
+  /* @media (prefers-color-scheme: dark) {
+    :root {
+      --personal-color: #9953e2;
+    }
+  } */
+
   html, body, div#root {
     min-height: 100vh;
     
@@ -12,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     /* font-weight: bold; */
-    background-color: #000;
+    /* background-color: white; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,7 +51,7 @@ const GlobalStyle = createGlobalStyle`
 
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background-color: #9953e2;
+      background-color: var(--personal-color);
     }
 
     &::-webkit-scrollbar-track {
@@ -41,8 +63,6 @@ const GlobalStyle = createGlobalStyle`
       width: 100%;
 
       position: relative;
-
-      outline: 3px solid red;
 
       overflow-x: hidden;
       

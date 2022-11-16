@@ -71,7 +71,7 @@ const ContentActionStyle = styled.div`
   }
   div.commentWrap {
     svg.commentShow {
-      color: #9953e2;
+      color: var(--personal-color);
     }
     svg.commentHidden {
       color: white;
@@ -89,7 +89,7 @@ const ContentAction = ({ content }) => {
     try {
       const q = query(
         collection(dbService(), "comments"),
-        where("sweetId", "==", content.id),
+        where("contentId", "==", content.id),
       );
 
       onSnapshot(q, (snapshot) => {
@@ -116,8 +116,8 @@ const ContentAction = ({ content }) => {
     onSnapshot(noticeQuery, (snapshot) => {
       snapshot.docs.forEach((doc) => {
         if (doc.id === content.creatorId) {
-          const likes = doc.data()[content.id]?.sweetLikes
-            ? Object.keys(doc.data()[content.id].sweetLikes)
+          const likes = doc.data()[content.id]?.contentLikes
+            ? Object.keys(doc.data()[content.id].contentLikes)
             : []; // array로
           const userLike = likes.includes(
             content.id + "/" + authService().currentUser?.uid,
@@ -142,11 +142,11 @@ const ContentAction = ({ content }) => {
         d,
         {
           [content.id]: {
-            sweetLikes: {
+            contentLikes: {
               [content.id + "/" + uid]: {
                 confirmed: false,
                 lastUpdate: Date.now(),
-                category: "sweetLikes",
+                category: "contentLikes",
               },
             },
           },
@@ -158,7 +158,7 @@ const ContentAction = ({ content }) => {
         d,
         {
           [content.id]: {
-            sweetLikes: { [content.id + "/" + uid]: deleteField() },
+            contentLikes: { [content.id + "/" + uid]: deleteField() },
           },
         },
         { merge: true },
