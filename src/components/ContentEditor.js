@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faCheck,
+  faChevronLeft,
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,7 +22,7 @@ import { editActions } from "modules/contentEditReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 const ContentEditorStyle = styled.div`
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.2);
   width: 100%;
 
   position: fixed;
@@ -41,7 +42,7 @@ const ContentEditorStyle = styled.div`
     // 스크롤 막는법?
 
     div#createBox {
-      background-color: #222;
+      background-color: var(--background-color);
       width: 470px;
       /* width: 45vw; */
       /* 모바일에서 줄이기?? */
@@ -50,7 +51,7 @@ const ContentEditorStyle = styled.div`
 
       padding: 8px 0;
       border-radius: 8px;
-      border: 1px solid rgb(219, 219, 219);
+      border: 1px solid var(--border-color);
 
       form {
         display: flex;
@@ -62,8 +63,6 @@ const ContentEditorStyle = styled.div`
           font-size: 1.2rem;
 
           cursor: pointer;
-
-          outline: 1px solid red;
 
           svg {
           }
@@ -88,6 +87,10 @@ const ContentEditorStyle = styled.div`
           overflow-y: hidden;
           overflow-x: auto;
 
+          border-top: 1px solid var(--border-color);
+          border-bottom: 1px solid var(--border-color);
+          box-sizing: border-box;
+
           &::-webkit-scrollbar {
             height: 8px;
           }
@@ -100,8 +103,6 @@ const ContentEditorStyle = styled.div`
           &::-webkit-scrollbar-track {
             background-color: transparent;
           }
-
-          outline: 1px solid red;
 
           div.selectImage {
             position: relative;
@@ -150,44 +151,118 @@ const ContentEditorStyle = styled.div`
 
         fieldset {
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 32px;
+          /* flex-direction: column; */
+          align-items: flex-end;
 
           width: 100%;
 
           border: none;
           margin: 0;
-          padding: 0 8px;
           box-sizing: border-box;
-
-          outline: 1px solid red;
 
           input[type="text"] {
             background: none;
             outline: none;
             border: none;
 
-            color: white;
+            color: var(--sub-color);
+            font-size: 1.1rem;
 
             width: 100%;
-            font-size: 1.1rem;
-            padding: 4px;
+            border-bottom: 2px solid var(--sub-color);
+            box-sizing: border-box;
+            padding-bottom: 4px;
+            padding-left: 12px;
+
+            &:focus + label[for="submitBtn"] {
+              svg {
+                display: none;
+              }
+              div#texting {
+                display: flex;
+              }
+
+              &:hover {
+                svg {
+                  display: block;
+                  transform: rotateZ(90deg);
+                  transition: transform 0.2s;
+                }
+                div#texting {
+                  display: none;
+                }
+              }
+            }
           }
 
           label[for="submitBtn"] {
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
 
-            background-color: var(--personal-color);
+            min-width: 36px;
+            height: 36px;
+
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-right-radius: 50%;
+            border: 2px solid var(--icon-color);
+            box-sizing: border-box;
+
+            /* background-color: var(--icon-color); */
+            /* border: 2px solid var(--icon-color);
             border-radius: 50%;
-            padding: 8px;
+            padding: 6px; */
 
             cursor: pointer;
 
+            &:hover > svg {
+              transform: rotateZ(90deg);
+            }
+
             svg {
-              font-size: 28px;
+              color: var(--icon-color);
+              /* font-size: 28px; */
+
+              width: 20px;
+              height: 20px;
+
+              transition: transform 0.2s;
+            }
+
+            div#texting {
+              display: none;
+              align-items: center;
+              gap: 3px;
+
+              div.textingCircle {
+                width: 5px;
+                height: 5px;
+                background-color: var(--icon-color);
+                border-radius: 50%;
+
+                &.textingCircle1 {
+                  animation: jump 1.2s .5s infinite alternate;
+                }
+                &.textingCircle2 {
+                  animation: jump 1.2s .6s infinite alternate;
+                }
+                &.textingCircle3 {
+                  animation: jump 1.2s .7s infinite alternate;
+                }
+
+                @keyframes jump {
+                  0% {
+                    transform: translateY(-3px);
+                  }
+                  20% {
+                    transform: translate(0);
+                  }
+                  100% {
+                    transform: translateY(0);
+                  }
+                }
+              }
             }
 
             input[type="submit"] {
@@ -212,7 +287,9 @@ const ContentEditor = ({ userObj }) => {
     e.preventDefault();
 
     if (content) {
-      const ok = window.confirm("Are you sure you want to delete this content?");
+      const ok = window.confirm(
+        "Are you sure you want to delete this content?",
+      );
       if (ok) {
         dispatch(
           editActions.editContent({
@@ -414,14 +491,20 @@ const ContentEditor = ({ userObj }) => {
 
             <fieldset>
               <input
+                type="text"
                 value={text}
                 onChange={onChange}
-                type="text"
                 placeholder="What's on you mind?"
                 maxLength={120}
+                required
               />
               <label htmlFor="submitBtn">
-                <FontAwesomeIcon icon={faCheck} />
+                <FontAwesomeIcon icon={faChevronLeft} />
+                <div id="texting">
+                  <div className="textingCircle textingCircle1"></div>
+                  <div className="textingCircle textingCircle2"></div>
+                  <div className="textingCircle textingCircle3"></div>
+                </div>
                 <input id="submitBtn" type="submit" value="Create" />
               </label>
             </fieldset>

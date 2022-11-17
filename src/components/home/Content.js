@@ -27,63 +27,92 @@ import {
 import ContentAction from "./ContentAction";
 import { useDispatch } from "react-redux";
 import { editActions } from "modules/contentEditReducer";
+import {
+  faPenToSquare,
+  faSquareMinus,
+} from "@fortawesome/free-regular-svg-icons";
 
 const ContentStyle = styled.div`
   width: 100%;
   /* height: 500px; */
 
-  border: 1px solid white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   box-sizing: border-box;
 
   div.contentHeader {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     padding: 8px;
 
-    outline: 1px solid white;
-
-    div.creatorAttachment {
+    div.creatorWrap {
       display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      align-items: center;
 
-      width: 40px;
-      height: 40px;
+      div.creatorAttachment {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
 
-      border-radius: 50%;
-      overflow: hidden;
+        width: 40px;
+        height: 40px;
 
-      cursor: pointer;
+        border-radius: 50%;
+        overflow: hidden;
 
-      img {
+        cursor: pointer;
+
+        img {
+        }
+
+        svg {
+          font-size: 32px;
+        }
       }
 
-      svg {
-        font-size: 32px;
+      span.creatorName {
+        margin-left: 8px;
+
+        cursor: pointer;
       }
     }
 
-    span.creatorName {
-      margin-left: 8px;
+    div.headerBtnWrap {
+      display: flex;
+      gap: 8px;
 
-      cursor: pointer;
+      button {
+        outline: none;
+        background: none;
+        border: none;
+        padding: 0;
+
+        cursor: pointer;
+
+        svg {
+          color: var(--icon-color);
+
+          width: 20px;
+          height: 20px;
+        }
+      }
     }
   }
 
   // ContentBox.js에서도 쓰니까 묶어놔도 좋을 듯
   div.contentImagesWrap {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+
     position: relative;
 
     overflow: hidden;
 
-    outline: 1px solid orange;
-
     div.contentImages {
       display: flex;
       align-items: center;
-
-      background-color: #444;
 
       /* transform: translateX(-468px); */
 
@@ -92,7 +121,6 @@ const ContentStyle = styled.div`
       // prev, next button
 
       div.contentImage {
-
         // 하단 여백 제거하기
         // height 크기 고정 - display none으로 해서 그런듯
         // insta에서는 display flex row, translate로 줌
@@ -112,8 +140,8 @@ const ContentStyle = styled.div`
 
       color: #aaa;
 
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
 
       padding: 0;
       border-radius: 50%;
@@ -145,7 +173,7 @@ const ContentStyle = styled.div`
     }
 
     &:hover button {
-      opacity: 0.5;
+      opacity: 0.7;
 
       &:hover {
         opacity: 1;
@@ -163,10 +191,11 @@ const ContentStyle = styled.div`
 
   div.contentComments {
     padding: 8px;
+    border-top: 1px solid var(--border-color);
   }
 `;
 
-const Content = ({ content }) => {
+const Content = ({ content, userObj }) => {
   const [imgError, setImgError] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const dispatch = useDispatch();
@@ -253,27 +282,37 @@ const Content = ({ content }) => {
               getId(contentObj.creatorId);
             }}
           > */}
-        <div className="creatorAttachment">
-          {content.creatorAttachmentUrl && !imgError ? (
-            <img
-              src={content.creatorAttachmentUrl}
-              width="40"
-              height="40"
-              alt="contentUserImage"
-              onError={onError}
-            />
-          ) : (
-            <FontAwesomeIcon id="profileicon" icon={faUser} />
-          )}
-        </div>
+        <div className="creatorWrap">
+          <div className="creatorAttachment">
+            {content.creatorAttachmentUrl && !imgError ? (
+              <img
+                src={content.creatorAttachmentUrl}
+                width="40"
+                height="40"
+                alt="contentUserImage"
+                onError={onError}
+              />
+            ) : (
+              <FontAwesomeIcon id="profileicon" icon={faUser} />
+            )}
+          </div>
 
-        <span className="creatorName">
-          <b>{content.creatorDisplayName}</b>
-        </span>
+          <span className="creatorName">
+            <b>{content.creatorDisplayName}</b>
+          </span>
+        </div>
         {/* </Link> */}
 
-        <button onClick={onEditing}>편집 버튼</button>
-        <button onClick={onDeleteClick}>삭제 버튼</button>
+        {content.creatorId === userObj.uid && (
+          <div className="headerBtnWrap">
+            <button onClick={onEditing}>
+              <FontAwesomeIcon icon={faPenToSquare} />
+            </button>
+            <button onClick={onDeleteClick}>
+              <FontAwesomeIcon icon={faSquareMinus} />
+            </button>
+          </div>
+        )}
       </div>
 
       {content.attachmentUrl && (

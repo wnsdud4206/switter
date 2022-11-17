@@ -32,8 +32,6 @@ const ContentActionStyle = styled.div`
 
   padding: 8px;
 
-  outline: 1px solid white;
-
   div {
     display: flex;
     justify-content: center;
@@ -61,7 +59,7 @@ const ContentActionStyle = styled.div`
       color: #ff6633;
     }
     svg.userNotLike {
-      color: white;
+      color: var(--sub-color);
     }
 
     span {
@@ -71,10 +69,10 @@ const ContentActionStyle = styled.div`
   }
   div.commentWrap {
     svg.commentShow {
-      color: var(--personal-color);
+      color: var(--icon-color);
     }
     svg.commentHidden {
-      color: white;
+      color: var(--sub-color);
     }
   }
 `;

@@ -6,20 +6,26 @@ const GlobalStyle = createGlobalStyle`
     them
       ? css`
           :root {
-            --personal-color: black;
+            --icon-color: #9953e2;
+            --sub-color: white;
+            --background-color: black;
+            --border-color: rgb(98, 98, 98);
           }
         `
       : css`
           :root {
-            --personal-color: white;
+            --icon-color: black;
+            --sub-color: black;
+            --background-color: white;
+            --border-color: rgb(212, 212, 212);
           }
         `}
   /* :root {
-    --personal-color: black;
+    --icon-color: black;
   } */
   /* @media (prefers-color-scheme: dark) {
     :root {
-      --personal-color: #9953e2;
+      --icon-color: #9953e2;
     }
   } */
 
@@ -43,7 +49,7 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden; */
     width: 100%;
     
-    color: white;
+    color: var(--sub-color);
 
     &::-webkit-scrollbar {
       width: 10px;
@@ -51,7 +57,7 @@ const GlobalStyle = createGlobalStyle`
 
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background-color: var(--personal-color);
+      background-color: var(--icon-color);
     }
 
     &::-webkit-scrollbar-track {
@@ -59,12 +65,15 @@ const GlobalStyle = createGlobalStyle`
     }
 
     div#root {
+      background-color: var(--background-color);
       
       width: 100%;
 
       position: relative;
 
       overflow-x: hidden;
+
+      transition: background-color .2s;
       
       @media screen and (max-width: 500px) {
         width: 100%;

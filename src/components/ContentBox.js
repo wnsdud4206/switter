@@ -19,6 +19,7 @@ import {
   collection,
   where,
 } from "fbase";
+import ContentBoxCommentActions from "./ContentBoxCommentActions";
 
 const ContentBoxStyle = styled.div`
   width: 100%;
@@ -37,7 +38,7 @@ const ContentBoxStyle = styled.div`
 
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
 
     div#content {
       display: flex;
@@ -46,6 +47,11 @@ const ContentBoxStyle = styled.div`
       // 임시, mobile에서는 다르게
       width: 87vw;
       height: 460px;
+
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+
+      overflow: hidden;
 
       /* outline: 1px solid white; */
 
@@ -60,19 +66,17 @@ const ContentBoxStyle = styled.div`
 
         /* overflow: hidden; */
 
-        outline: 1px solid red;
+        border-right: 1px solid var(--border-color);
 
         div#contentBoxImages {
           height: 100%;
-
-          outline: 1px solid orange;
 
           div#contentBoxImage {
             display: flex;
             justify-content: center;
             align-items: center;
 
-            background-color: #222;
+            background-color: var(--background-color);
 
             img {
               width: 100%;
@@ -93,8 +97,8 @@ const ContentBoxStyle = styled.div`
 
           color: #aaa;
 
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
 
           padding: 0;
           border-radius: 50%;
@@ -126,7 +130,7 @@ const ContentBoxStyle = styled.div`
         }
 
         &:hover button {
-          opacity: 0.5;
+          opacity: 0.7;
 
           &:hover {
             opacity: 1;
@@ -139,11 +143,9 @@ const ContentBoxStyle = styled.div`
         display: flex;
         flex-direction: column;
 
-        background-color: black;
+        background-color: var(--background-color);
 
         min-width: 405px;
-
-        outline: 1px solid green;
 
         div#contentBoxHeader {
           display: flex;
@@ -152,8 +154,7 @@ const ContentBoxStyle = styled.div`
           height: 42px;
 
           padding: 8px;
-
-          outline: 1px solid white;
+          border-bottom: 1px solid var(--border-color);
 
           div#contentBoxCreatorAttachment {
             display: flex;
@@ -186,26 +187,37 @@ const ContentBoxStyle = styled.div`
         div#commentsWrap {
           flex: 1;
 
-          outline: 1px solid red;
-
           ul#commentsList {
             list-style: none;
 
-            padding: 0 12px;
+            padding: 0 8px;
 
             li {
-              outline: 1px solid white;
+              display: flex;
+              justify-content: space-between;
 
               &#emptyComment {
                 text-align: center;
                 padding: 32px 0;
               }
+
+              div.comment {
+                display: flex;
+                align-items: center;
+
+                img {
+                  margin-right: 8px;
+                }
+              }
+
+              // div.commentBtnWrap, ContentBoxCommentActions.js
             }
           }
         }
 
         div#commentFactory {
-          padding: 8px;
+          padding: 12px 8px;
+          border-top: 1px solid var(--border-color);
 
           form {
             display: flex;
@@ -218,10 +230,10 @@ const ContentBoxStyle = styled.div`
               min-width: 36px;
               height: 36px;
 
-              background-color: white;
+              /* background-color: white; */
 
               border-radius: 50%;
-              border: 1px solid #00bdee;
+              /* border: 1px solid #00bdee; */
               box-sizing: border-box;
 
               overflow: hidden;
@@ -232,7 +244,7 @@ const ContentBoxStyle = styled.div`
               }
 
               svg {
-                color: var(--personal-color);
+                color: var(--icon-color);
 
                 width: 30px;
                 height: 30px;
@@ -244,13 +256,33 @@ const ContentBoxStyle = styled.div`
               outline: none;
               border: none;
 
-              color: white;
-
-              margin-left: 8px;
-              border-bottom: 2px solid white;
-              box-sizing: border-box;
+              color: var(--sub-color);
 
               width: 100%;
+
+              margin-left: 8px;
+              border-bottom: 2px solid var(--sub-color);
+              box-sizing: border-box;
+
+              &:focus + label[for="commentSubmitBtn"] {
+                svg {
+                  display: none;
+                }
+                div#texting {
+                  display: flex;
+                }
+
+                &:hover {
+                  svg {
+                    display: block;
+                    transform: rotateZ(90deg);
+                    transition: transform 0.2s;
+                  }
+                  div#texting {
+                    display: none;
+                  }
+                }
+              }
             }
 
             label[for="commentSubmitBtn"] {
@@ -258,7 +290,7 @@ const ContentBoxStyle = styled.div`
               align-items: center;
               justify-content: center;
 
-              background-color: var(--personal-color);
+              /* background-color: var(--icon-color); */
 
               min-width: 36px;
               height: 36px;
@@ -266,19 +298,58 @@ const ContentBoxStyle = styled.div`
               border-top-left-radius: 50%;
               border-top-right-radius: 50%;
               border-bottom-right-radius: 50%;
+              border: 2px solid var(--icon-color);
+              box-sizing: border-box;
               /* border-radius: 50%; */
 
               cursor: pointer;
 
+              &:hover > svg {
+                transform: rotateZ(90deg);
+              }
+
               svg {
+                color: var(--icon-color);
+
                 width: 20px;
                 height: 20px;
 
                 transition: transform 0.2s;
               }
 
-              &:hover > svg {
-                transform: rotateZ(-90deg);
+              div#texting {
+                display: none;
+                align-items: center;
+                gap: 3px;
+
+                div.textingCircle {
+                  width: 5px;
+                  height: 5px;
+                  background-color: var(--icon-color);
+                  border-radius: 50%;
+
+                  &.textingCircle1 {
+                    animation: jump 1.2s 0.5s infinite alternate;
+                  }
+                  &.textingCircle2 {
+                    animation: jump 1.2s 0.6s infinite alternate;
+                  }
+                  &.textingCircle3 {
+                    animation: jump 1.2s 0.7s infinite alternate;
+                  }
+
+                  @keyframes jump {
+                    0% {
+                      transform: translateY(-3px);
+                    }
+                    20% {
+                      transform: translate(0);
+                    }
+                    100% {
+                      transform: translateY(0);
+                    }
+                  }
+                }
               }
 
               input[type="submit"] {
@@ -325,6 +396,7 @@ const ContentBox = ({ userObj }) => {
 
         const commentObj = {
           ...comment.data(),
+          id: comment.id,
           attachmentUrl,
           displayName,
         };
@@ -364,7 +436,6 @@ const ContentBox = ({ userObj }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit");
     try {
       const commentObj = {
         text: commentText,
@@ -392,7 +463,7 @@ const ContentBox = ({ userObj }) => {
               [content.id + "/" + docRef.id]: {
                 confirmed: false,
                 lastUpdate: Date.now(),
-                category: "contentComments"
+                category: "contentComments",
               },
             },
           },
@@ -410,10 +481,11 @@ const ContentBox = ({ userObj }) => {
       // );
 
       setCommentText("");
+      getComments();
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <ContentBoxStyle>
@@ -504,7 +576,29 @@ const ContentBox = ({ userObj }) => {
                 {comments?.length ? (
                   comments.map((comment) => (
                     <li key={comment.createdAt}>
-                      {comment.displayName}/{comment.text}
+                      <div className="comment">
+                        {comment.attachmentUrl && !imgError ? (
+                          <img
+                            src={comment.attachmentUrl}
+                            width="40"
+                            height="40"
+                            alt="commentImage"
+                            onError={onError}
+                          />
+                        ) : (
+                          <FontAwesomeIcon id="profileicon" icon={faUser} />
+                        )}
+                        <b>{comment.displayName}</b>&nbsp;{comment.text}
+                      </div>
+
+                      {comment.creatorId === userObj.uid && (
+                        <ContentBoxCommentActions
+                          userObj={userObj}
+                          content={content}
+                          comment={comment}
+                          getComments={getComments}
+                        />
+                      )}
                     </li>
                   ))
                 ) : (
@@ -540,12 +634,16 @@ const ContentBox = ({ userObj }) => {
                 />
 
                 <label htmlFor="commentSubmitBtn">
-                  <FontAwesomeIcon icon={faChevronRight} />
+                  <FontAwesomeIcon icon={faChevronLeft} />
+                  <div id="texting">
+                    <div className="textingCircle textingCircle1"></div>
+                    <div className="textingCircle textingCircle2"></div>
+                    <div className="textingCircle textingCircle3"></div>
+                  </div>
                   <input id="commentSubmitBtn" type="submit" value="Comment" />
                 </label>
               </form>
             </div>
-
           </div>
         </div>
       </div>
