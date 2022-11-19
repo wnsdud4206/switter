@@ -1,16 +1,31 @@
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { authService, dbService, doc, getDoc } from "fbase";
+import { authService, dbService, doc, getDoc, setDoc } from "fbase";
+import { boxActions } from "modules/contentBoxReducer";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
 
 const Notification = ({ noticeObj, offNotification }) => {
   const [noticeKey, noticeData] = noticeObj;
-  const [contentText, getContentText] = useState("");
-  const [userName, getUserName] = useState("");
-  const [userImage, getUserImage] = useState("");
+  const [contentText, setContentText] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userImage, setUserImage] = useState("");
+  const [contentObj, setContentObj] = useState({});
   const [imgError, setImgError] = useState(false);
+  const dispatch = useDispatch();
+
+  let contentId, secondId, userId;
+  let collection;
+  // 이름을 조금 바꿔줘야 할듯 - 정확하지 않음
+  if (noticeData.category === "commentLikes") {
+    [contentId, secondId, userId] = noticeKey.split("/");
+    collection = "comments";
+  } else {
+    [secondId, userId] = noticeKey.split("/");
+    collection = "contents";
+  }
 
   const onError = () => {
     // 이미지 깨지면 대체
@@ -18,18 +33,6 @@ const Notification = ({ noticeObj, offNotification }) => {
   };
 
   const getContentAndUser = async () => {
-    // const [secondId, userId] = noticeKey.split("/");
-
-    let contentId, secondId, userId;
-    let collection;
-    if (noticeData.category === "commentLikes") {
-      [contentId, secondId, userId] = noticeKey.split("/");
-      collection = "comments";
-    } else {
-      [secondId, userId] = noticeKey.split("/");
-      collection = "contents";
-    }
-
     // getContent
     const contentDoc = doc(dbService(), collection, secondId);
 
@@ -41,7 +44,7 @@ const Notification = ({ noticeObj, offNotification }) => {
     } else {
       text = contentGet.data().text;
     }
-    getContentText(text);
+    setContentText(text);
 
     // getUser
     let userDoc;
@@ -56,33 +59,117 @@ const Notification = ({ noticeObj, offNotification }) => {
 
     const userGet = await getDoc(userDoc);
 
-    const name = userGet.data().displayName;
-    getUserName(name);
-    const image = userGet.data().attachmentUrl;
-    getUserImage(image);
+    const creatorDisplayName = userGet.data().displayName;
+    const creatorAttachmentUrl = userGet.data().attachmentUrl;
+
+    setContentObj({
+      ...contentGet.data(),
+      creatorDisplayName,
+      creatorAttachmentUrl,
+    });
+    // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
   };
 
   const onConfirm = async () => {
-    const d = doc(dbService(), "notifications", authService().currentUser.uid);
-    const get = await getDoc(d);
-    // console.log(get.data());
+    const noticeDoc = doc(
+      dbService(),
+      "notifications",
+      authService().currentUser.uid,
+    );
+    // const noticeSnap = await getDoc(noticeDoc);
 
+    if (noticeData.category === "commentLikes") {
+      // console.log(
+      //   noticeSnap.data()[contentId][noticeData.category][secondId][noticeKey],
+      // );
+      await setDoc(
+        noticeDoc,
+        {
+          [contentId]: {
+            [noticeData.category]: {
+              [secondId]: {
+                [noticeKey]: {
+                  confirmed: true,
+                },
+              },
+            },
+          },
+        },
+        { merge: true },
+      );
+    } else {
+      // console.log(noticeSnap.data()[secondId][noticeData.category][noticeKey]);
+      await setDoc(
+        noticeDoc,
+        {
+          [secondId]: {
+            [noticeData.category]: {
+              [noticeKey]: {
+                confirmed: true,
+              },
+            },
+          },
+        },
+        { merge: true },
+      );
+    }
+
+    // console.log(noticeObj);
+    // console.log(noticeSnap.data());
     // console.log(noticeKey);
   };
 
   useEffect(() => {
     getContentAndUser();
-    onConfirm();
   }, []);
 
+  const onContentBox = async () => {
+    try {
+      let contentDoc;
+      if (noticeData.category === "commentLikes") {
+        contentDoc = doc(dbService(), "contents", contentId);
+      } else {
+        contentDoc = doc(dbService(), "contents", secondId);
+      }
+
+      const contentSnap = await getDoc(contentDoc);
+
+      const dbUser = await getDoc(
+        doc(dbService(), "users", contentSnap.data().creatorId),
+      );
+
+      const id = contentSnap.id;
+      const creatorId = contentSnap.data().creatorId;
+      const attachmentUrl = contentSnap.data().attachmentUrl;
+      // contentAction(contentList)에서도 text 넣어줘야함
+      const text = contentSnap.data().text;
+      const creatorDisplayName = dbUser.data().displayName;
+      const creatorAttachmentUrl = dbUser.data().attachmentUrl;
+
+      const contentObj = {
+        id,
+        creatorId,
+        attachmentUrl,
+        text,
+        creatorDisplayName,
+        creatorAttachmentUrl,
+      };
+
+      dispatch(boxActions.onContentBox(contentObj));
+      onConfirm();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <NotificationStyle className="notice">
+    <NotificationStyle className="notice" confirm={noticeData.confirmed}>
       <div className="noticeProfileImage notice">
-        {userImage && !imgError ? (
+        {contentObj.creatorAttachmentUrl && !imgError ? (
           <img
-            src={userImage}
-            width="50"
-            height="50"
+            src={contentObj.creatorAttachmentUrl}
+            width="36"
+            height="36"
             alt="contentUserImage"
             onError={onError}
           />
@@ -91,23 +178,31 @@ const Notification = ({ noticeObj, offNotification }) => {
         )}
       </div>
       {/* <div className="noticeTextWrap notice"> */}
-      <Link to="/profile" className="noticeTextWrap notice" onClick={offNotification}>
+      {/* <Link
+        to="/profile"
+        className="noticeTextWrap notice"
+        onClick={offNotification}
+      > */}
+      <button className="contentBoxBtn" onClick={onContentBox}>
         <span className="notice">
           "{contentText}"{" "}
           {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
           {noticeData.category === "contentComments" ? "에 " : "을 "}
         </span>
         <span className="notice">
-          "{userName}"님이
+          "{contentObj.creatorDisplayName}"님이
           {noticeData.category === "contentComments"
-            ? " 댓글을 남겼습니다."
-            : " 좋아합니다."}
+            ? " 댓글을 남겼습니다"
+            : " 좋아합니다"}
         </span>
-      </Link>
-      <div className="noticeBtnWrap">
-        <button className="confirm">확인</button>
-        <button className="delete">삭제</button>
-      </div>
+      </button>
+      {/* </Link> */}
+      {/* <div className="noticeBtnWrap"> */}
+      <button className="notice confirm" onClick={onConfirm}>
+        <FontAwesomeIcon icon={faCheck} />
+      </button>
+      {/* <button className="delete">삭제</button> */}
+      {/* </div> */}
     </NotificationStyle>
   );
 };

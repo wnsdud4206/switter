@@ -69,6 +69,7 @@ const ContentStyle = styled.div`
 
         svg {
           font-size: 32px;
+          color: var(--icon-color);
         }
       }
 
@@ -115,8 +116,6 @@ const ContentStyle = styled.div`
       align-items: center;
 
       /* transform: translateX(-468px); */
-
-      outline: 1px solid red;
 
       // prev, next button
 
@@ -198,7 +197,28 @@ const ContentStyle = styled.div`
 const Content = ({ content, userObj }) => {
   const [imgError, setImgError] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [contentObj, setContentObj] = useState(content);
   const dispatch = useDispatch();
+
+  const getCreator = async () => {
+    const d = doc(dbService(), "users", `${content.creatorId}`);
+    const docSnap = await getDoc(d);
+    const creatorDisplayName = docSnap.data().displayName;
+    const creatorAttachmentUrl = docSnap.data().attachmentUrl;
+
+    setContentObj((prev) => ({
+      ...prev,
+      creatorDisplayName,
+      creatorAttachmentUrl,
+    }));
+
+    // console.log(docSnap.data().comments.length || 0);
+    // setCommentLength(docSnap.data().comments.length || 0);
+  };
+
+  useEffect(() => {
+    getCreator();
+  }, []);
 
   const onError = () => {
     // 이미지 깨지면 대체
@@ -206,7 +226,7 @@ const Content = ({ content, userObj }) => {
   };
 
   const onEditing = () => {
-    dispatch(editActions.onEdit({ mode: true, content }));
+    dispatch(editActions.onEdit({ mode: true, contentObj }));
     // contentEditor에게 현재 content의 정보를 보내는 방법?
   };
 
@@ -227,11 +247,13 @@ const Content = ({ content, userObj }) => {
     const ok = window.confirm("Are you sure you want to delete this content?");
     if (ok) {
       try {
-        const contentDoc = doc(dbService(), "contents", `${content.id}`);
+        const contentId = contentObj.id;
+
+        const contentDoc = doc(dbService(), "contents", `${contentId}`);
 
         const commentQuery = query(
           collection(dbService(), "comments"),
-          where("contentId", "==", content.id),
+          where("contentId", "==", contentId),
         );
         const commentDocs = await getDocs(commentQuery);
         commentDocs.docs.forEach(async (commentDoc) => {
@@ -242,12 +264,12 @@ const Content = ({ content, userObj }) => {
         const noticeQuery = query(collection(dbService(), "notifications"));
         const noticeDocs = await getDocs(noticeQuery);
         noticeDocs.docs.forEach(async (noticeDoc) => {
-          if (Object.keys(noticeDoc.data()).includes(content.id)) {
+          if (Object.keys(noticeDoc.data()).includes(contentId)) {
             const notice = doc(dbService(), "notifications", noticeDoc.id);
             await setDoc(
               notice,
               {
-                [content.id]: deleteField(),
+                [contentId]: deleteField(),
               },
               { merge: true },
             );
@@ -256,9 +278,9 @@ const Content = ({ content, userObj }) => {
 
         await deleteDoc(contentDoc);
 
-        if (content.attachmentUrl) {
+        if (contentObj.attachmentUrl) {
           // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 content을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
-          const r = ref(storageService(), content.attachmentUrl);
+          const r = ref(storageService(), contentObj.attachmentUrl);
           await deleteObject(r);
         }
       } catch (error) {
@@ -284,13 +306,14 @@ const Content = ({ content, userObj }) => {
           > */}
         <div className="creatorWrap">
           <div className="creatorAttachment">
-            {content.creatorAttachmentUrl && !imgError ? (
+            {contentObj.creatorAttachmentUrl && !imgError ? (
               <img
-                src={content.creatorAttachmentUrl}
+                src={contentObj.creatorAttachmentUrl}
                 width="40"
                 height="40"
                 alt="contentUserImage"
                 onError={onError}
+                loading="lazy"
               />
             ) : (
               <FontAwesomeIcon id="profileicon" icon={faUser} />
@@ -298,12 +321,12 @@ const Content = ({ content, userObj }) => {
           </div>
 
           <span className="creatorName">
-            <b>{content.creatorDisplayName}</b>
+            <b>{contentObj.creatorDisplayName}</b>
           </span>
         </div>
         {/* </Link> */}
 
-        {content.creatorId === userObj.uid && (
+        {contentObj.creatorId === userObj.uid && (
           <div className="headerBtnWrap">
             <button onClick={onEditing}>
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -315,33 +338,39 @@ const Content = ({ content, userObj }) => {
         )}
       </div>
 
-      {content.attachmentUrl && (
+      {contentObj.attachmentUrl && (
         <div className="contentImagesWrap">
           <div
             className="contentImages"
             style={{ transform: `translateX(${slideIndex * -468}px)` }}
           >
-            {content.attachmentUrl.map((url, i) => (
+            {contentObj.attachmentUrl.map((url, i) => (
               <div
-                key={content.id + i}
+                key={contentObj.id + i}
                 // className={`contentImage ${i === slideIndex && "active"}`}
                 className="contentImage"
               >
-                <img src={url} width="468px" height="100%" alt="contentImage" />
+                <img
+                  src={url}
+                  width="468px"
+                  height="100%"
+                  alt="contentImage"
+                  loading="lazy"
+                />
               </div>
             ))}
           </div>
-          {content.attachmentUrl.length > 1 && (
+          {contentObj.attachmentUrl.length > 1 && (
             <>
               <button
                 className="prev"
-                onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                onClick={(e) => sliderBtn(e, contentObj.attachmentUrl)}
               >
                 <FontAwesomeIcon icon={faChevronLeft} />
               </button>
               <button
                 className="next"
-                onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                onClick={(e) => sliderBtn(e, contentObj.attachmentUrl)}
               >
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
@@ -350,16 +379,16 @@ const Content = ({ content, userObj }) => {
         </div>
       )}
       <div className="contentText">
-        <p>{content.text}</p>
+        <p>{contentObj.text}</p>
       </div>
 
-      <ContentAction content={content} />
+      <ContentAction contentObj={contentObj} />
 
-      {content.firstComment && (
+      {/* {contentObj.firstComment && (
         <div className="contentComments">
-          <b>{content.firstCommentName}</b>/{content.firstComment}
+          <b>{contentObj.firstCommentName}</b>/{contentObj.firstComment}
         </div>
-      )}
+      )} */}
     </ContentStyle>
   );
 };

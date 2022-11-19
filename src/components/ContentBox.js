@@ -2,7 +2,9 @@ import {
   faChevronLeft,
   faChevronRight,
   faUser,
+  faHeart as like,
 } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { boxActions } from "modules/contentBoxReducer";
 import { useEffect, useState } from "react";
@@ -18,8 +20,14 @@ import {
   query,
   collection,
   where,
+  onSnapshot,
+  authService,
+  arrayUnion,
+  deleteField,
+  arrayRemove,
 } from "fbase";
 import ContentBoxCommentActions from "./ContentBoxCommentActions";
+import ContentAction from "./home/ContentAction";
 
 const ContentBoxStyle = styled.div`
   width: 100%;
@@ -69,7 +77,7 @@ const ContentBoxStyle = styled.div`
         border-right: 1px solid var(--border-color);
 
         div#contentBoxImages {
-          height: 100%;
+          /* height: 50%; */
 
           div#contentBoxImage {
             display: flex;
@@ -80,13 +88,14 @@ const ContentBoxStyle = styled.div`
 
             img {
               width: 100%;
+              /* height: calc(460px - 42px); */
               height: 460px;
               object-fit: contain;
             }
           }
         }
 
-        button {
+        & > button {
           outline: none;
           background: none;
           border: none;
@@ -127,14 +136,29 @@ const ContentBoxStyle = styled.div`
 
             pointer-events: none;
           }
-        }
 
-        &:hover button {
-          opacity: 0.7;
-
-          &:hover {
+          &:hover button {
+            opacity: 0.7;
+          }
+          &:active {
             opacity: 1;
             background-color: rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        div#noImage {
+          // 그냥 없애고 사이즈를 줄일까?
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          width: 100%;
+
+          border-right: 1px solid var(--border-color);
+          background-color: var(--background-color);
+
+          p {
           }
         }
       }
@@ -150,37 +174,72 @@ const ContentBoxStyle = styled.div`
         div#contentBoxHeader {
           display: flex;
           align-items: center;
+          justify-content: space-between;
 
           height: 42px;
 
           padding: 8px;
           border-bottom: 1px solid var(--border-color);
 
-          div#contentBoxCreatorAttachment {
+          div#contentCreator {
             display: flex;
-            align-items: flex-end;
-            justify-content: center;
+            align-items: center;
 
-            width: 40px;
-            height: 40px;
+            div#contentBoxCreatorAttachment {
+              display: flex;
+              align-items: flex-end;
+              justify-content: center;
 
-            border-radius: 50%;
-            overflow: hidden;
+              width: 40px;
+              height: 40px;
 
-            cursor: pointer;
+              border-radius: 50%;
+              overflow: hidden;
 
-            img {
+              cursor: pointer;
+
+              img {
+              }
+
+              svg {
+                font-size: 32px;
+              }
             }
 
-            svg {
-              font-size: 32px;
+            span#contentBoxCreatorName {
+              margin-left: 8px;
+
+              cursor: pointer;
             }
           }
 
-          span#contentBoxCreatorName {
-            margin-left: 8px;
+          div.likeWrap {
+            display: flex;
+            align-items: center;
 
-            cursor: pointer;
+            span {
+              margin: 0 8px;
+              font-size: 1.2rem;
+            }
+
+            button.likeBtn {
+              background: none;
+              outline: none;
+              border: none;
+              padding: 0;
+
+              cursor: pointer;
+
+              svg {
+                font-size: 22px;
+                &.userLike {
+                  color: #ff6633;
+                }
+                &.userNotLike {
+                  color: var(--sub-color);
+                }
+              }
+            }
           }
         }
 
@@ -195,6 +254,12 @@ const ContentBoxStyle = styled.div`
             li {
               display: flex;
               justify-content: space-between;
+
+              &#creatorText {
+                font-size: 1.1em;
+                padding-left: 8px;
+                margin-bottom: 12px;
+              }
 
               &#emptyComment {
                 text-align: center;
@@ -368,6 +433,8 @@ const ContentBox = ({ userObj }) => {
   const [commentText, setCommentText] = useState("");
   const [slideIndex, setSlideIndex] = useState(0);
   const [comments, setComments] = useState([]);
+  const [likeCount, setLikeCount] = useState([]);
+  const [currentUserLike, setCurrentUserLike] = useState(false);
   const dispatch = useDispatch();
   const { content } = useSelector((state) => state.boxState);
 
@@ -450,11 +517,7 @@ const ContentBox = ({ userObj }) => {
         commentObj,
       );
 
-      const noticeDoc = doc(
-        dbService(),
-        "notifications",
-        `${content.creatorId}`,
-      );
+      const noticeDoc = doc(dbService(), "notifications", content.creatorId);
       await setDoc(
         noticeDoc,
         {
@@ -467,6 +530,15 @@ const ContentBox = ({ userObj }) => {
               },
             },
           },
+        },
+        { merge: true },
+      );
+
+      const contentsDoc = doc(dbService(), "contents", content.id);
+      await setDoc(
+        contentsDoc,
+        {
+          comments: arrayUnion(docRef.id),
         },
         { merge: true },
       );
@@ -487,56 +559,108 @@ const ContentBox = ({ userObj }) => {
     }
   };
 
+  useEffect(() => {
+    // getComments();
+
+    const noticeQuery = query(collection(dbService(), "notifications"));
+    onSnapshot(noticeQuery, (snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        if (doc.id === content.creatorId) {
+          const likes = doc.data()[content.id]?.contentLikes
+            ? Object.keys(doc.data()[content.id].contentLikes)
+            : []; // array로
+          const userLike = likes.includes(
+            content.id + "/" + authService().currentUser?.uid,
+          );
+
+          // console.log(likes); // 없으면 undefined 반환
+          setLikeCount(likes);
+          setCurrentUserLike(userLike);
+          // console.log(likes);
+          // console.log(userLike);
+        }
+      });
+    });
+  }, []);
+
+  const onLikeToggle = async () => {
+    const { uid } = authService().currentUser;
+
+    const noticeDoc = doc(dbService(), "notifications", content.creatorId);
+    const contentDoc = doc(dbService(), "contents", content.id);
+
+    if (!currentUserLike) {
+      await setDoc(
+        noticeDoc,
+        {
+          [content.id]: {
+            contentLikes: {
+              [content.id + "/" + uid]: {
+                confirmed: false,
+                lastUpdate: Date.now(),
+                category: "contentLikes",
+              },
+            },
+          },
+        },
+        { merge: true },
+      );
+      await setDoc(contentDoc, { likes: arrayUnion(uid) }, { merge: true });
+    } else if (currentUserLike) {
+      await setDoc(
+        noticeDoc,
+        {
+          [content.id]: {
+            contentLikes: { [content.id + "/" + uid]: deleteField() },
+          },
+        },
+        { merge: true },
+      );
+      await setDoc(contentDoc, { likes: arrayRemove(uid) }, { merge: true });
+    }
+  };
+
   return (
     <ContentBoxStyle>
       <div id="contentBackground" onClick={contentBoxCancel}>
         <div id="content">
           {/* left */}
-          {content.attachmentUrl?.length && (
-            <div id="contentBoxImagesWrap">
-              <div id="contentBoxImages">
-                {/* {content.attachmentUrl.map((url, i) => (
-                  <div
-                    key={content.id + i}
-                    // className={`contentImage ${i === slideIndex && "active"}`}
-                    id="contentBoxImage"
-                  >
+          <div id="contentBoxImagesWrap">
+            {content.attachmentUrl?.length ? (
+              <>
+                <div id="contentBoxImages">
+                  <div id="contentBoxImage">
                     <img
-                      src={url}
-                      width="100%"
-                      height="100%"
+                      src={content.attachmentUrl[slideIndex]}
+                      // width="100%"
+                      // height="100%"
                       alt="contentImage"
                     />
                   </div>
-                ))} */}
-
-                <div id="contentBoxImage">
-                  <img
-                    src={content.attachmentUrl[slideIndex]}
-                    // width="100%"
-                    // height="100%"
-                    alt="contentImage"
-                  />
                 </div>
+                {content.attachmentUrl.length > 1 && (
+                  <>
+                    <button
+                      className="prev"
+                      onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <button
+                      className="next"
+                      onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                    >
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                  </>
+                )}
+              </>
+            ) : (
+              <div id="noImage">
+                <p>이미지가 없는 글입니다😉</p>
               </div>
-              {content.attachmentUrl.length > 1 && (
-                <>
-                  <button
-                    className="prev"
-                    onClick={(e) => sliderBtn(e, content.attachmentUrl)}
-                  >
-                    <FontAwesomeIcon icon={faChevronLeft} />
-                  </button>
-                  <button
-                    className="next"
-                    onClick={(e) => sliderBtn(e, content.attachmentUrl)}
-                  >
-                    <FontAwesomeIcon icon={faChevronRight} />
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+            )}
+          </div>
 
           {/* right */}
           <div id="CommentBox">
@@ -550,29 +674,46 @@ const ContentBox = ({ userObj }) => {
               getId(content.creatorId);
             }}
           > */}
-              <div id="contentBoxCreatorAttachment">
-                {content.creatorAttachmentUrl && !imgError ? (
-                  <img
-                    src={content.creatorAttachmentUrl}
-                    width="40"
-                    height="40"
-                    alt="contentUserImage"
-                    onError={onError}
-                  />
-                ) : (
-                  <FontAwesomeIcon id="profileicon" icon={faUser} />
-                )}
-              </div>
+              <div id="contentCreator">
+                <div id="contentBoxCreatorAttachment">
+                  {content.creatorAttachmentUrl && !imgError ? (
+                    <img
+                      src={content.creatorAttachmentUrl}
+                      width="40"
+                      height="40"
+                      alt="contentUserImage"
+                      onError={onError}
+                    />
+                  ) : (
+                    <FontAwesomeIcon id="profileicon" icon={faUser} />
+                  )}
+                </div>
 
-              <span id="contentBoxCreatorName">
-                <b>{content.creatorDisplayName}</b>
-              </span>
+                <span id="contentBoxCreatorName">
+                  <b>{content.creatorDisplayName}</b>
+                </span>
+              </div>
               {/* </Link> */}
+
+              <div className="likeWrap">
+                <span className="likeCounter">{likeCount.length}</span>
+                <button className="likeBtn" onClick={onLikeToggle}>
+                  {currentUserLike ? (
+                    <FontAwesomeIcon className="userLike" icon={like} />
+                  ) : (
+                    <FontAwesomeIcon
+                      className="userNotLike"
+                      icon={faRegHeart}
+                    />
+                  )}
+                </button>
+              </div>
             </div>
 
             <div id="commentsWrap">
               <ul id="commentsList">
                 {/* contents나 comments에 displayName도 저장하고 profile 수정할 때 contents, comments 의 displayName도 변경하게 끔 해야할 듯, 왜냐면 해당 content나 comment의 주인을 찾으려면 또 일일이 db를 가져오는 것이 번거로움(아래 댓글 작성자 부분) - 아냐 그럼 content랑 comment가 아주 많은 유저는 바꾸는 것이 너무 오래걸리거나 무거워 질 수도 있음 */}
+                <li id="creatorText">{content.text}</li>
                 {comments?.length ? (
                   comments.map((comment) => (
                     <li key={comment.createdAt}>
@@ -591,14 +732,12 @@ const ContentBox = ({ userObj }) => {
                         <b>{comment.displayName}</b>&nbsp;{comment.text}
                       </div>
 
-                      {comment.creatorId === userObj.uid && (
-                        <ContentBoxCommentActions
-                          userObj={userObj}
-                          content={content}
-                          comment={comment}
-                          getComments={getComments}
-                        />
-                      )}
+                      <ContentBoxCommentActions
+                        userObj={userObj}
+                        content={content}
+                        comment={comment}
+                        getComments={getComments}
+                      />
                     </li>
                   ))
                 ) : (

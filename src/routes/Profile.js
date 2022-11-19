@@ -1,3 +1,5 @@
+import ContentsList from "components/home/ContentsList";
+import SideMenu from "components/sideMenu/SideMenu";
 import {
   authService,
   dbService,
@@ -10,6 +12,14 @@ import {
 } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+const ProfileStyle = styled.div`
+  display: flex;
+  justify-content: center;
+
+  margin-top: 61px;
+`;
 
 const Profile = ({ userObj }) => {
   const [mySweets, setMySweets] = useState([]);
@@ -61,6 +71,11 @@ const Profile = ({ userObj }) => {
 
   return (
     <>
+      <ProfileStyle>
+        <ContentsList userObj={userObj} />
+        <SideMenu />
+      </ProfileStyle>
+
       {/* <div>
         profileHeader
           <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(mySweets, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>

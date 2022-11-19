@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const NotificationStyle = styled.li`
   display: flex;
@@ -6,13 +6,13 @@ const NotificationStyle = styled.li`
   justify-content: space-between;
   gap: 8px;
 
-  padding: 16px 0;
+  padding: 8px 0;
 
   &:not(:first-child) {
-    border-top: 2px solid #444;
+    border-top: 2px solid var(--border-color);
   }
   & > div {
-    min-height: 50px;
+    /* min-height: 50px; */
   }
 
   div.noticeProfileImage {
@@ -20,73 +20,96 @@ const NotificationStyle = styled.li`
     align-items: flex-end;
     justify-content: center;
 
-    min-width: 50px;
-    height: 50px;
+    min-width: 36px;
+    height: 36px;
 
-    background-color: white;
+    /* background-color: ; */
 
     border-radius: 50%;
-    border: 1px solid #00bdee;
-    box-sizing: border-box;
 
     overflow: hidden;
 
     img {
-      width: 50px;
-      height: 50px;
+      width: 36px;
+      height: 36px;
     }
 
     svg {
-      color: #00bdee;
+      color: var(--icon-color);
 
-      width: 38px;
-      height: 38px;
+      width: 24px;
+      height: 24px;
     }
   }
 
-  a.noticeTextWrap {
-    text-decoration: none;
-    color: white;
-    
+  /* a.noticeTextWrap { */
+  button.contentBoxBtn {
+    outline: none;
+    background: none;
+    border: none;
+    padding: 12px 0;
+
+    /* text-decoration: none; */
+    color: ${({ confirm }) => (confirm ? "#aaa" : "white")};
+    font-size: 0.9em;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 
     width: 100%;
+
+    transition: background-color 0.2s;
 
     cursor: pointer;
 
     span {
+      pointer-events: none;
+    }
+
+    &:hover {
+      background-color: rgba(135, 135, 135, 0.2);
     }
   }
 
-  div.noticeBtnWrap {
+  /* div.noticeBtnWrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    
+
     min-width: 50px;
 
-    outline: 1px solid white;
+    outline: 1px solid white; */
 
-    button {
-      background: none;
-      outline: none;
-      border: none;
+  button.confirm {
+    background: none;
+    outline: none;
+    border: none;
 
-      margin: 0;
-      padding: 0;
+    margin: 0;
+    padding: 0;
 
-      color: white;
-      font-weight: bold;
-      font-size: .9em;
+    font-weight: bold;
+    font-size: 0.9em;
 
-      cursor: pointer;
-
-      outline: 1px solid red;
-    }
+    ${({ confirm }) =>
+      confirm
+        ? css`
+            pointer-events: none;
+            svg {
+              color: #444;
+            }
+          `
+        : css`
+            cursor: pointer;
+            svg {
+              color: var(--icon-color);
+            }
+          `};
   }
+  /* } */
 `;
 
 export default NotificationStyle;

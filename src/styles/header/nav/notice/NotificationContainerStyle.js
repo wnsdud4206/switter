@@ -7,14 +7,14 @@ const NotificationContainerStyle = styled.div`
   align-items: flex-start;
   justify-content: center;
 
-  width: 85%;
+  min-width: 470px;
 
+  // 모바일은 center
   position: absolute;
-  left: 50%;
+  right: 10px;
 
-  transform: translate(-50%, 10px);
-
-  /* outline: 1px solid red; */
+  /* transform: translate(-50%, 10px); */
+  transform: translateY(18px);
 
   &.open {
     visibility: visible;
@@ -32,17 +32,17 @@ const NotificationContainerStyle = styled.div`
 
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
-    border-bottom: 12px solid #444;
+    border-bottom: 12px solid var(--border-color);
 
     position: absolute;
     top: -10px;
-    left: 50%;
+    right: 52px;
 
     transform: translateX(-50%);
   }
 
   div#noticeDropdownWrap {
-    background-color: #222;
+    background-color: var(--background-color);
 
     width: 100%;
 
@@ -61,12 +61,12 @@ const NotificationContainerStyle = styled.div`
       align-items: center;
       justify-content: space-between;
 
-      background: #222;
+      background: var(--background-color);
 
       width: 100%;
 
       padding: 4px 8px;
-      border-bottom: 2px solid #444;
+      border-bottom: 2px solid var(--border-color);
       box-sizing: border-box;
 
       position: sticky;
@@ -77,7 +77,7 @@ const NotificationContainerStyle = styled.div`
         outline: none;
         border: none;
 
-        color: white;   // 임시
+        color: var(--sub-color);   // 임시
 
         cursor: pointer;
       }
@@ -90,7 +90,7 @@ const NotificationContainerStyle = styled.div`
         button#commentNotice {
         }
       }
-      dib#noticeAction {
+      div#noticeAction {
         button {
         }
         button#allConfirm {
@@ -156,7 +156,7 @@ const NotificationContainerStyle = styled.div`
     &::-webkit-scrollbar-thumb {
       border-radius: 3px;
       /* background-color: #00bdee; */
-      background-color: #444;
+      background-color: var(--icon-color);
     }
 
     &::-webkit-scrollbar-track {

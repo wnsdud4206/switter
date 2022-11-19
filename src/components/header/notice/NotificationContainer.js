@@ -75,7 +75,7 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
               })
             ) : (
               <p id="noNotice" className="notice">
-                알림이 없어요!
+                아직 알림이 없어요😪
               </p>
             )}
           </ul>

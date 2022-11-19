@@ -4,6 +4,12 @@ const SideMenuStyle = styled.div`
   background-color: #666;
 
   flex-basis: 320px;
+
+  margin-top: 32px;
+
+  @media (max-width: 850px) {
+    display: none;
+  }
 `;
 
 const SideMenu = () => {

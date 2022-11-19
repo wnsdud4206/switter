@@ -68,6 +68,7 @@ const Nav = ({
                   height="25px"
                   alt="profileImage"
                   onError={onError}
+                  loading="lazy"
                 />
               </NavigationProfileImage>
             ) : (

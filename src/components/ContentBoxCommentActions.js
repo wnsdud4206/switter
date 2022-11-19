@@ -10,6 +10,8 @@ import {
   deleteDoc,
   deleteField,
   onSnapshot,
+  arrayUnion,
+  arrayRemove,
 } from "fbase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faHeart as like } from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +21,7 @@ import { useEffect, useState } from "react";
 const ContentBoxCommentActionsStyle = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 
   button {
     outline: none;
@@ -27,20 +29,27 @@ const ContentBoxCommentActionsStyle = styled.div`
     border: none;
     padding: 0;
 
-    color: var(--sub-color);
-
     cursor: pointer;
-    
+
+    &.commentDeleteBtn {
+      svg {
+        color: var(--sub-color);
+      }
+    }
+    &.commentLikeBtn {
+      svg {
+        &.commentLike {
+          color: #ff6633;
+        }
+
+        &.commentNotLike {
+          color: var(--sub-color);
+        }
+      }
+    }
+
     svg {
       font-size: 16px;
-
-      &.commentLike {
-        color: #ff6633;
-      }
-
-      &.commentNotLike {
-        color: white;
-      }
     }
   }
 `;
@@ -61,6 +70,15 @@ const ContentBoxCommentActions = ({
       if (ok) {
         const commentDoc = doc(dbService(), "comments", `${comment.id}`);
         await deleteDoc(commentDoc);
+
+        const contentsDoc = doc(dbService(), "contents", content.id);
+        await setDoc(
+          contentsDoc,
+          {
+            comments: arrayRemove(comment.id),
+          },
+          { merge: true },
+        );
 
         const noticeQuery = query(collection(dbService(), "notifications"));
         const noticeDocs = await getDocs(noticeQuery);
@@ -123,6 +141,7 @@ const ContentBoxCommentActions = ({
       // comment.id X, 지울 때 복잡해짐, 한 곳에 넣고 where 같은 걸로 필터링해서 commentlikes는 따로 가져와야 할듯?? - XXX
       // commentLikes는 따로 넣고 찾아서 지우는게 나을듯
       const d = doc(dbService(), "notifications", `${comment.creatorId}`);
+      const commentDoc = doc(dbService(), "comments", comment.id);
 
       if (!currentUserCommentLike) {
         await setDoc(
@@ -142,6 +161,7 @@ const ContentBoxCommentActions = ({
           },
           { merge: true },
         );
+        await setDoc(commentDoc, { likes: arrayUnion(uid) }, { merge: true });
       } else if (currentUserCommentLike) {
         await setDoc(
           d,
@@ -156,6 +176,7 @@ const ContentBoxCommentActions = ({
           },
           { merge: true },
         );
+        await setDoc(commentDoc, { likes: arrayRemove(uid) }, { merge: true });
 
         // notification(
         //   "REMOVE",
@@ -173,16 +194,18 @@ const ContentBoxCommentActions = ({
 
   return (
     <ContentBoxCommentActionsStyle className="commentBtnWrap">
+      {comment.creatorId === userObj.uid && (
+        <button className="commentDeleteBtn" onClick={onDeleteComment}>
+          <FontAwesomeIcon icon={faTrashCan} />
+        </button>
+      )}
+
       <button className="commentLikeBtn" onClick={onLikeToggle}>
         {currentUserCommentLike ? (
-          <FontAwesomeIcon className="userLike" icon={like} />
+          <FontAwesomeIcon className="commentLike" icon={like} />
         ) : (
-          <FontAwesomeIcon className="userNotLike" icon={faRegHeart} />
+          <FontAwesomeIcon className="commentNotLike" icon={faRegHeart} />
         )}
-      </button>
-
-      <button className="commentDeleteBtn" onClick={onDeleteComment}>
-        <FontAwesomeIcon icon={faTrashCan} />
       </button>
     </ContentBoxCommentActionsStyle>
   );
