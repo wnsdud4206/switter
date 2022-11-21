@@ -11,9 +11,9 @@ import NavigationProfileImage from "styles/header/NavigationProfileImage";
 import NotificationContainer from "./notice/NotificationContainer";
 import NavStyle from "styles/header/nav/NavStyle";
 import { useDispatch, useSelector } from "react-redux";
-import { editActions } from "../../../modules/contentEditReducer";
+import { editActions } from "../../../reducers/contentEditReducer";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import { darkModeActions } from "modules/darkModeReducer";
+import { darkModeActions } from "reducers/darkModeReducer";
 
 const Nav = ({
   userObj,

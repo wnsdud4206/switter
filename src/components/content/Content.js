@@ -26,7 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ContentAction from "./ContentAction";
 import { useDispatch } from "react-redux";
-import { editActions } from "modules/contentEditReducer";
+import { editActions } from "reducers/contentEditReducer";
 import {
   faPenToSquare,
   faSquareMinus,

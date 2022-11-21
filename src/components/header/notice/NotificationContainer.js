@@ -71,7 +71,14 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
           <ul id="notificationList" className="notice" ref={ulRef}>
             {unConfirm.length ? ( // key도 같이 가져와야 하는데..
               unConfirm.map((con) => {
-                return <Notification key={con[0]} noticeObj={con} offNotification={offNotification} />;
+                return (
+                  <Notification
+                    key={con[0]}
+                    noticeObj={con}
+                    offNotification={offNotification}
+                    activeNotice={activeNotice}
+                  />
+                );
               })
             ) : (
               <p id="noNotice" className="notice">

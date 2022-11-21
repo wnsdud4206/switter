@@ -1,13 +1,13 @@
 import { faCheck, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { authService, dbService, doc, getDoc, setDoc } from "fbase";
-import { boxActions } from "modules/contentBoxReducer";
-import { useEffect, useState } from "react";
+import { boxActions } from "reducers/contentBoxReducer";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
 
-const Notification = ({ noticeObj, offNotification }) => {
+const Notification = ({ noticeObj, offNotification, activeNotice }) => {
   const [noticeKey, noticeData] = noticeObj;
   const [contentText, setContentText] = useState("");
   const [userName, setUserName] = useState("");
@@ -32,43 +32,48 @@ const Notification = ({ noticeObj, offNotification }) => {
     setImgError(true);
   };
 
-  const getContentAndUser = async () => {
-    // getContent
-    const contentDoc = doc(dbService(), collection, secondId);
+  const getContentAndUser = useCallback(async () => {
+    try {
+      // getContent
+      const contentDoc = doc(dbService(), collection, secondId);
 
-    const contentGet = await getDoc(contentDoc);
+      const contentGet = await getDoc(contentDoc);
 
-    let text;
-    if (contentGet.data().text.length > 10) {
-      text = `${contentGet.data().text.slice(0, 10)}...`;
-    } else {
-      text = contentGet.data().text;
+      // 왜 자꾸 text를 바로바로 못가져 오는 거야..
+      let text;
+      if (contentGet.data().text?.length > 10) {
+        text = `${contentGet.data().text.slice(0, 10)}...`;
+      } else {
+        text = contentGet.data().text;
+      }
+
+      // getUser
+      let userDoc;
+      if (noticeData.category === "contentComments") {
+        const commentDoc = doc(dbService(), "comments", userId);
+        const commentGet = await getDoc(commentDoc);
+
+        userDoc = doc(dbService(), "users", commentGet.data().creatorId);
+      } else {
+        userDoc = doc(dbService(), "users", userId);
+      }
+
+      const userGet = await getDoc(userDoc);
+
+      const creatorDisplayName = userGet.data().displayName;
+      const creatorAttachmentUrl = userGet.data().attachmentUrl;
+
+      setContentText(text);
+      setContentObj({
+        ...contentGet.data(),
+        creatorDisplayName,
+        creatorAttachmentUrl,
+      });
+      // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
+    } catch (error) {
+      console.error(error);
     }
-    setContentText(text);
-
-    // getUser
-    let userDoc;
-    if (noticeData.category === "contentComments") {
-      const commentDoc = doc(dbService(), "comments", userId);
-      const commentGet = await getDoc(commentDoc);
-
-      userDoc = doc(dbService(), "users", commentGet.data().creatorId);
-    } else {
-      userDoc = doc(dbService(), "users", userId);
-    }
-
-    const userGet = await getDoc(userDoc);
-
-    const creatorDisplayName = userGet.data().displayName;
-    const creatorAttachmentUrl = userGet.data().attachmentUrl;
-
-    setContentObj({
-      ...contentGet.data(),
-      creatorDisplayName,
-      creatorAttachmentUrl,
-    });
-    // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
-  };
+  }, [collection, noticeData.category, secondId, userId]);
 
   const onConfirm = async () => {
     const noticeDoc = doc(
@@ -120,8 +125,8 @@ const Notification = ({ noticeObj, offNotification }) => {
   };
 
   useEffect(() => {
-    getContentAndUser();
-  }, []);
+    activeNotice && getContentAndUser();
+  }, [activeNotice, getContentAndUser]);
 
   const onContentBox = async () => {
     try {

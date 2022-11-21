@@ -18,7 +18,7 @@ import {
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { editActions } from "modules/contentEditReducer";
+import { editActions } from "reducers/contentEditReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 const ContentEditorStyle = styled.div`

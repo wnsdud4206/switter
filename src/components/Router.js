@@ -5,9 +5,9 @@ import Home from "routes/Home";
 // import OtherUserProfile from "routes/OtherUserProfile";
 import Profile from "routes/Profile";
 import Header from "./header/Header";
-import ContentEditor from "components/ContentEditor";
+import ContentEditor from "components/content/ContentEditor";
 import { useSelector } from "react-redux";
-import ContentBox from "./ContentBox";
+import ContentBox from "./content/ContentBox";
 
 const AppRouter = ({ isLoggedIn, userObj, init }) => {
   // const [otherUserId, setOtherUserId] = useState("");

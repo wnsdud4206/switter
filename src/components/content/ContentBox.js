@@ -6,7 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { boxActions } from "modules/contentBoxReducer";
+import { boxActions } from "reducers/contentBoxReducer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -27,7 +27,9 @@ import {
   arrayRemove,
 } from "fbase";
 import ContentBoxCommentActions from "./ContentBoxCommentActions";
-import ContentAction from "./home/ContentAction";
+import ContentAction from "./ContentAction";
+import useGetLike from "hooks/useGetLike";
+import onLikeToggle from "utils/onLikeToggle";
 
 const ContentBoxStyle = styled.div`
   width: 100%;
@@ -433,16 +435,16 @@ const ContentBox = ({ userObj }) => {
   const [commentText, setCommentText] = useState("");
   const [slideIndex, setSlideIndex] = useState(0);
   const [comments, setComments] = useState([]);
-  const [likeCount, setLikeCount] = useState([]);
-  const [currentUserLike, setCurrentUserLike] = useState(false);
   const dispatch = useDispatch();
   const { content } = useSelector((state) => state.boxState);
+  const { likeCount, currentUserLike } = useGetLike(content);
 
   const onError = () => {
     // 이미지 깨지면 대체
     setImgError(true);
   };
 
+  // useEffect onSnapshot 해야 좋을듯(async&await 없이)
   const getComments = async () => {
     // const commentsDoc = doc(dbService(), "comments");
     const commentsQuery = query(
@@ -559,67 +561,6 @@ const ContentBox = ({ userObj }) => {
     }
   };
 
-  useEffect(() => {
-    // getComments();
-
-    const noticeQuery = query(collection(dbService(), "notifications"));
-    onSnapshot(noticeQuery, (snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        if (doc.id === content.creatorId) {
-          const likes = doc.data()[content.id]?.contentLikes
-            ? Object.keys(doc.data()[content.id].contentLikes)
-            : []; // array로
-          const userLike = likes.includes(
-            content.id + "/" + authService().currentUser?.uid,
-          );
-
-          // console.log(likes); // 없으면 undefined 반환
-          setLikeCount(likes);
-          setCurrentUserLike(userLike);
-          // console.log(likes);
-          // console.log(userLike);
-        }
-      });
-    });
-  }, []);
-
-  const onLikeToggle = async () => {
-    const { uid } = authService().currentUser;
-
-    const noticeDoc = doc(dbService(), "notifications", content.creatorId);
-    const contentDoc = doc(dbService(), "contents", content.id);
-
-    if (!currentUserLike) {
-      await setDoc(
-        noticeDoc,
-        {
-          [content.id]: {
-            contentLikes: {
-              [content.id + "/" + uid]: {
-                confirmed: false,
-                lastUpdate: Date.now(),
-                category: "contentLikes",
-              },
-            },
-          },
-        },
-        { merge: true },
-      );
-      await setDoc(contentDoc, { likes: arrayUnion(uid) }, { merge: true });
-    } else if (currentUserLike) {
-      await setDoc(
-        noticeDoc,
-        {
-          [content.id]: {
-            contentLikes: { [content.id + "/" + uid]: deleteField() },
-          },
-        },
-        { merge: true },
-      );
-      await setDoc(contentDoc, { likes: arrayRemove(uid) }, { merge: true });
-    }
-  };
-
   return (
     <ContentBoxStyle>
       <div id="contentBackground" onClick={contentBoxCancel}>
@@ -697,7 +638,7 @@ const ContentBox = ({ userObj }) => {
 
               <div className="likeWrap">
                 <span className="likeCounter">{likeCount.length}</span>
-                <button className="likeBtn" onClick={onLikeToggle}>
+                <button className="likeBtn" onClick={() => onLikeToggle(content, currentUserLike)}>
                   {currentUserLike ? (
                     <FontAwesomeIcon className="userLike" icon={like} />
                   ) : (

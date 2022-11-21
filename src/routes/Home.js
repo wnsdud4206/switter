@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ContentsList from "components/home/ContentsList";
+import ContentsList from "components/content/ContentsList";
 import SideMenu from "components/sideMenu/SideMenu";
 import styled from "styled-components";
 

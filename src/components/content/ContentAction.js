@@ -26,7 +26,9 @@ import {
   faComment as faRegCommnet,
 } from "@fortawesome/free-regular-svg-icons";
 import { useDispatch } from "react-redux";
-import { boxActions } from "modules/contentBoxReducer";
+import { boxActions } from "reducers/contentBoxReducer";
+import useGetLike from "hooks/useGetLike";
+import onLikeToggle from "utils/onLikeToggle";
 
 const ContentActionStyle = styled.div`
   display: flex;
@@ -63,7 +65,7 @@ const ContentActionStyle = styled.div`
         }
       }
 
-      span {
+      span.likeCounter {
         margin: 0 8px;
         font-size: 1.2rem;
       }
@@ -80,10 +82,12 @@ const ContentActionStyle = styled.div`
 `;
 
 const ContentAction = ({ contentObj }) => {
-  const [likeCount, setLikeCount] = useState([]);
-  const [currentUserLike, setCurrentUserLike] = useState(false);
+  // const [likeCount, setLikeCount] = useState([]);
+  // const [currentUserLike, setCurrentUserLike] = useState(false);
   // const [commentCount, setCommentCount] = useState([]);
   const dispatch = useDispatch();
+
+  const { likeCount, currentUserLike } = useGetLike(contentObj);
 
   // const getComments = async () => {
   //   try {
@@ -109,66 +113,66 @@ const ContentAction = ({ contentObj }) => {
   //   // console.log(commentCount);
   // };
 
-  useEffect(() => {
-    // getComments();
+  // useEffect(() => {
+  //   // getComments();
 
-    const noticeQuery = query(collection(dbService(), "notifications"));
-    onSnapshot(noticeQuery, (snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        if (doc.id === contentObj.creatorId) {
-          const likes = doc.data()[contentObj.id]?.contentLikes
-            ? Object.keys(doc.data()[contentObj.id].contentLikes)
-            : []; // array로
-          const userLike = likes.includes(
-            contentObj.id + "/" + authService().currentUser?.uid,
-          );
+  //   const noticeQuery = query(collection(dbService(), "notifications"));
+  //   onSnapshot(noticeQuery, (snapshot) => {
+  //     snapshot.docs.forEach((doc) => {
+  //       if (doc.id === contentObj.creatorId) {
+  //         const likes = doc.data()[contentObj.id]?.contentLikes
+  //           ? Object.keys(doc.data()[contentObj.id].contentLikes)
+  //           : []; // array로
+  //         const userLike = likes.includes(
+  //           contentObj.id + "/" + authService().currentUser?.uid,
+  //         );
 
-          // console.log(likes); // 없으면 undefined 반환
-          setLikeCount(likes);
-          setCurrentUserLike(userLike);
-          // console.log(likes);
-          // console.log(userLike);
-        }
-      });
-    });
-  }, []);
+  //         // console.log(likes); // 없으면 undefined 반환
+  //         setLikeCount(likes);
+  //         setCurrentUserLike(userLike);
+  //         // console.log(likes);
+  //         // console.log(userLike);
+  //       }
+  //     });
+  //   });
+  // }, []);
 
-  const onLikeToggle = async () => {
-    const { uid } = authService().currentUser;
+  // const onLikeToggle = async () => {
+  //   const { uid } = authService().currentUser;
 
-    const noticeDoc = doc(dbService(), "notifications", contentObj.creatorId);
-    const contentDoc = doc(dbService(), "contents", contentObj.id);
+  //   const noticeDoc = doc(dbService(), "notifications", contentObj.creatorId);
+  //   const contentDoc = doc(dbService(), "contents", contentObj.id);
 
-    if (!currentUserLike) {
-      await setDoc(
-        noticeDoc,
-        {
-          [contentObj.id]: {
-            contentLikes: {
-              [contentObj.id + "/" + uid]: {
-                confirmed: false,
-                lastUpdate: Date.now(),
-                category: "contentLikes",
-              },
-            },
-          },
-        },
-        { merge: true },
-      );
-      await setDoc(contentDoc, { likes: arrayUnion(uid) }, { merge: true });
-    } else if (currentUserLike) {
-      await setDoc(
-        noticeDoc,
-        {
-          [contentObj.id]: {
-            contentLikes: { [contentObj.id + "/" + uid]: deleteField() },
-          },
-        },
-        { merge: true },
-      );
-      await setDoc(contentDoc, { likes: arrayRemove(uid) }, { merge: true });
-    }
-  };
+  //   if (!currentUserLike) {
+  //     await setDoc(
+  //       noticeDoc,
+  //       {
+  //         [contentObj.id]: {
+  //           contentLikes: {
+  //             [contentObj.id + "/" + uid]: {
+  //               confirmed: false,
+  //               lastUpdate: Date.now(),
+  //               category: "contentLikes",
+  //             },
+  //           },
+  //         },
+  //       },
+  //       { merge: true },
+  //     );
+  //     await setDoc(contentDoc, { likes: arrayUnion(uid) }, { merge: true });
+  //   } else if (currentUserLike) {
+  //     await setDoc(
+  //       noticeDoc,
+  //       {
+  //         [contentObj.id]: {
+  //           contentLikes: { [contentObj.id + "/" + uid]: deleteField() },
+  //         },
+  //       },
+  //       { merge: true },
+  //     );
+  //     await setDoc(contentDoc, { likes: arrayRemove(uid) }, { merge: true });
+  //   }
+  // };
 
   const onContentBox = () => {
     dispatch(boxActions.onContentBox(contentObj));
@@ -177,7 +181,10 @@ const ContentAction = ({ contentObj }) => {
   return (
     <ContentActionStyle className="contentActions">
       <div className="likeWrap">
-        <button className="likeBtn" onClick={onLikeToggle}>
+        <button
+          className="likeBtn"
+          onClick={() => onLikeToggle(contentObj, currentUserLike)}
+        >
           {currentUserLike ? (
             <FontAwesomeIcon className="userLike" icon={like} />
           ) : (

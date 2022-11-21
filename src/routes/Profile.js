@@ -1,4 +1,4 @@
-import ContentsList from "components/home/ContentsList";
+import ContentsList from "components/content/ContentsList";
 import SideMenu from "components/sideMenu/SideMenu";
 import {
   authService,
@@ -22,7 +22,7 @@ const ProfileStyle = styled.div`
 `;
 
 const Profile = ({ userObj }) => {
-  const [mySweets, setMySweets] = useState([]);
+  const [myContents, setMyContents] = useState([]);
 
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const Profile = ({ userObj }) => {
     navigate("/", { replace: true });
   };
 
-  const getMySweets = async () => {
+  const getMyContents = async () => {
     try {
       const q = query(
         collection(dbService(), "sweets"),
@@ -46,19 +46,19 @@ const Profile = ({ userObj }) => {
       //   console.log(doc.id, "=>", doc.data());
       // });
 
-      const mySweetArr = Object.values(querySnapshot.docs).map((doc) => ({
+      const myContentArr = Object.values(querySnapshot.docs).map((doc) => ({
         id: doc.id,
         ...doc.data(), // creatorId, createdAt, text
       }));
-      // console.log(mySweetArr);
-      setMySweets(mySweetArr);
+      // console.log(myContentArr);
+      setMyContents(myContentArr);
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    getMySweets();
-    // console.log(mySweets);
+    getMyContents();
+    // console.log(myContents);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -78,14 +78,14 @@ const Profile = ({ userObj }) => {
 
       {/* <div>
         profileHeader
-          <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(mySweets, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>
+          <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(myContents, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>
       </div> */}
 
       {/* <ProfileEdit userObj={userObj} />
-      <SweetConatiner sweets={mySweets} userObj={userObj} /> */}
+      <SweetConatiner contents={myContents} userObj={userObj} /> */}
 
       {/* {true ? (
-        <SweetConatiner sweets={mySweets} userObj={userObj} />
+        <SweetConatiner contents={myContents} userObj={userObj} />
       ) : (
         <ProfileEdit userObj={userObj} />
       )} */}
