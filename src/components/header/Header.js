@@ -7,7 +7,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import HeaderStyle from "styles/header/HeaderStyle";
-import NavigationProfileImage from "styles/header/NavigationProfileImage";
+import NavigationProfileImage from "styles/header/NavigationUserImage";
 import NotificationContainer from "./nav/notice/NotificationContainer";
 import ScrollProgress from "./ScrollProgress";
 import ScrollTopButton from "components/ScrollTopButton";
@@ -51,7 +51,7 @@ const Header = ({ userObj }) => {
   return (
     <>
       <HeaderStyle>
-        <div id="homeLink">
+        <div id="homeLink" title="home">
           <Link to="/">
             <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
           </Link>

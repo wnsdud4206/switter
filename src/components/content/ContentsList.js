@@ -14,6 +14,7 @@ import LoadingBox from "components/loading/LoadingBox";
 import Content from "./Content";
 import { useLocation, useParams } from "react-router-dom";
 import ContentNav from "./ContentNav";
+import UserProfile from "components/UserProfileEditor";
 
 const ContentsListStyle = styled.div`
   display: flex;
@@ -125,7 +126,7 @@ const ContentsList = ({ userObj }) => {
       ) : (
         <LoadingBox text={"Loading"} />
       )}
-      
+
       {/* 컨텐츠가 없을 경우에도 loding화면이 나와서 컨텐츠가 없을 때와 로딩중일 때의 구분을 해야함 */}
     </ContentsListStyle>
   );

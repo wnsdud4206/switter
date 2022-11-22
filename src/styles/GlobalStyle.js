@@ -65,6 +65,9 @@ const GlobalStyle = createGlobalStyle`
     }
 
     div#root {
+      display: flex;
+      justify-content: center;
+      
       background-color: var(--background-color);
       
       width: 100%;

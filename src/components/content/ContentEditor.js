@@ -49,7 +49,7 @@ const ContentEditorStyle = styled.div`
 
       /* pointer-events: none; */
 
-      padding: 8px 0;
+      padding: 16px 0;
       border-radius: 8px;
       border: 1px solid var(--border-color);
 
@@ -57,12 +57,19 @@ const ContentEditorStyle = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 32px;
+        gap: 28px;
 
         label[for="fileBtn"] {
           font-size: 1.2rem;
+          padding: 6px;
 
           cursor: pointer;
+
+          transition: background 0.2s;
+
+          &:hover {
+            background-color: rgba(128, 128, 128, 0.3);
+          }
 
           svg {
           }
@@ -242,13 +249,13 @@ const ContentEditorStyle = styled.div`
                 border-radius: 50%;
 
                 &.textingCircle1 {
-                  animation: jump 1.2s .5s infinite alternate;
+                  animation: jump 1.2s 0.5s infinite alternate;
                 }
                 &.textingCircle2 {
-                  animation: jump 1.2s .6s infinite alternate;
+                  animation: jump 1.2s 0.6s infinite alternate;
                 }
                 &.textingCircle3 {
-                  animation: jump 1.2s .7s infinite alternate;
+                  animation: jump 1.2s 0.7s infinite alternate;
                 }
 
                 @keyframes jump {

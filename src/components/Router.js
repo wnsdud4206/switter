@@ -44,11 +44,11 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
             {/* <Route
               path={`/${otherUserId}`}
               element={
-                <OtherUserProfile userObj={userObj} otherUserId={otherUserId} />
+                <OtherUserUser userObj={userObj} otherUserId={otherUserId} />
               }
             /> */}
             <Route path="/profile" element={<Profile userObj={userObj} />} />
-            {/* redirect 사라져서 이렇게 사용, 또는 Profile.js 에서 useNavigate() 사용 */}
+            {/* redirect 사라져서 이렇게 사용, 또는 User.js 에서 useNavigate() 사용 */}
             {/* <Route path="*" element={<Header replace to="/" />} /> */}
           </>
         ) : (

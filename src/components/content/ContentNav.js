@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const ContentNavStyle = styled.nav`
-  width: 100%;
+  width: 470px;
 
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -18,7 +18,7 @@ const ContentNavStyle = styled.nav`
 
     li {
       line-height: 50%;
-      
+
       button {
         outline: none;
         background: none;
@@ -54,7 +54,6 @@ const ContentNav = ({ onContentType }) => {
     { name: "myContents", text: "내가 쓴 글" },
     { name: "myLikes", text: "내가 좋아요한 글" },
     { name: "myComments", text: "내가 댓글 단 글" },
-    { name: "myProfile", text: "내 프로필 정보" },
   ];
 
   return (

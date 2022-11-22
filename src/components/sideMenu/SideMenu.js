@@ -3,7 +3,8 @@ import styled from "styled-components";
 const SideMenuStyle = styled.div`
   background-color: #666;
 
-  flex-basis: 320px;
+  /* flex-basis: 290px; */
+  width: 290px;
 
   margin-top: 32px;
 

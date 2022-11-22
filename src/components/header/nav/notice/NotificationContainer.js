@@ -83,17 +83,14 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
         >
           <ul id="notificationList" className="notice" ref={ulRef}>
             {noticeArr.length ? ( // key도 같이 가져와야 하는데..
-              noticeArr.map((notice) => {
-                console.log(notice);
-                return (
-                  <Notification
-                    key={notice[0]}
-                    noticeObj={notice}
-                    offNotification={offNotification}
-                    activeNotice={activeNotice}
-                  />
-                );
-              })
+              noticeArr.map((notice) => (
+                <Notification
+                  key={notice[0]}
+                  noticeObj={notice}
+                  offNotification={offNotification}
+                  activeNotice={activeNotice}
+                />
+              ))
             ) : (
               <p id="noNotice" className="notice">
                 아직 알림이 없어요😪

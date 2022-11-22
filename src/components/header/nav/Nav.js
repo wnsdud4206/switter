@@ -7,7 +7,7 @@ import {
   faCircleHalfStroke,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import NavigationProfileImage from "styles/header/NavigationProfileImage";
+import NavigationUserImage from "styles/header/NavigationUserImage";
 import NotificationContainer from "./notice/NotificationContainer";
 import NavStyle from "styles/header/nav/NavStyle";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,38 +43,38 @@ const Nav = ({
   return (
     <NavStyle>
       <ul id="navContainer">
-        <li id="newContent">
+        <li id="newContent" title="newContent">
           <button onClick={contentCreate}>
             <FontAwesomeIcon icon={faSquarePlus} />
           </button>
         </li>
-        <li id="darkMode">
+        <li id="darkMode" title="darkMode">
           <button onClick={onDarkModeToggle}>
             <FontAwesomeIcon icon={faCircleHalfStroke} />
           </button>
         </li>
-        <li id="notification" className="notice" onClick={toggleNotification}>
+        <li id="notification" className="notice" onClick={toggleNotification} title="notice">
           {/* not Link */}
           <FontAwesomeIcon icon={faBellActivate} />
           {/* <FontAwesomeIcon icon={faBell} /> */}
         </li>
-        <li id="profileLink">
+        <li id="profileLink" title="myProfile">
           <Link id="myProfile" to="/profile">
             {userObj.photoURL && !imgError ? (
-              <NavigationProfileImage>
+              <NavigationUserImage>
                 <img
                   src={userObj.photoURL}
                   width="25px"
                   height="25px"
-                  alt="profileImage"
+                  alt="userImage"
                   onError={onError}
                   loading="lazy"
                 />
-              </NavigationProfileImage>
+              </NavigationUserImage>
             ) : (
-              <FontAwesomeIcon id="profileicon" icon={faUser} />
+              <FontAwesomeIcon id="usericon" icon={faUser} />
             )}
-            {/* <span>{userObj.displayName}'s Profile</span> */}
+            {/* <span>{userObj.displayName}'s User</span> */}
           </Link>
         </li>
       </ul>

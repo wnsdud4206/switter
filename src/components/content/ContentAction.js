@@ -25,8 +25,6 @@ import {
   faHeart as faRegHeart,
   faComment as faRegCommnet,
 } from "@fortawesome/free-regular-svg-icons";
-import { useDispatch } from "react-redux";
-import { boxActions } from "reducers/contentBoxReducer";
 import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
 
@@ -81,102 +79,10 @@ const ContentActionStyle = styled.div`
   }
 `;
 
-const ContentAction = ({ contentObj }) => {
-  // const [likeCount, setLikeCount] = useState([]);
-  // const [currentUserLike, setCurrentUserLike] = useState(false);
-  // const [commentCount, setCommentCount] = useState([]);
-  const dispatch = useDispatch();
+const ContentAction = ({ contentObj, onContentBox }) => {
 
   const { likeCount, currentUserLike } = useGetLike(contentObj);
 
-  // const getComments = async () => {
-  //   try {
-  //     const commentQuery = query(
-  //       collection(dbService(), "comments"),
-  //       where("contentId", "==", contentObj.id),
-  //     );
-
-  //     onSnapshot(commentQuery, (snapshot) => {
-  //       // snapshot.docs.map((doc) => {
-  //       //   console.log(doc.data());
-  //       // });
-  //       const commentArr = snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(), // creatorId, createdAt, text
-  //       }));
-  //       // console.log(commentArr);   // array
-  //       setCommentCount(commentArr);
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  //   // console.log(commentCount);
-  // };
-
-  // useEffect(() => {
-  //   // getComments();
-
-  //   const noticeQuery = query(collection(dbService(), "notifications"));
-  //   onSnapshot(noticeQuery, (snapshot) => {
-  //     snapshot.docs.forEach((doc) => {
-  //       if (doc.id === contentObj.creatorId) {
-  //         const likes = doc.data()[contentObj.id]?.contentLikes
-  //           ? Object.keys(doc.data()[contentObj.id].contentLikes)
-  //           : []; // array로
-  //         const userLike = likes.includes(
-  //           contentObj.id + "/" + authService().currentUser?.uid,
-  //         );
-
-  //         // console.log(likes); // 없으면 undefined 반환
-  //         setLikeCount(likes);
-  //         setCurrentUserLike(userLike);
-  //         // console.log(likes);
-  //         // console.log(userLike);
-  //       }
-  //     });
-  //   });
-  // }, []);
-
-  // const onLikeToggle = async () => {
-  //   const { uid } = authService().currentUser;
-
-  //   const noticeDoc = doc(dbService(), "notifications", contentObj.creatorId);
-  //   const contentDoc = doc(dbService(), "contents", contentObj.id);
-
-  //   if (!currentUserLike) {
-  //     await setDoc(
-  //       noticeDoc,
-  //       {
-  //         [contentObj.id]: {
-  //           contentLikes: {
-  //             [contentObj.id + "/" + uid]: {
-  //               confirmed: false,
-  //               lastUpdate: Date.now(),
-  //               category: "contentLikes",
-  //             },
-  //           },
-  //         },
-  //       },
-  //       { merge: true },
-  //     );
-  //     await setDoc(contentDoc, { likes: arrayUnion(uid) }, { merge: true });
-  //   } else if (currentUserLike) {
-  //     await setDoc(
-  //       noticeDoc,
-  //       {
-  //         [contentObj.id]: {
-  //           contentLikes: { [contentObj.id + "/" + uid]: deleteField() },
-  //         },
-  //       },
-  //       { merge: true },
-  //     );
-  //     await setDoc(contentDoc, { likes: arrayRemove(uid) }, { merge: true });
-  //   }
-  // };
-
-  const onContentBox = () => {
-    dispatch(boxActions.onContentBox(contentObj));
-  };
 
   return (
     <ContentActionStyle className="contentActions">

@@ -1,5 +1,7 @@
 import ContentsList from "components/content/ContentsList";
 import SideMenu from "components/sideMenu/SideMenu";
+import UserProfile from "components/UserProfile";
+import UserProfileEditor from "components/UserProfileEditor";
 import {
   authService,
   dbService,
@@ -11,69 +13,44 @@ import {
   orderBy,
 } from "fbase";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const ProfileStyle = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+
+  width: 792px;
 
   margin-top: 61px;
+
+  div#bottomBox {
+    display: flex;
+
+    border-top: 1px solid var(--border-color);
+  }
 `;
 
 const Profile = ({ userObj }) => {
-  const [myContents, setMyContents] = useState([]);
+  const [editing, setEditing] = useState(false);
 
-  const navigate = useNavigate();
-
-  const onLogOutClick = () => {
-    signOut(authService());
-    navigate("/", { replace: true });
+  const onEditing = () => {
+    setEditing(!editing);
   };
-
-  const getMyContents = async () => {
-    try {
-      const q = query(
-        collection(dbService(), "sweets"),
-        where("creatorId", "==", userObj.uid),
-        orderBy("createdAt"),
-      );
-      // eslint-disable-next-line no-unused-vars
-      const querySnapshot = await getDocs(q);
-      // state에 담고 map으로 출력
-      // console.log(querySnapshot);
-      // querySnapshot.forEach((doc) => {
-      //   console.log(doc.id, "=>", doc.data());
-      // });
-
-      const myContentArr = Object.values(querySnapshot.docs).map((doc) => ({
-        id: doc.id,
-        ...doc.data(), // creatorId, createdAt, text
-      }));
-      // console.log(myContentArr);
-      setMyContents(myContentArr);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  useEffect(() => {
-    getMyContents();
-    // console.log(myContents);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // const profileImageFormat = async () => {
-  //   await updateProfile(authService().currentUser, {
-  //     photoURL: null,
-  //   });
-  // };
 
   return (
     <>
       <ProfileStyle>
-        <ContentsList userObj={userObj} />
-        <SideMenu />
+        {editing ? (
+          <UserProfileEditor userObj={userObj} onEditing={onEditing} />
+        ) : (
+          <UserProfile userObj={userObj} onEditing={onEditing} />
+        )}
+        <div id="bottomBox">
+          <ContentsList userObj={userObj} />
+          <SideMenu />
+        </div>
       </ProfileStyle>
 
       {/* <div>

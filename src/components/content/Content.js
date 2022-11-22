@@ -26,6 +26,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ContentAction from "./ContentAction";
 import { useDispatch } from "react-redux";
+import { boxActions } from "reducers/contentBoxReducer";
 import { editActions } from "reducers/contentEditReducer";
 import {
   faPenToSquare,
@@ -183,6 +184,11 @@ const ContentStyle = styled.div`
 
   div.contentText {
     padding: 8px;
+
+    cursor: pointer;
+
+    p {
+    }
   }
 
   div.contentActions {
@@ -292,6 +298,10 @@ const Content = ({ content, userObj }) => {
     // }
   };
 
+  const onContentBox = () => {
+    dispatch(boxActions.onContentBox(contentObj));
+  };
+
   return (
     <ContentStyle className="content">
       <div className="contentHeader">
@@ -320,18 +330,16 @@ const Content = ({ content, userObj }) => {
             )}
           </div>
 
-          <span className="creatorName">
-            <b>{contentObj.creatorDisplayName}</b>
-          </span>
+          <span className="creatorName">{contentObj.creatorDisplayName}</span>
         </div>
         {/* </Link> */}
 
         {contentObj.creatorId === userObj.uid && (
           <div className="headerBtnWrap">
-            <button onClick={onEditing}>
+            <button onClick={onEditing} title="contentEdit">
               <FontAwesomeIcon icon={faPenToSquare} />
             </button>
-            <button onClick={onDeleteClick}>
+            <button onClick={onDeleteClick} title="contentDelete">
               <FontAwesomeIcon icon={faSquareMinus} />
             </button>
           </div>
@@ -364,12 +372,14 @@ const Content = ({ content, userObj }) => {
             <>
               <button
                 className="prev"
+                title="prev"
                 onClick={(e) => sliderBtn(e, contentObj.attachmentUrl)}
               >
                 <FontAwesomeIcon icon={faChevronLeft} />
               </button>
               <button
                 className="next"
+                title="next"
                 onClick={(e) => sliderBtn(e, contentObj.attachmentUrl)}
               >
                 <FontAwesomeIcon icon={faChevronRight} />
@@ -378,11 +388,11 @@ const Content = ({ content, userObj }) => {
           )}
         </div>
       )}
-      <div className="contentText">
+      <div className="contentText" onClick={onContentBox}>
         <p>{contentObj.text}</p>
       </div>
 
-      <ContentAction contentObj={contentObj} />
+      <ContentAction contentObj={contentObj} onContentBox={onContentBox} />
 
       {/* {contentObj.firstComment && (
         <div className="contentComments">

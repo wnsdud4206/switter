@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const NavigationProfileImage = styled.div`
+const NavigationUserImage = styled.div`
   display: flex;
   justify-content: center;
 
@@ -14,4 +14,4 @@ const NavigationProfileImage = styled.div`
   }
 `;
 
-export default NavigationProfileImage;
+export default NavigationUserImage;
