@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const HomeContainerStyle = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
 
   width: 792px;
 

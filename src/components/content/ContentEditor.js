@@ -115,6 +115,7 @@ const ContentEditorStyle = styled.div`
             position: relative;
 
             img {
+              vertical-align: middle
             }
 
             button {

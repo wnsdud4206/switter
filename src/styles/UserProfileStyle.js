@@ -24,11 +24,17 @@ const UserProfileStyle = styled.div`
   }
 
   div#textProfile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-width: 310px;   // 100%로 줄까?
+    min-height: 150px;
+
     div#textProfileHeader {
       display: flex;
       align-items: center;
-
-      outline: 1px solid white;
+      justify-content: space-between;
 
       h2#userName {
         font-weight: lighter;
@@ -37,44 +43,111 @@ const UserProfileStyle = styled.div`
 
         margin: 0;
       }
-      div#textProfileActions {
+
+      nav#profileMenu {
         display: flex;
-        gap: 12px;
 
-        margin-left: 32px;
+        position: relative;
 
-        button {
-          border: none;
+        &:hover {
+          ul {
+            display: flex;
+          }
+        }
+
+        button#profileMenuBtn {
           outline: none;
+          border: none;
           background: none;
           padding: 0;
 
-          color: var(--sub-color);
+          width: 32px;
+          height: 32px;
 
           cursor: pointer;
 
-          &#profileEditBtn {
-            svg {
-              color: var(--icon-color);
-            }
-          }
-
-          &#logOutBtn {
-            svg {
-              color: rgba(128, 128, 128, 0.7);
-
-              transition: color 0.2s;
-
-              &:hover {
-                color: #ff6633;
-              }
-            }
-          }
-
           svg {
+            color: var(--icon-color);
             font-size: 24px;
           }
         }
+
+        ul {
+          display: none;
+          /* display: flex; */
+          align-items: center;
+          flex-direction: column;
+          gap: 0;
+
+          width: 120px;
+
+          list-style: none;
+
+          padding: 0;
+          margin: 0;
+          border-top-right-radius: 6px;
+          border-bottom-right-radius: 6px;
+          border-bottom-left-radius: 6px;
+          border: 1px solid var(--border-color);
+
+          position: absolute;
+          left: 32px;
+
+          li {
+            width: 100%;
+
+            button {
+              border: none;
+              outline: none;
+              background: none;
+              padding: 8px 0;
+
+              color: var(--sub-color);
+
+              width: 100%;
+
+              opacity: 0.8;
+
+              cursor: pointer;
+
+              transition: opacity 0.2s color 0.2s;
+
+              &:hover {
+                opacity: 1;
+
+                &#accountWithdrawalBtn {
+                  color: #ff6633;
+                }
+              }
+
+              &.profileEditBtn {
+              }
+
+              &#logOutBtn {
+              }
+
+              &#accountWithdrawalBtn {
+              }
+            }
+
+            &:not(:first-child) {
+              border-top: 1px solid var(--border-color);
+            }
+          }
+        }
+      }
+    }
+
+    ul {
+      list-style: none;
+
+      display: flex;
+      gap: 40px;
+
+      margin: 0;
+      padding: 0;
+
+      li {
       }
     }
 

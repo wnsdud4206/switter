@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
         `
       : css`
           :root {
-            --icon-color: black;
+            --icon-color: #222;
             --sub-color: black;
             --background-color: white;
             --border-color: rgb(212, 212, 212);

@@ -4,44 +4,57 @@ import NotificationContainerStyle from "styles/header/nav/notice/NotificationCon
 import Notification from "./Notification";
 
 const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
-  const [unConfirm, setUnConfirm] = useState({});
+  const [noticeArr, setNoticeArr] = useState([]);
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
 
-  const getNotification = async () => {
-    // const d = doc(dbService(), "notifications", "noData");  // undefined
-    const d = doc(dbService(), "notifications", userObj.uid);
-    onSnapshot(d, (snapshot) => {
+  useEffect(() => {
+    const noticeDoc = doc(dbService(), "notifications", userObj.uid);
+    onSnapshot(noticeDoc, (snapshot) => {
       // 각 contentComments, contentLikes, commentLikes 안의 모든 갯수를 더한 만큼 출력
-      let data = snapshot.data() || {};
-      let unConfirmAll = {};
+      setNoticeArr([]);
+      let data = snapshot.data();
+      let confirmAll = [];
+      let unConfirmAll = [];
       for (let docValue of Object.values(data)) {
+        // console.log(docValue);
+        // console.log(Object.entries(docValue));
         // category
         for (let [categoryKey, categoryValue] of Object.entries(docValue)) {
+          if (Object.keys(categoryValue).length === 0) continue;
           if (categoryKey === "commentLikes") {
             for (let commentValue of Object.values(categoryValue)) {
-              Object.assign(unConfirmAll, commentValue);
+              if (Object.keys(commentValue).length === 0) continue;
+              for (let commentObj of Object.entries(commentValue)) {
+                commentObj[1].confirmed
+                  ? (confirmAll = [...confirmAll, commentObj])
+                  : (unConfirmAll = [...unConfirmAll, commentObj]);
+              }
             }
           } else {
-            Object.assign(unConfirmAll, categoryValue);
+            for (let contentObj of Object.entries(categoryValue)) {
+              contentObj[1].confirmed
+                ? (confirmAll = [...confirmAll, contentObj])
+                : (unConfirmAll = [...unConfirmAll, contentObj]);
+            }
           }
         }
       }
 
-      const result = Object.entries(unConfirmAll).sort((a, b) => {
+      const conResult = confirmAll.sort((a, b) => {
+        if (a[1].lastUpdate < b[1].lastUpdate) return 1;
+        if (a[1].lastUpdate > b[1].lastUpdate) return -1;
+        return 0;
+      });
+      const unConResult = unConfirmAll.sort((a, b) => {
         if (a[1].lastUpdate < b[1].lastUpdate) return 1;
         if (a[1].lastUpdate > b[1].lastUpdate) return -1;
         return 0;
       });
 
-      setUnConfirm(result);
+      setNoticeArr([...unConResult, ...conResult]);
     });
-  };
 
-  useEffect(() => {
-    getNotification();
-
-    // console.log(ulRef.current.clientHeight);
     setUlSize(ulRef.current.clientHeight);
   }, [activeNotice]);
 
@@ -69,17 +82,15 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
           className={`notice ${activeNotice ? "dropdown" : "dropup"}`}
         >
           <ul id="notificationList" className="notice" ref={ulRef}>
-            {unConfirm.length ? ( // key도 같이 가져와야 하는데..
-              unConfirm.map((con) => {
-                return (
-                  <Notification
-                    key={con[0]}
-                    noticeObj={con}
-                    offNotification={offNotification}
-                    activeNotice={activeNotice}
-                  />
-                );
-              })
+            {noticeArr.length ? ( // key도 같이 가져와야 하는데..
+              noticeArr.map((notice) => (
+                <Notification
+                  key={notice[0]}
+                  noticeObj={notice}
+                  offNotification={offNotification}
+                  activeNotice={activeNotice}
+                />
+              ))
             ) : (
               <p id="noNotice" className="notice">
                 아직 알림이 없어요😪

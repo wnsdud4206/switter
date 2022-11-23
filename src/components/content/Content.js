@@ -126,6 +126,7 @@ const ContentStyle = styled.div`
         // insta에서는 display flex row, translate로 줌
 
         img {
+          vertical-align: middle
         }
       }
     }

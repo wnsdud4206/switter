@@ -3,7 +3,11 @@ import { authService, signOut } from "fbase";
 import { useNavigate } from "react-router-dom";
 import UserProfileStyle from "styles/UserProfileStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRightFromBracket, faUserPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisVertical,
+  faRightFromBracket,
+  faUserPen,
+} from "@fortawesome/free-solid-svg-icons";
 
 const UserProfile = ({ userObj, onEditing }) => {
   const [imgError, setImgError] = useState(false);
@@ -39,20 +43,48 @@ const UserProfile = ({ userObj, onEditing }) => {
       <div id="textProfile">
         <div id="textProfileHeader">
           <h2 id="userName">{userObj.displayName}</h2>
-          <div id="textProfileActions">
-            <button id="profileEditBtn" onClick={onEditing} title="editing">
-              <FontAwesomeIcon icon={faUserPen} />
+          <nav id="profileMenu">
+            <button id="profileMenuBtn">
+              <FontAwesomeIcon icon={faEllipsisVertical} />
             </button>
-            <button id="logOutBtn" onClick={onLogOutClick} title="logout">
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            </button>
-          </div>
+            <ul>
+              <li>
+                <button
+                  className="profileEditBtn"
+                  onClick={onEditing}
+                  title="editing"
+                >
+                  프로필 수정
+                  {/* <FontAwesomeIcon icon={faUserPen} /> */}
+                </button>
+              </li>
+              <li>
+                <button id="logOutBtn" onClick={onLogOutClick} title="logout">
+                  로그아웃
+                  {/* <FontAwesomeIcon icon={faRightFromBracket} /> */}
+                </button>
+              </li>
+              <li>
+                <button id="accountWithdrawalBtn">회원탈퇴</button>
+              </li>
+            </ul>
+          </nav>
         </div>
 
-        {/* <span>게시글 n    팔로워 n    팔로우 n</span> */}
+        <ul>
+          <li>
+            게시글 <b>n</b>
+          </li>
+          <li>
+            팔로워 <b>n</b>
+          </li>
+          <li>
+            팔로우 <b>n</b>
+          </li>
+        </ul>
 
         {/* 글자 수 제한, input이 아니라 textarea? */}
-        <p>내 소개</p>
+        <p>{userObj?.introduce || "아직 내 소개를 작성하지 않았어요!😪"}</p>
       </div>
     </UserProfileStyle>
   );

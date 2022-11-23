@@ -1,6 +1,9 @@
 import {
   faArrowRight,
+  faCamera,
+  faCheck,
   faPlus,
+  faUserPen,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,7 +24,7 @@ import React, { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const UserProfileEditor = ({ userObj, onEditing }) => {
-  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
   const fileInput = useRef();
   const [attachment, setAttachment] = useState(
     authService().currentUser.photoURL,
@@ -34,6 +37,17 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   };
 
   const onChange = ({ target: { value } }) => setNewDisplayName(value);
+  const onFocusText = () => {
+    if (newDisplayName === userObj.displayName) {
+      setNewDisplayName("");
+    }
+  };
+  const onBlurText = () => {
+    if (!newDisplayName) {
+      setNewDisplayName(userObj.displayName);
+    }
+  };
+
   const onPhotoChange = ({ target: { files } }) => {
     const theFile = files[0];
     const reader = new FileReader();
@@ -171,50 +185,71 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   return (
     // view모드 edit모드 구분(기본값 view)
     <UserProfileEditorStyle onSubmit={onSubmit}>
-    <div id="attachmentProfile">
-      {attachment && !imgError && (
-        <div id="selectImage">
-          <img
-            src={attachment}
-            width="150px"
-            height="150px"
-            alt="uploadImage"
-            onError={onError}
-          />
-          <button onClick={onClearAttachmentClick}>
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-        </div>
-      )}
-      <label htmlFor="fileBtn">
-        Change photo
-        <FontAwesomeIcon icon={faPlus} />
-        <input
-          id="fileBtn"
-          type="file"
-          accept="image/*"
-          onChange={onPhotoChange}
-          ref={fileInput}
-        />
-      </label>
-    </div>
+      <div id="profileEditBox">
+        <div id="profileEditWrap">
+          <div id="attachmentProfile">
+            {attachment && !imgError && (
+              <div id="selectImage">
+                <label htmlFor="fileBtn">
+                  <img
+                    src={attachment}
+                    width="150px"
+                    height="150px"
+                    alt="profileImage"
+                    onError={onError}
+                  />
+                  <div className="changeIconWrap">
+                    <FontAwesomeIcon icon={faCamera} title="changeImage" />
+                  </div>
+                  <input
+                    id="fileBtn"
+                    type="file"
+                    accept="image/*"
+                    onChange={onPhotoChange}
+                    ref={fileInput}
+                  />
+                </label>
+                <button id="attachmentRemoveBtn" onClick={onClearAttachmentClick}>
+                  <FontAwesomeIcon icon={faXmark} title="cancelImage" />
+                </button>
+              </div>
+            )}
+          </div>
 
-      <div id="textProfile">
-        <fieldset>
-          <input
-            onChange={onChange}
-            type="text"
-            placeholder="Profile name to update"
-            value={newDisplayName}
-          />
+          <div id="textProfile">
+            <input
+              onChange={onChange}
+              type="text"
+              placeholder="Profile name to update"
+              value={newDisplayName}
+              onFocus={onFocusText}
+              onBlur={onBlurText}
+            />
+
+            {/* 글자 수 제한, input이 아니라 textarea? */}
+            <textarea
+              id="introduce"
+              type="text"
+              placeholder="내 소개를 입력해 주세요."
+            ></textarea>
+          </div>
+        </div>
+
+        <div id="profileEditActionWrap">
+          <button
+            className="profileEditBtn"
+            onClick={onEditing}
+            title="editing"
+          >
+            취소
+            {/* <FontAwesomeIcon icon={faUserPen} /> */}
+          </button>
           <label htmlFor="submitBtn">
-            <FontAwesomeIcon icon={faArrowRight} />
+            확인
+            {/* <FontAwesomeIcon icon={faCheck} /> */}
             <input id="submitBtn" type="submit" value="Update Profile" />
           </label>
-        </fieldset>
-
-        {/* 글자 수 제한, input이 아니라 textarea? */}
-        <input type="text" value="내 소개" />
+        </div>
       </div>
     </UserProfileEditorStyle>
   );
