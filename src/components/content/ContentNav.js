@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const ContentNavStyle = styled.nav`
   width: 470px;
@@ -37,19 +37,25 @@ const ContentNavStyle = styled.nav`
           background-color: rgba(128, 128, 128, 0.3);
         }
       }
+
+      &.active {
+        button {
+          background-color: rgba(128, 128, 128, 0.3);
+        }
+      }
     }
   }
 `;
 
-const NavList = ({ name, onContentType, text }) => (
-  <li>
+const NavList = ({ name, text, contentType, onContentType }) => (
+  <li className={name === contentType ? "active" : ""}>
     <button name={name} onClick={onContentType}>
       {text}
     </button>
   </li>
 );
 
-const ContentNav = ({ onContentType }) => {
+const ContentNav = ({ contentType, onContentType }) => {
   const navListArr = [
     { name: "myContents", text: "내가 쓴 글" },
     { name: "myLikes", text: "내가 좋아요한 글" },
@@ -64,6 +70,7 @@ const ContentNav = ({ onContentType }) => {
             key={name}
             name={name}
             text={text}
+            contentType={contentType}
             onContentType={onContentType}
           />
         ))}

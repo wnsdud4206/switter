@@ -16,9 +16,11 @@ const UserProfileStyle = styled.div`
       flex-direction: column;
       align-items: center;
 
+      width: 150px;
+      margin: 0 7vw;
+
       img {
         border-radius: 50%;
-        margin: 0 7vw;
       }
     }
   }
@@ -28,7 +30,7 @@ const UserProfileStyle = styled.div`
     flex-direction: column;
     justify-content: space-between;
 
-    min-width: 310px;   // 100%로 줄까?
+    min-width: 310px; // 100%로 줄까?
     min-height: 150px;
 
     div#textProfileHeader {
@@ -44,94 +46,161 @@ const UserProfileStyle = styled.div`
         margin: 0;
       }
 
-      nav#profileMenu {
+      div#profileActions {
         display: flex;
+        align-items: center;
+        gap: 8px;
 
-        position: relative;
-
-        &:hover {
-          ul {
-            display: flex;
-          }
-        }
-
-        button#profileMenuBtn {
-          outline: none;
+        button#followToggle {
+          outline: 1px solid white;
           border: none;
           background: none;
           padding: 0;
 
+          display: flex;
+          align-items: center;
+
           width: 32px;
           height: 32px;
+
+          color: var(--sub-color);
 
           cursor: pointer;
 
           svg {
-            color: var(--icon-color);
-            font-size: 24px;
+            font-size: 22px;
+
+            margin-left: 5px;
+
+            outline: 1px solid red;
+
+            &.followIcon {
+              display: block;
+              color: var(--icon-color);
+            }
+            &.unFollowIconHover {
+              display: none;
+              color: #ff6633;
+            }
+            &.unFollowIcon {
+              display: block;
+              color: var(--sub-color);
+            }
+            &.followIconHover {
+              display: none;
+              color: var(--icon-color);
+            }
+          }
+
+          &:hover {
+            svg {
+              &.followIcon {
+                display: none;
+              }
+              &.unFollowIconHover {
+                display: block;
+              }
+              &.unFollowIcon {
+                display: none;
+              }
+              &.followIconHover {
+                display: block;
+              }
+            }
           }
         }
 
-        ul {
-          display: none;
-          /* display: flex; */
-          align-items: center;
-          flex-direction: column;
-          gap: 0;
+        nav#profileMenu {
+          outline: 1px solid red;
 
-          width: 120px;
+          display: flex;
 
-          list-style: none;
+          position: relative;
 
-          padding: 0;
-          margin: 0;
-          border-top-right-radius: 6px;
-          border-bottom-right-radius: 6px;
-          border-bottom-left-radius: 6px;
-          border: 1px solid var(--border-color);
+          &:hover {
+            ul {
+              display: flex;
+            }
+          }
 
-          position: absolute;
-          left: 32px;
+          button#profileMenuBtn {
+            outline: none;
+            border: none;
+            background: none;
+            padding: 0;
 
-          li {
-            width: 100%;
+            width: 32px;
+            height: 32px;
 
-            button {
-              border: none;
-              outline: none;
-              background: none;
-              padding: 8px 0;
+            cursor: pointer;
 
-              color: var(--sub-color);
+            svg {
+              color: var(--icon-color);
+              font-size: 24px;
+            }
+          }
 
+          ul {
+            display: none;
+            /* display: flex; */
+            align-items: center;
+            flex-direction: column;
+            gap: 0;
+
+            width: 120px;
+
+            list-style: none;
+
+            padding: 0;
+            margin: 0;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            border-bottom-left-radius: 6px;
+            border: 1px solid var(--border-color);
+
+            position: absolute;
+            left: 32px;
+
+            li {
               width: 100%;
 
-              opacity: 0.8;
+              button {
+                border: none;
+                outline: none;
+                background: none;
+                padding: 8px 0;
 
-              cursor: pointer;
+                color: var(--sub-color);
 
-              transition: opacity 0.2s color 0.2s;
+                width: 100%;
 
-              &:hover {
-                opacity: 1;
+                opacity: 0.8;
+
+                cursor: pointer;
+
+                transition: opacity 0.2s color 0.2s;
+
+                &:hover {
+                  opacity: 1;
+
+                  &#accountWithdrawalBtn {
+                    color: #ff6633;
+                  }
+                }
+
+                &.profileEditBtn {
+                }
+
+                &#logOutBtn {
+                }
 
                 &#accountWithdrawalBtn {
-                  color: #ff6633;
                 }
               }
 
-              &.profileEditBtn {
+              &:not(:first-child) {
+                border-top: 1px solid var(--border-color);
               }
-
-              &#logOutBtn {
-              }
-
-              &#accountWithdrawalBtn {
-              }
-            }
-
-            &:not(:first-child) {
-              border-top: 1px solid var(--border-color);
             }
           }
         }

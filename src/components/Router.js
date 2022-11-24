@@ -47,7 +47,8 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
                 <OtherUserUser userObj={userObj} otherUserId={otherUserId} />
               }
             /> */}
-            <Route path="/profile" element={<Profile userObj={userObj} />} />
+            <Route path="/profile/:name" element={<Profile userObj={userObj} />} />
+            {/* path를 이용해서 myProfile과 해다 user의 profile을 구분해서 Route작성 */}
             {/* redirect 사라져서 이렇게 사용, 또는 User.js 에서 useNavigate() 사용 */}
             {/* <Route path="*" element={<Header replace to="/" />} /> */}
           </>

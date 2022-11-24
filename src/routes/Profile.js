@@ -1,4 +1,5 @@
 import ContentsList from "components/content/ContentsList";
+import LoadingBox from "components/loading/LoadingBox";
 import SideMenu from "components/sideMenu/SideMenu";
 import UserProfile from "components/UserProfile";
 import UserProfileEditor from "components/UserProfileEditor";
@@ -9,10 +10,12 @@ import {
   query,
   collection,
   where,
+  getDoc,
   getDocs,
   orderBy,
 } from "fbase";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const ProfileStyle = styled.div`
@@ -34,6 +37,26 @@ const ProfileStyle = styled.div`
 const Profile = ({ userObj }) => {
   const [editing, setEditing] = useState(false);
 
+  const [profileObj, setProfileObj] = useState(null);
+
+  const { name } = useParams();
+
+  const getProfileObj = async () => {
+    const userQuery = query(
+      collection(dbService(), "users"),
+      where("displayName", "==", name),
+    );
+
+    const {
+      docs: [profileUser],
+    } = await getDocs(userQuery);
+    setProfileObj(profileUser.data());
+  };
+
+  useEffect(() => {
+    getProfileObj();
+  }, [name]);
+
   const onEditing = () => {
     setEditing(!editing);
   };
@@ -41,15 +64,25 @@ const Profile = ({ userObj }) => {
   return (
     <>
       <ProfileStyle>
-        {editing ? (
-          <UserProfileEditor userObj={userObj} onEditing={onEditing} />
+        {profileObj ? (
+          <>
+            {editing ? (
+              <UserProfileEditor userObj={userObj} onEditing={onEditing} />
+            ) : (
+              <UserProfile
+                userObj={userObj}
+                profileObj={profileObj}
+                onEditing={onEditing}
+              />
+            )}
+            <div id="bottomBox">
+              <ContentsList userObj={profileObj} />
+              <SideMenu />
+            </div>
+          </>
         ) : (
-          <UserProfile userObj={userObj} onEditing={onEditing} />
+          <LoadingBox text={"Profile Loading"} />
         )}
-        <div id="bottomBox">
-          <ContentsList userObj={userObj} />
-          <SideMenu />
-        </div>
       </ProfileStyle>
 
       {/* <div>

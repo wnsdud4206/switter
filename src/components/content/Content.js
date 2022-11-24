@@ -32,6 +32,7 @@ import {
   faPenToSquare,
   faSquareMinus,
 } from "@fortawesome/free-regular-svg-icons";
+import { Link } from "react-router-dom";
 
 const ContentStyle = styled.div`
   width: 100%;
@@ -48,9 +49,11 @@ const ContentStyle = styled.div`
 
     padding: 8px;
 
-    div.creatorWrap {
+    a.creatorWrap {
       display: flex;
       align-items: center;
+
+      text-decoration: none;
 
       div.creatorAttachment {
         display: flex;
@@ -62,8 +65,6 @@ const ContentStyle = styled.div`
 
         border-radius: 50%;
         overflow: hidden;
-
-        cursor: pointer;
 
         img {
         }
@@ -77,7 +78,7 @@ const ContentStyle = styled.div`
       span.creatorName {
         margin-left: 8px;
 
-        cursor: pointer;
+        color: var(--sub-color);
       }
     }
 
@@ -126,7 +127,7 @@ const ContentStyle = styled.div`
         // insta에서는 display flex row, translate로 줌
 
         img {
-          vertical-align: middle
+          vertical-align: middle;
         }
       }
     }
@@ -315,7 +316,10 @@ const Content = ({ content, userObj }) => {
               getId(contentObj.creatorId);
             }}
           > */}
-        <div className="creatorWrap">
+        <Link
+          className="creatorWrap"
+          to={`/profile/${contentObj.creatorDisplayName}`}
+        >
           <div className="creatorAttachment">
             {contentObj.creatorAttachmentUrl && !imgError ? (
               <img
@@ -332,7 +336,7 @@ const Content = ({ content, userObj }) => {
           </div>
 
           <span className="creatorName">{contentObj.creatorDisplayName}</span>
-        </div>
+        </Link>
         {/* </Link> */}
 
         {contentObj.creatorId === userObj.uid && (

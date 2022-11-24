@@ -53,13 +53,18 @@ const Nav = ({
             <FontAwesomeIcon icon={faCircleHalfStroke} />
           </button>
         </li>
-        <li id="notification" className="notice" onClick={toggleNotification} title="notice">
+        <li
+          id="notification"
+          className="notice"
+          onClick={toggleNotification}
+          title="notice"
+        >
           {/* not Link */}
           <FontAwesomeIcon icon={faBellActivate} />
           {/* <FontAwesomeIcon icon={faBell} /> */}
         </li>
         <li id="profileLink" title="myProfile">
-          <Link id="myProfile" to="/profile">
+          <Link id="myProfile" to={`/profile/${userObj.displayName}`}>
             {userObj.photoURL && !imgError ? (
               <NavigationUserImage>
                 <img

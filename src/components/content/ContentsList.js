@@ -44,6 +44,7 @@ const ContentsListStyle = styled.div`
 const ContentsList = ({ userObj }) => {
   // const contents = useGetContents();
   const { pathname } = useLocation();
+  const { name } = useParams();
   const [contents, setContents] = useState([]);
   const [myCommentsArr, setMyCommentsArr] = useState([]);
   const [contentType, setContentType] = useState(
@@ -51,6 +52,7 @@ const ContentsList = ({ userObj }) => {
   );
 
   useEffect(() => {
+    console.log(userObj.uid);
     // 너무 많은 양을 가져오게 되는 문제
     const commentQuery = query(
       collection(dbService(), "comments"),
@@ -60,6 +62,7 @@ const ContentsList = ({ userObj }) => {
       setMyCommentsArr([]);
       subSnapshot.docs.forEach((doc) => {
         const commentId = doc.id;
+        console.log(commentId);
         setMyCommentsArr((prev) => [...prev, commentId]);
       });
     });
@@ -73,9 +76,10 @@ const ContentsList = ({ userObj }) => {
       snapshot.docs.forEach((doc) => {
         let contentArr = {};
         if (contentType === "myComments") {
-          if (!doc.data()?.comments || !doc.data().comments.length > 0) return;
+          if (myCommentsArr.length === 0) return;
+          if (!doc.data()?.comments || !doc.data().comments?.length > 0) return;
           for (let comment of doc.data().comments) {
-            if (myCommentsArr.includes(comment)) {
+            if (myCommentsArr.length !== 0 && myCommentsArr.includes(comment)) {
               contentArr = {
                 ...doc.data(),
                 id: doc.id,
@@ -100,7 +104,7 @@ const ContentsList = ({ userObj }) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType, userObj.uid]);
+  }, [contentType, userObj.uid, name]);
 
   const onContentType = ({ target: { name } }) => {
     const type = name;
@@ -109,7 +113,7 @@ const ContentsList = ({ userObj }) => {
 
   return (
     <ContentsListStyle>
-      {contentType !== "all" && <ContentNav onContentType={onContentType} />}
+      {contentType !== "all" && <ContentNav contentType={contentType} onContentType={onContentType} />}
 
       {contents.length ? (
         contents
