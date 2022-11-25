@@ -92,6 +92,8 @@ const ContentStyle = styled.div`
         border: none;
         padding: 0;
 
+        /* outline: 1px solid red; */
+
         cursor: pointer;
 
         svg {
@@ -99,6 +101,16 @@ const ContentStyle = styled.div`
 
           width: 20px;
           height: 20px;
+        }
+
+        &.editBtn {
+          svg {
+          }
+        }
+        &.removeBtn {
+          svg {
+            padding-top: 2px;
+          }
         }
       }
     }
@@ -341,10 +353,14 @@ const Content = ({ content, userObj }) => {
 
         {contentObj.creatorId === userObj.uid && (
           <div className="headerBtnWrap">
-            <button onClick={onEditing} title="contentEdit">
+            <button className="editBtn" onClick={onEditing} title="contentEdit">
               <FontAwesomeIcon icon={faPenToSquare} />
             </button>
-            <button onClick={onDeleteClick} title="contentDelete">
+            <button
+              className="removeBtn"
+              onClick={onDeleteClick}
+              title="contentDelete"
+            >
               <FontAwesomeIcon icon={faSquareMinus} />
             </button>
           </div>

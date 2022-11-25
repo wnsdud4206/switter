@@ -20,11 +20,14 @@ import {
   getDownloadURL,
   deleteObject,
 } from "fbase";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const UserProfileEditor = ({ userObj, onEditing }) => {
-  const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
+  const [text, setText] = useState({
+    displayName: userObj.displayName,
+    introduce: userObj?.introduce || "",
+  });
   const fileInput = useRef();
   const [attachment, setAttachment] = useState(
     authService().currentUser.photoURL,
@@ -36,15 +39,36 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
     setImgError(true);
   };
 
-  const onChange = ({ target: { value } }) => setNewDisplayName(value);
-  const onFocusText = () => {
-    if (newDisplayName === userObj.displayName) {
-      setNewDisplayName("");
+  const onChange = ({ target: { className, value } }) => {
+    setText((prev) => ({
+      ...prev,
+      [className]: value,
+    }));
+  };
+  const onFocusText = ({ target: { className } }) => {
+    if (
+      className === "displayName" &&
+      text.displayName === userObj?.displayName
+    ) {
+      setText((prev) => ({ ...prev, [className]: "" }));
+    } else if (
+      className === "introduce" &&
+      text.introduce === userObj?.introduce
+    ) {
+      setText((prev) => ({ ...prev, [className]: "" }));
     }
   };
-  const onBlurText = () => {
-    if (!newDisplayName) {
-      setNewDisplayName(userObj.displayName);
+  const onBlurText = ({ target: { className } }) => {
+    if (className === "displayName" && !text.displayName) {
+      setText((prev) => ({
+        ...prev,
+        [className]: userObj.displayName,
+      }));
+    } else if (className === "introduce" && !text.introduce) {
+      setText((prev) => ({
+        ...prev,
+        [className]: userObj?.introduce || "",
+      }));
     }
   };
 
@@ -68,11 +92,11 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   const updateProfileAndDoc = async (url) => {
     if (url === undefined) {
       await updateProfile(authService().currentUser, {
-        displayName: newDisplayName || userObj.displayName,
+        displayName: text.displayName || userObj.displayName,
       });
     } else {
       await updateProfile(authService().currentUser, {
-        displayName: newDisplayName || userObj.displayName,
+        displayName: text.displayName || userObj.displayName,
         photoURL: url,
       });
     }
@@ -80,13 +104,14 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
     const { email, uid } = userObj;
     const newUserObj = {
       attachmentUrl: url || authService().currentUser.photoURL,
-      displayName: newDisplayName,
+      displayName: text.displayName,
       email: email,
+      introduce: text.introduce,
       uid: uid,
     };
     const newUser = doc(dbService(), "users", userObj.uid);
     // eslint-disable-next-line no-unused-vars
-    const docRef = await setDoc(newUser, newUserObj);
+    const docRef = await setDoc(newUser, newUserObj, { merge: true });
 
     // setAttachment(authService().currentUser.photoURL);
     // fileInput.current.value = authService().currentUser.photoURL;
@@ -95,8 +120,9 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (
-      authService().currentUser.displayName !== newDisplayName ||
-      authService().currentUser.photoURL !== attachment
+      authService().currentUser?.displayName !== text.displayName ||
+      authService().currentUser?.photoURL !== attachment ||
+      authService().currentUser?.introduce !== text.introduce
     ) {
       const ok = window.confirm(
         "Are you sure you want to update your profile?",
@@ -172,6 +198,8 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
               updateProfileAndDoc(attachmentUrl);
             }
           }
+
+          onEditing();
         } catch (error) {
           console.error(error);
         }
@@ -185,70 +213,76 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   return (
     // view모드 edit모드 구분(기본값 view)
     <UserProfileEditorStyle onSubmit={onSubmit}>
-      <div id="profileEditBox">
-        <div id="profileEditWrap">
-          <div id="attachmentProfile">
-            {attachment && !imgError && (
-              <div id="selectImage">
-                <label htmlFor="fileBtn">
-                  <img
-                    src={attachment}
-                    width="150px"
-                    height="150px"
-                    alt="profileImage"
-                    onError={onError}
-                  />
-                  <div className="changeIconWrap">
-                    <FontAwesomeIcon icon={faCamera} title="changeImage" />
-                  </div>
-                  <input
-                    id="fileBtn"
-                    type="file"
-                    accept="image/*"
-                    onChange={onPhotoChange}
-                    ref={fileInput}
-                  />
-                </label>
-                <button id="attachmentRemoveBtn" onClick={onClearAttachmentClick}>
-                  <FontAwesomeIcon icon={faXmark} title="cancelImage" />
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div id="textProfile">
-            <input
-              onChange={onChange}
-              type="text"
-              placeholder="Profile name to update"
-              value={newDisplayName}
-              onFocus={onFocusText}
-              onBlur={onBlurText}
-            />
-
-            {/* 글자 수 제한, input이 아니라 textarea? */}
-            <textarea
-              id="introduce"
-              type="text"
-              placeholder="내 소개를 입력해 주세요."
-            ></textarea>
-          </div>
+      <div id="profileEditWrap">
+        <div id="attachmentProfile">
+          {attachment && !imgError && (
+            <div id="selectImage">
+              <label htmlFor="fileBtn">
+                <img
+                  src={attachment}
+                  width="150px"
+                  height="150px"
+                  alt="profileImage"
+                  onError={onError}
+                />
+                <div className="changeIconWrap">
+                  <FontAwesomeIcon icon={faCamera} title="changeImage" />
+                </div>
+                <input
+                  id="fileBtn"
+                  type="file"
+                  accept="image/*"
+                  onChange={onPhotoChange}
+                  ref={fileInput}
+                />
+              </label>
+              <button id="attachmentRemoveBtn" onClick={onClearAttachmentClick}>
+                <FontAwesomeIcon icon={faXmark} title="cancelImage" />
+              </button>
+            </div>
+          )}
         </div>
 
-        <div id="profileEditActionWrap">
-          <button
-            className="profileEditBtn"
-            onClick={onEditing}
-            title="editing"
-          >
-            취소
-            {/* <FontAwesomeIcon icon={faUserPen} /> */}
-          </button>
-          <label htmlFor="submitBtn">
-            확인
-            {/* <FontAwesomeIcon icon={faCheck} /> */}
-            <input id="submitBtn" type="submit" value="Update Profile" />
-          </label>
+        <div id="textProfile">
+          <input
+            className="displayName"
+            type="text"
+            placeholder="Profile name to update"
+            value={text.displayName}
+            onChange={onChange}
+            onFocus={onFocusText}
+            onBlur={onBlurText}
+            maxLength="10"
+            required
+          />
+
+          {/* 글자 수 제한, input이 아니라 textarea? */}
+          <textarea
+            className="introduce"
+            type="text"
+            placeholder="내 소개를 입력해 주세요."
+            value={text.introduce}
+            onChange={onChange}
+            onFocus={onFocusText}
+            onBlur={onBlurText}
+            maxLength="120"
+          ></textarea>
+
+          <div id="profileEditActionWrap">
+            <button
+              className="profileEditBtn"
+              onClick={onEditing}
+              title="editing"
+            >
+              취소
+              {/* <FontAwesomeIcon icon={faUserPen} /> */}
+            </button>
+            <label htmlFor="submitBtn">
+              확인
+              {/* <FontAwesomeIcon icon={faCheck} /> */}
+              <input id="submitBtn" type="submit" value="Update Profile" />
+            </label>
+          </div>
         </div>
       </div>
     </UserProfileEditorStyle>

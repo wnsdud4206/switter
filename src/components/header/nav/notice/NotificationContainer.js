@@ -3,7 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/header/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
 
-const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
+const NotificationContainer = ({
+  userObj,
+  activeNotice,
+  offNotification,
+  onNewNotice,
+}) => {
   const [noticeArr, setNoticeArr] = useState([]);
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
@@ -16,30 +21,44 @@ const NotificationContainer = ({ userObj, activeNotice, offNotification }) => {
       let data = snapshot.data();
       let confirmAll = [];
       let unConfirmAll = [];
-      for (let docValue of Object.values(data)) {
-        // console.log(docValue);
-        // console.log(Object.entries(docValue));
-        // category
-        for (let [categoryKey, categoryValue] of Object.entries(docValue)) {
-          if (Object.keys(categoryValue).length === 0) continue;
-          if (categoryKey === "commentLikes") {
-            for (let commentValue of Object.values(categoryValue)) {
-              if (Object.keys(commentValue).length === 0) continue;
-              for (let commentObj of Object.entries(commentValue)) {
-                commentObj[1].confirmed
-                  ? (confirmAll = [...confirmAll, commentObj])
-                  : (unConfirmAll = [...unConfirmAll, commentObj]);
-              }
+      for (let [docKey, docValue] of Object.entries(data)) {
+        if (docKey === "follower") {
+          for (let followerField of Object.values(docValue)) {
+            for (let followerObj of Object.entries(followerField)) {
+              console.log(followerObj);
+              followerObj[1].confirmed
+                ? (confirmAll = [...confirmAll, followerObj])
+                : (unConfirmAll = [...unConfirmAll, followerObj]);
             }
-          } else {
-            for (let contentObj of Object.entries(categoryValue)) {
-              contentObj[1].confirmed
-                ? (confirmAll = [...confirmAll, contentObj])
-                : (unConfirmAll = [...unConfirmAll, contentObj]);
+          }
+        } else {
+          for (let [categoryKey, categoryValue] of Object.entries(docValue)) {
+            if (Object.keys(categoryValue).length === 0) continue;
+            if (categoryKey === "commentLikes") {
+              for (let commentValue of Object.values(categoryValue)) {
+                if (Object.keys(commentValue).length === 0) continue;
+                for (let commentObj of Object.entries(commentValue)) {
+                  commentObj[1].confirmed
+                    ? (confirmAll = [...confirmAll, commentObj])
+                    : (unConfirmAll = [...unConfirmAll, commentObj]);
+                }
+              }
+            } else if (
+              categoryKey === "contentComments" ||
+              categoryKey === "contentLikes"
+            ) {
+              for (let contentObj of Object.entries(categoryValue)) {
+                console.log(contentObj);
+                contentObj[1].confirmed
+                  ? (confirmAll = [...confirmAll, contentObj])
+                  : (unConfirmAll = [...unConfirmAll, contentObj]);
+              }
             }
           }
         }
       }
+
+      confirmAll === 0 ? onNewNotice(false) : onNewNotice(true);
 
       const conResult = confirmAll.sort((a, b) => {
         if (a[1].lastUpdate < b[1].lastUpdate) return 1;

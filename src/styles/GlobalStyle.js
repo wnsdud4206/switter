@@ -6,7 +6,7 @@ const GlobalStyle = createGlobalStyle`
     them
       ? css`
           :root {
-            --icon-color: #9953e2;
+            --icon-color: #00acee;
             --sub-color: white;
             --background-color: black;
             --border-color: rgb(98, 98, 98);
@@ -58,6 +58,7 @@ const GlobalStyle = createGlobalStyle`
     &::-webkit-scrollbar-thumb {
       border-radius: 5px;
       background-color: var(--icon-color);
+      /* background-color: #444; */
     }
 
     &::-webkit-scrollbar-track {

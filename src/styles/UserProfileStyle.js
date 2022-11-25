@@ -7,8 +7,7 @@ const UserProfileStyle = styled.div`
 
   width: 100%;
 
-  margin: 16px 0 0;
-  padding: 20px 0;
+  padding: 32px 0;
 
   div#attachmentProfile {
     div#userAttachment {
@@ -30,7 +29,7 @@ const UserProfileStyle = styled.div`
     flex-direction: column;
     justify-content: space-between;
 
-    min-width: 310px; // 100%로 줄까?
+    /* min-width: 310px; // 100%로 줄까? */
     min-height: 150px;
 
     div#textProfileHeader {
@@ -52,7 +51,7 @@ const UserProfileStyle = styled.div`
         gap: 8px;
 
         button#followToggle {
-          outline: 1px solid white;
+          outline: none;
           border: none;
           background: none;
           padding: 0;
@@ -71,8 +70,6 @@ const UserProfileStyle = styled.div`
             font-size: 22px;
 
             margin-left: 5px;
-
-            outline: 1px solid red;
 
             &.followIcon {
               display: block;
@@ -111,8 +108,6 @@ const UserProfileStyle = styled.div`
         }
 
         nav#profileMenu {
-          outline: 1px solid red;
-
           display: flex;
 
           position: relative;
@@ -161,8 +156,12 @@ const UserProfileStyle = styled.div`
             position: absolute;
             left: 32px;
 
+            overflow: hidden;
+
             li {
               width: 100%;
+
+              overflow: hidden;
 
               button {
                 border: none;
@@ -178,10 +177,12 @@ const UserProfileStyle = styled.div`
 
                 cursor: pointer;
 
-                transition: opacity 0.2s color 0.2s;
+                transition: opacity 0.2s color 0.2s background-color 0.2s;
 
                 &:hover {
                   opacity: 1;
+
+                  background-color: rgba(128, 128, 128, .2);
 
                   &#accountWithdrawalBtn {
                     color: #ff6633;
@@ -214,6 +215,7 @@ const UserProfileStyle = styled.div`
       gap: 40px;
 
       margin: 0;
+      margin-right: 8px;
       padding: 0;
 
       li {

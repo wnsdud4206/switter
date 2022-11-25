@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const ScrollProgressStyle = styled.div`
@@ -10,17 +11,22 @@ const ScrollProgressStyle = styled.div`
   top: 0;
   left: 0;
 
+  z-index: 1;
+
   div#progress {
     /* background-color: #00acee; */
-    background-color: #9953e2;
+    /* background-color: #9953e2; */
+    background-color: var(--icon-color);
     height: 2px;
 
-    transition: width .2s ease-out;
+    transition: width 0.2s ease-out;
   }
 `;
 
 const ScrollProgress = () => {
   const [scroll, setScroll] = useState(0);
+  const [originalPathname, setOriginalPathname] = useState("");
+  const { pathname } = useLocation();
 
   const handelScroll = useCallback(() => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -29,11 +35,15 @@ const ScrollProgress = () => {
   }, []);
 
   useEffect(() => {
+    if (pathname !== originalPathname) {
+      setOriginalPathname(pathname);
+      setScroll(0);
+    }
     window.addEventListener("scroll", handelScroll, true);
     return () => {
       window.addEventListener("scroll", handelScroll, true);
     };
-  }, [handelScroll]);
+  }, [handelScroll, pathname]);
 
   return (
     <ScrollProgressStyle>

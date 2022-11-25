@@ -10,11 +10,10 @@ import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
 const Notification = ({ noticeObj, offNotification, activeNotice }) => {
   const [noticeKey, noticeData] = noticeObj;
   const [contentText, setContentText] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userImage, setUserImage] = useState("");
   const [contentObj, setContentObj] = useState({});
   const [imgError, setImgError] = useState(false);
   const dispatch = useDispatch();
+
 
   let contentId, secondId, userId;
   let collection;
@@ -22,8 +21,14 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
   if (noticeData.category === "commentLikes") {
     [contentId, secondId, userId] = noticeKey.split("/");
     collection = "comments";
-  } else {
+  } else if (
+    noticeData.category === "contentComments" ||
+    noticeData.category === "contentLikes"
+  ) {
     [secondId, userId] = noticeKey.split("/");
+    collection = "contents";
+  } else if (noticeData.category === "follower") {
+    userId = noticeKey;
     collection = "contents";
   }
 
@@ -54,7 +59,10 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
         const commentGet = await getDoc(commentDoc);
 
         userDoc = doc(dbService(), "users", commentGet.data().creatorId);
-      } else {
+      } else if (
+        noticeData.category === "contentLikes" ||
+        noticeData.category === "commentLikes"
+      ) {
         userDoc = doc(dbService(), "users", userId);
       }
 
@@ -74,6 +82,12 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
       console.error(error);
     }
   }, [collection, noticeData.category, secondId, userId]);
+
+  useEffect(() => {
+    console.log(noticeData.category)
+    !(noticeData.category === "follower") && getContentAndUser();
+    // console.log(noticeObj);
+  }, [activeNotice, getContentAndUser]);
 
   const onConfirm = async () => {
     const noticeDoc = doc(
@@ -124,16 +138,15 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
     // console.log(noticeKey);
   };
 
-  useEffect(() => {
-    activeNotice && getContentAndUser();
-  }, [activeNotice, getContentAndUser]);
-
   const onContentBox = async () => {
     try {
       let contentDoc;
       if (noticeData.category === "commentLikes") {
         contentDoc = doc(dbService(), "contents", contentId);
-      } else {
+      } else if (
+        noticeData.category === "contentComments" ||
+        noticeData.category === "contentLikes"
+      ) {
         contentDoc = doc(dbService(), "contents", secondId);
       }
 

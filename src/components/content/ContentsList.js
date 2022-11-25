@@ -52,7 +52,6 @@ const ContentsList = ({ userObj }) => {
   );
 
   useEffect(() => {
-    console.log(userObj.uid);
     // 너무 많은 양을 가져오게 되는 문제
     const commentQuery = query(
       collection(dbService(), "comments"),
@@ -62,7 +61,6 @@ const ContentsList = ({ userObj }) => {
       setMyCommentsArr([]);
       subSnapshot.docs.forEach((doc) => {
         const commentId = doc.id;
-        console.log(commentId);
         setMyCommentsArr((prev) => [...prev, commentId]);
       });
     });

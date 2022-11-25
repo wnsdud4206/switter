@@ -34,7 +34,7 @@ const ContentNavStyle = styled.nav`
         transition: background-color 0.2s;
 
         &:hover {
-          background-color: rgba(128, 128, 128, 0.3);
+          background-color: rgba(128, 128, 128, 0.2);
         }
       }
 
@@ -57,9 +57,9 @@ const NavList = ({ name, text, contentType, onContentType }) => (
 
 const ContentNav = ({ contentType, onContentType }) => {
   const navListArr = [
-    { name: "myContents", text: "내가 쓴 글" },
-    { name: "myLikes", text: "내가 좋아요한 글" },
-    { name: "myComments", text: "내가 댓글 단 글" },
+    { name: "myContents", text: "게시글" },
+    { name: "myLikes", text: "좋아하는 글" },
+    { name: "myComments", text: "댓글 쓴 글" },
   ];
 
   return (

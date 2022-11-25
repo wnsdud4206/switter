@@ -44,6 +44,8 @@ const NavStyle = styled.nav`
       }
 
       &#notification {
+        position: relative;
+        
         cursor: pointer;
 
         svg {
@@ -52,6 +54,25 @@ const NavStyle = styled.nav`
           /* font-size: 50px; */
 
           pointer-events: none;
+        }
+
+        div#noticeOnIcon {
+          display: none;
+          
+          background-color: red;
+
+          width: 8px;
+          height: 8px;
+
+          border-radius: 50%;
+
+          position: absolute;
+          top: -5px;
+          right: -5px;
+
+          &.enable {
+            display: block;
+          }
         }
       }
 

@@ -1,6 +1,7 @@
 import { faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const ScrollTopButtonStyle = styled.button`
@@ -26,7 +27,7 @@ const ScrollTopButtonStyle = styled.button`
 
   transform: translate(-50%, 110%);
 
-  transition: transform .2s;
+  transition: transform 0.2s;
 
   cursor: pointer;
 
@@ -37,7 +38,7 @@ const ScrollTopButtonStyle = styled.button`
       transform: translate(-50%, 50%) scale(1.1, 1.1);
     }
   }
-  
+
   svg {
     color: white;
 
@@ -49,6 +50,8 @@ const ScrollTopButtonStyle = styled.button`
 const ScrollTopButton = () => {
   // const [scrollY, setScrollY] = useState(window.scrollY);
   const [moveTopBtn, setMoveTopBtn] = useState(false);
+  const [originalPathname, setOriginalPathname] = useState("");
+  const { pathname } = useLocation();
 
   const onScrollTop = () => {
     window.scrollTo(0, 0);
@@ -65,13 +68,17 @@ const ScrollTopButton = () => {
   }, []);
 
   useEffect(() => {
+    if (pathname !== originalPathname) {
+      setOriginalPathname(pathname);
+      onScrollTop();
+    }
     window.addEventListener("scroll", onMoveTopBtn, true);
     // console.log("window: " + window.scrollY);
     // console.log("scrollY: " + scrollY);
     return () => {
       window.addEventListener("scroll", onMoveTopBtn, true);
     };
-  }, [onMoveTopBtn]);
+  }, [onMoveTopBtn, pathname]);
 
   return (
     <>

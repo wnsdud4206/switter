@@ -7,207 +7,220 @@ const UserProfileEditorStyle = styled.form`
 
   width: 100%;
 
-  margin: 16px 0 0;
-  padding: 20px 0;
+  padding: 32px 0;
 
-  outline: 1px solid red;
-
-  div#profileEditBox {
+  div#profileEditWrap {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
 
-    div#profileEditWrap {
-      display: flex;
+    div#attachmentProfile {
+      /* Add photo +가 애니메이션으로 cancel photo -로 바뀌게, 이미지 하단 x버튼 제거하고 */
+      div#selectImage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-      div#attachmentProfile {
-        outline: 1px solid white;
+        margin: 0 7vw;
 
-        /* Add photo +가 애니메이션으로 cancel photo -로 바뀌게, 이미지 하단 x버튼 제거하고 */
-        div#selectImage {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+        position: relative;
 
-          margin: 0 7vw;
+        label[for="fileBtn"] {
+          color: var(--sub-color);
+          font-weight: normal;
+          font-size: 1.1rem;
+
+          border-radius: 50%;
 
           position: relative;
 
-          outline: 1px solid white;
+          overflow: hidden;
 
-          label[for="fileBtn"] {
-            color: var(--sub-color);
-            font-weight: normal;
-            font-size: 1.1rem;
+          cursor: pointer;
+
+          &:hover {
+            div.changeIconWrap {
+              opacity: 0.5;
+            }
+          }
+
+          img {
+            vertical-align: middle;
+          }
+
+          div.changeIconWrap {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background-color: black;
+
+            width: 100%;
+            height: 100%;
 
             border-radius: 50%;
 
-            position: relative;
-
-            overflow: hidden;
-
-            cursor: pointer;
-
-            &:hover {
-              div.changeIconWrap {
-                opacity: 0.5;
-              }
-            }
-
-            img {
-              vertical-align: middle;
-            }
-
-            div.changeIconWrap {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-
-              background-color: black;
-
-              width: 100%;
-              height: 100%;
-
-              border-radius: 50%;
-
-              position: absolute;
-              top: 0;
-              left: 0;
-
-              opacity: 0;
-
-              transition: opacity 0.2s;
-
-              outline: 1px solid red;
-
-              svg {
-                color: var(--sub-color);
-                font-size: 42px;
-              }
-            }
-
-            input[type="file"] {
-              display: none;
-            }
-          }
-
-          button#attachmentRemoveBtn {
-            outline: none;
-            border: none;
-            background: transparent;
-
-            color: rgba(128, 128, 128, 0.4);
-
-            width: 20px;
-            height: 20px;
-
-            padding: 0;
-            box-sizing: border-box;
-
             position: absolute;
-            top: 4px;
-            right: 4px;
+            top: 0;
+            left: 0;
 
-            cursor: pointer;
+            opacity: 0;
 
-            transition: color 0.25s;
-
-            &:hover {
-              color: #ff6633;
-            }
+            transition: opacity 0.2s;
 
             svg {
-              width: 100%;
-              height: 100%;
+              color: var(--sub-color);
+              font-size: 42px;
             }
           }
+
+          input[type="file"] {
+            display: none;
+          }
         }
-      }
 
-      div#textProfile {
-        display: flex;
-        flex-direction: column;
-
-        outline: 1px solid white;
-
-        input[type="text"] {
+        button#attachmentRemoveBtn {
           outline: none;
           border: none;
           background: transparent;
 
-          font-size: 1.5rem;
-          font-weight: lighter;
-          letter-spacing: 0.5px;
-          color: var(--sub-color);
+          color: rgba(128, 128, 128, 0.4);
 
-          opacity: .8;
+          width: 20px;
+          height: 20px;
 
-          &:focus {
-            opacity: 1;
+          padding: 0;
+          box-sizing: border-box;
+
+          position: absolute;
+          top: 4px;
+          right: 4px;
+
+          cursor: pointer;
+
+          transition: color 0.25s;
+
+          &:hover {
+            color: #ff6633;
           }
-        }
 
-        textarea#introduce {
-          background-color: transparent;
-          font-size: 1rem;
-
-          color: var(--sub-color);
+          svg {
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }
 
-    div#profileEditActionWrap {
+    div#textProfile {
       display: flex;
+      flex-direction: column;
       gap: 8px;
 
-      button.profileEditBtn {
+      input[type="text"] {
+        outline: none;
         border: none;
+        background: transparent;
+
+        font-size: 1.5rem;
+        font-weight: lighter;
+        letter-spacing: 0.5px;
+        color: var(--sub-color);
+
+        border-bottom: 1px solid var(--border-color);
+        box-sizing: border-box;
+
+        opacity: 0.8;
+
+        &:focus {
+          opacity: 1;
+        }
+      }
+
+      textarea.introduce {
         outline: none;
         background: none;
-        padding: 2px 6px;
 
+        background-color: transparent;
         font-size: 1rem;
 
         color: var(--sub-color);
 
-        border: 2px solid white;
+        height: 100%;
+
+        padding: 6px;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
         box-sizing: border-box;
 
-        cursor: pointer;
-
-        svg {
-          color: var(--icon-color);
-        }
+        resize: none;
       }
 
-      label[for="submitBtn"] {
-        /* background: #00acee; */
-
+      div#profileEditActionWrap {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        gap: 8px;
 
-        font-size: 1rem;
+        align-self: flex-end;
 
-        padding: 2px 6px;
-        border: 2px solid white;
-        border-radius: 4px;
-        box-sizing: border-box;
+        button.profileEditBtn {
+          border: none;
+          outline: none;
+          background: none;
+          padding: 2px 6px;
 
-        cursor: pointer;
+          font-size: 1rem;
+
+          color: var(--sub-color);
+
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+          box-sizing: border-box;
+
+          transition: background-color .2s;
+
+          cursor: pointer;
+
+          svg {
+            color: var(--icon-color);
+          }
+
+          &:hover {
+            background-color: rgba(128, 128, 128, .2);
+          }
+        }
+
+        label[for="submitBtn"] {
+          /* background: #00acee; */
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          font-size: 1rem;
+
+          padding: 2px 6px;
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+          box-sizing: border-box;
+
+          cursor: pointer;
+          
+          transition: background-color .2s;
+
+          svg {
+            color: var(--icon-color);
+          }
+
+          input[type="submit"] {
+            display: none;
+          }
+
+          &:hover {
+            background-color: rgba(128, 128, 128, .2);
+          }
+        }
 
         svg {
-          color: var(--icon-color);
+          font-size: 24px;
         }
-
-        input[type="submit"] {
-          display: none;
-        }
-      }
-
-      svg {
-        font-size: 24px;
       }
     }
   }

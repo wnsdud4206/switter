@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -23,6 +23,7 @@ const Nav = ({
   offNotification,
 }) => {
   const [imgError, setImgError] = useState(false);
+  const [newNotice, setNewNotice] = useState(false);
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.darkModeState.mode);
 
@@ -38,6 +39,10 @@ const Nav = ({
     darkMode
       ? dispatch(darkModeActions.light({ mode: false }))
       : dispatch(darkModeActions.dark({ mode: true }));
+  };
+
+  const onNewNotice = (bool) => {
+    setNewNotice(bool);
   };
 
   return (
@@ -62,6 +67,7 @@ const Nav = ({
           {/* not Link */}
           <FontAwesomeIcon icon={faBellActivate} />
           {/* <FontAwesomeIcon icon={faBell} /> */}
+          <div id="noticeOnIcon" className={onNewNotice ? "enable" : ""}></div>
         </li>
         <li id="profileLink" title="myProfile">
           <Link id="myProfile" to={`/profile/${userObj.displayName}`}>
@@ -88,6 +94,7 @@ const Nav = ({
         userObj={userObj}
         activeNotice={activeNotice}
         offNotification={offNotification}
+        onNewNotice={onNewNotice}
       />
     </NavStyle>
   );

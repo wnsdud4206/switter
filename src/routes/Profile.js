@@ -13,6 +13,7 @@ import {
   getDoc,
   getDocs,
   orderBy,
+  onSnapshot,
 } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -41,20 +42,17 @@ const Profile = ({ userObj }) => {
 
   const { name } = useParams();
 
-  const getProfileObj = async () => {
+  useEffect(() => {
     const userQuery = query(
       collection(dbService(), "users"),
       where("displayName", "==", name),
     );
 
-    const {
-      docs: [profileUser],
-    } = await getDocs(userQuery);
-    setProfileObj(profileUser.data());
-  };
-
-  useEffect(() => {
-    getProfileObj();
+    onSnapshot(userQuery, (snapshot) => {
+      snapshot.docs.forEach((doc) => {
+        setProfileObj(doc.data());
+      });
+    });
   }, [name]);
 
   const onEditing = () => {
