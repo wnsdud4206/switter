@@ -1,20 +1,9 @@
 import ContentsList from "components/content/ContentsList";
 import LoadingBox from "components/loading/LoadingBox";
 import SideMenu from "components/sideMenu/SideMenu";
-import UserProfile from "components/UserProfile";
-import UserProfileEditor from "components/UserProfileEditor";
-import {
-  authService,
-  dbService,
-  signOut,
-  query,
-  collection,
-  where,
-  getDoc,
-  getDocs,
-  orderBy,
-  onSnapshot,
-} from "fbase";
+import UserProfile from "components/profile/UserProfile";
+import UserProfileEditor from "components/profile/UserProfileEditor";
+import { dbService, query, collection, where, onSnapshot } from "fbase";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -37,9 +26,7 @@ const ProfileStyle = styled.div`
 
 const Profile = ({ userObj }) => {
   const [editing, setEditing] = useState(false);
-
   const [profileObj, setProfileObj] = useState(null);
-
   const { name } = useParams();
 
   useEffect(() => {
@@ -49,15 +36,12 @@ const Profile = ({ userObj }) => {
     );
 
     onSnapshot(userQuery, (snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        setProfileObj(doc.data());
-      });
+      setProfileObj(null);
+      snapshot.docs.forEach((doc) => setProfileObj(doc.data()));
     });
-  }, [name]);
+  }, [name, editing]);
 
-  const onEditing = () => {
-    setEditing(!editing);
-  };
+  const onEditing = () => setEditing(!editing);
 
   return (
     <>
@@ -75,7 +59,7 @@ const Profile = ({ userObj }) => {
             )}
             <div id="bottomBox">
               <ContentsList userObj={profileObj} />
-              <SideMenu />
+              <SideMenu userObj={userObj} />
             </div>
           </>
         ) : (

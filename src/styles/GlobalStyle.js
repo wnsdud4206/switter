@@ -1,7 +1,8 @@
 import { createGlobalStyle, css } from "styled-components";
 
+// 모든 style module화
+
 const GlobalStyle = createGlobalStyle`
-  // props 받아와서 다크모드 여부
   ${({them}) =>
     them
       ? css`
@@ -14,20 +15,13 @@ const GlobalStyle = createGlobalStyle`
         `
       : css`
           :root {
-            --icon-color: #222;
+            /* --icon-color: #222; */
+            --icon-color: #00acee;
             --sub-color: black;
             --background-color: white;
             --border-color: rgb(212, 212, 212);
           }
         `}
-  /* :root {
-    --icon-color: black;
-  } */
-  /* @media (prefers-color-scheme: dark) {
-    :root {
-      --icon-color: #9953e2;
-    }
-  } */
 
   html, body, div#root {
     min-height: 100vh;
@@ -38,15 +32,12 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
 
   }
+
   body {
-    /* font-weight: bold; */
-    /* background-color: white; */
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    /* width: 100vw;
-    overflow-x: hidden; */
     width: 100%;
     
     color: var(--sub-color);

@@ -13,7 +13,6 @@ const NotificationContainerStyle = styled.div`
   position: absolute;
   right: 10px;
 
-  /* transform: translate(-50%, 10px); */
   transform: translateY(18px);
 
   &.open {
@@ -27,8 +26,6 @@ const NotificationContainerStyle = styled.div`
 
   &:before {
     content: "";
-    /* width: 30px;
-    height: 20px; */
 
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
@@ -111,8 +108,6 @@ const NotificationContainerStyle = styled.div`
 
       overflow: hidden;
 
-      /* outline: 1px solid orange; */
-
       &.dropdown {
         height: ${({ ulSize }) => ulSize}px;
       }
@@ -132,8 +127,6 @@ const NotificationContainerStyle = styled.div`
         margin: 0;
         padding: 0 8px;
         box-sizing: border-box;
-
-        /* outline: 1px solid red; */
 
         li {
         }
@@ -155,7 +148,6 @@ const NotificationContainerStyle = styled.div`
 
     &::-webkit-scrollbar-thumb {
       border-radius: 3px;
-      /* background-color: #00bdee; */
       background-color: var(--icon-color);
     }
 

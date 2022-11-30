@@ -3,12 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/header/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
 
-const NotificationContainer = ({
-  userObj,
-  activeNotice,
-  offNotification,
-  onNewNotice,
-}) => {
+const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
   const [noticeArr, setNoticeArr] = useState([]);
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
@@ -21,15 +16,14 @@ const NotificationContainer = ({
       let data = snapshot.data();
       let confirmAll = [];
       let unConfirmAll = [];
+
       for (let [docKey, docValue] of Object.entries(data)) {
         if (docKey === "follower") {
-          for (let followerField of Object.values(docValue)) {
-            for (let followerObj of Object.entries(followerField)) {
-              console.log(followerObj);
-              followerObj[1].confirmed
-                ? (confirmAll = [...confirmAll, followerObj])
-                : (unConfirmAll = [...unConfirmAll, followerObj]);
-            }
+          for (let followerObj of Object.entries(docValue)) {
+            console.log(followerObj);
+            followerObj[1].confirmed
+              ? (confirmAll = [...confirmAll, followerObj])
+              : (unConfirmAll = [...unConfirmAll, followerObj]);
           }
         } else {
           for (let [categoryKey, categoryValue] of Object.entries(docValue)) {
@@ -48,7 +42,6 @@ const NotificationContainer = ({
               categoryKey === "contentLikes"
             ) {
               for (let contentObj of Object.entries(categoryValue)) {
-                console.log(contentObj);
                 contentObj[1].confirmed
                   ? (confirmAll = [...confirmAll, contentObj])
                   : (unConfirmAll = [...unConfirmAll, contentObj]);
@@ -58,7 +51,7 @@ const NotificationContainer = ({
         }
       }
 
-      confirmAll === 0 ? onNewNotice(false) : onNewNotice(true);
+      onNewNotice(confirmAll === 0 ? false : true);
 
       const conResult = confirmAll.sort((a, b) => {
         if (a[1].lastUpdate < b[1].lastUpdate) return 1;
@@ -75,6 +68,7 @@ const NotificationContainer = ({
     });
 
     setUlSize(ulRef.current.clientHeight);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNotice]);
 
   return (
@@ -101,12 +95,11 @@ const NotificationContainer = ({
           className={`notice ${activeNotice ? "dropdown" : "dropup"}`}
         >
           <ul id="notificationList" className="notice" ref={ulRef}>
-            {noticeArr.length ? ( // key도 같이 가져와야 하는데..
+            {noticeArr.length ? (
               noticeArr.map((notice) => (
                 <Notification
                   key={notice[0]}
                   noticeObj={notice}
-                  offNotification={offNotification}
                   activeNotice={activeNotice}
                 />
               ))

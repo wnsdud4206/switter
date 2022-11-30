@@ -14,8 +14,6 @@ const ScrollProgressStyle = styled.div`
   z-index: 1;
 
   div#progress {
-    /* background-color: #00acee; */
-    /* background-color: #9953e2; */
     background-color: var(--icon-color);
     height: 2px;
 
@@ -40,9 +38,8 @@ const ScrollProgress = () => {
       setScroll(0);
     }
     window.addEventListener("scroll", handelScroll, true);
-    return () => {
-      window.addEventListener("scroll", handelScroll, true);
-    };
+    return () => window.addEventListener("scroll", handelScroll, true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handelScroll, pathname]);
 
   return (

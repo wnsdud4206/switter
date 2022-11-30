@@ -17,7 +17,6 @@ import {
   storageService,
   deleteObject,
 } from "fbase";
-import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -33,186 +32,8 @@ import {
   faSquareMinus,
 } from "@fortawesome/free-regular-svg-icons";
 import { Link } from "react-router-dom";
+import ContentStyle from "styles/content/ContentStyle";
 
-const ContentStyle = styled.div`
-  width: 100%;
-  /* height: 500px; */
-
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-sizing: border-box;
-
-  div.contentHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 8px;
-
-    a.creatorWrap {
-      display: flex;
-      align-items: center;
-
-      text-decoration: none;
-
-      div.creatorAttachment {
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-
-        width: 40px;
-        height: 40px;
-
-        border-radius: 50%;
-        overflow: hidden;
-
-        img {
-        }
-
-        svg {
-          font-size: 32px;
-          color: var(--icon-color);
-        }
-      }
-
-      span.creatorName {
-        margin-left: 8px;
-
-        color: var(--sub-color);
-      }
-    }
-
-    div.headerBtnWrap {
-      display: flex;
-      gap: 8px;
-
-      button {
-        outline: none;
-        background: none;
-        border: none;
-        padding: 0;
-
-        /* outline: 1px solid red; */
-
-        cursor: pointer;
-
-        svg {
-          color: var(--icon-color);
-
-          width: 20px;
-          height: 20px;
-        }
-
-        &.editBtn {
-          svg {
-          }
-        }
-        &.removeBtn {
-          svg {
-            padding-top: 2px;
-          }
-        }
-      }
-    }
-  }
-
-  // ContentBox.js에서도 쓰니까 묶어놔도 좋을 듯
-  div.contentImagesWrap {
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-
-    position: relative;
-
-    overflow: hidden;
-
-    div.contentImages {
-      display: flex;
-      align-items: center;
-
-      /* transform: translateX(-468px); */
-
-      // prev, next button
-
-      div.contentImage {
-        // 하단 여백 제거하기
-        // height 크기 고정 - display none으로 해서 그런듯
-        // insta에서는 display flex row, translate로 줌
-
-        img {
-          vertical-align: middle;
-        }
-      }
-    }
-    button {
-      outline: none;
-      background: none;
-      border: none;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      color: #aaa;
-
-      width: 28px;
-      height: 28px;
-
-      padding: 0;
-      border-radius: 50%;
-      box-sizing: border-box;
-
-      position: absolute;
-      top: 50%;
-
-      transform: translateY(-100%);
-
-      opacity: 0;
-
-      transition: all 0.2s;
-
-      cursor: pointer;
-
-      &.prev {
-        left: 0;
-      }
-      &.next {
-        right: 0;
-      }
-
-      svg {
-        font-size: 16px;
-
-        pointer-events: none;
-      }
-    }
-
-    &:hover button {
-      opacity: 0.7;
-
-      &:hover {
-        opacity: 1;
-        background-color: rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-
-  div.contentText {
-    padding: 8px;
-
-    cursor: pointer;
-
-    p {
-    }
-  }
-
-  div.contentActions {
-  }
-
-  div.contentComments {
-    padding: 8px;
-    border-top: 1px solid var(--border-color);
-  }
-`;
 
 const Content = ({ content, userObj }) => {
   const [imgError, setImgError] = useState(false);
@@ -319,15 +140,6 @@ const Content = ({ content, userObj }) => {
   return (
     <ContentStyle className="content">
       <div className="contentHeader">
-        {/* <Link
-            to={`/${isOwner ? "profile" : contentObj.creatorId}`}
-            onClick={() => {
-              if (isOwner) {
-                return;
-              }
-              getId(contentObj.creatorId);
-            }}
-          > */}
         <Link
           className="creatorWrap"
           to={`/profile/${contentObj.creatorDisplayName}`}
@@ -343,13 +155,15 @@ const Content = ({ content, userObj }) => {
                 loading="lazy"
               />
             ) : (
-              <FontAwesomeIcon id="profileicon" icon={faUser} />
+              <FontAwesomeIcon
+                className="creatorAttachmentIcon"
+                icon={faUser}
+              />
             )}
           </div>
 
           <span className="creatorName">{contentObj.creatorDisplayName}</span>
         </Link>
-        {/* </Link> */}
 
         {contentObj.creatorId === userObj.uid && (
           <div className="headerBtnWrap">

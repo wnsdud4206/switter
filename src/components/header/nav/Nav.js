@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import {
   faBell as faBellActivate,
   faCircleHalfStroke,
@@ -15,35 +14,25 @@ import { editActions } from "../../../reducers/contentEditReducer";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { darkModeActions } from "reducers/darkModeReducer";
 
-const Nav = ({
-  userObj,
-  activeNotice,
-  toggleNotification,
-  onNotification,
-  offNotification,
-}) => {
+const Nav = ({ userObj, activeNotice, toggleNotification }) => {
   const [imgError, setImgError] = useState(false);
   const [newNotice, setNewNotice] = useState(false);
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.darkModeState.mode);
 
-  const contentCreate = () => {
+  const contentCreate = () =>
     dispatch(editActions.onEdit({ mode: true, content: null }));
-  };
 
-  const onError = () => {
-    setImgError(true);
-  };
+  const onError = () => setImgError(true);
 
-  const onDarkModeToggle = () => {
-    darkMode
-      ? dispatch(darkModeActions.light({ mode: false }))
-      : dispatch(darkModeActions.dark({ mode: true }));
-  };
+  const onDarkModeToggle = () =>
+    dispatch(
+      darkMode
+        ? darkModeActions.dark({ mode: true })
+        : darkModeActions.light({ mode: false }),
+    );
 
-  const onNewNotice = (bool) => {
-    setNewNotice(bool);
-  };
+  const onNewNotice = (bool) => setNewNotice(bool);
 
   return (
     <NavStyle>
@@ -64,10 +53,8 @@ const Nav = ({
           onClick={toggleNotification}
           title="notice"
         >
-          {/* not Link */}
           <FontAwesomeIcon icon={faBellActivate} />
-          {/* <FontAwesomeIcon icon={faBell} /> */}
-          <div id="noticeOnIcon" className={onNewNotice ? "enable" : ""}></div>
+          <div id="noticeOnIcon" className={newNotice ? "enable" : ""}></div>
         </li>
         <li id="profileLink" title="myProfile">
           <Link id="myProfile" to={`/profile/${userObj.displayName}`}>
@@ -85,7 +72,6 @@ const Nav = ({
             ) : (
               <FontAwesomeIcon id="usericon" icon={faUser} />
             )}
-            {/* <span>{userObj.displayName}'s User</span> */}
           </Link>
         </li>
       </ul>
@@ -93,7 +79,6 @@ const Nav = ({
       <NotificationContainer
         userObj={userObj}
         activeNotice={activeNotice}
-        offNotification={offNotification}
         onNewNotice={onNewNotice}
       />
     </NavStyle>

@@ -11,7 +11,6 @@ const ScrollTopButtonStyle = styled.button`
   display: flex;
   justify-content: center;
 
-  /* background-color: #00bdee; */
   background-color: var(--icon-color);
 
   width: 50px;
@@ -48,23 +47,15 @@ const ScrollTopButtonStyle = styled.button`
 `;
 
 const ScrollTopButton = () => {
-  // const [scrollY, setScrollY] = useState(window.scrollY);
   const [moveTopBtn, setMoveTopBtn] = useState(false);
   const [originalPathname, setOriginalPathname] = useState("");
   const { pathname } = useLocation();
 
-  const onScrollTop = () => {
-    window.scrollTo(0, 0);
-  };
+  const onScrollTop = () => window.scrollTo(0, 0);
 
   const onMoveTopBtn = useCallback(() => {
-    // setScrollY(window.scrollY);
-
-    if (window.scrollY < 100) {
-      setMoveTopBtn(false);
-    } else {
-      setMoveTopBtn(true);
-    }
+    if (window.scrollY < 100) setMoveTopBtn(false);
+    else setMoveTopBtn(true);
   }, []);
 
   useEffect(() => {
@@ -75,9 +66,8 @@ const ScrollTopButton = () => {
     window.addEventListener("scroll", onMoveTopBtn, true);
     // console.log("window: " + window.scrollY);
     // console.log("scrollY: " + scrollY);
-    return () => {
-      window.addEventListener("scroll", onMoveTopBtn, true);
-    };
+    return () => window.addEventListener("scroll", onMoveTopBtn, true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onMoveTopBtn, pathname]);
 
   return (

@@ -1,14 +1,10 @@
 import { dbService, doc, onSnapshot } from "fbase";
+import useGetUser from "hooks/useGetUser";
 import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/header/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
 
-const NotificationContainer = ({
-  userObj,
-  activeNotice,
-  offNotification,
-  onNewNotice,
-}) => {
+const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
   const [noticeArr, setNoticeArr] = useState([]);
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
@@ -23,13 +19,11 @@ const NotificationContainer = ({
       let unConfirmAll = [];
       for (let [docKey, docValue] of Object.entries(data)) {
         if (docKey === "follower") {
-          for (let followerField of Object.values(docValue)) {
-            for (let followerObj of Object.entries(followerField)) {
-              console.log(followerObj);
-              followerObj[1].confirmed
-                ? (confirmAll = [...confirmAll, followerObj])
-                : (unConfirmAll = [...unConfirmAll, followerObj]);
-            }
+          for (let followerObj of Object.entries(docValue)) {
+            console.log(followerObj);
+            followerObj[1].confirmed
+              ? (confirmAll = [...confirmAll, followerObj])
+              : (unConfirmAll = [...unConfirmAll, followerObj]);
           }
         } else {
           for (let [categoryKey, categoryValue] of Object.entries(docValue)) {
@@ -48,7 +42,6 @@ const NotificationContainer = ({
               categoryKey === "contentLikes"
             ) {
               for (let contentObj of Object.entries(categoryValue)) {
-                console.log(contentObj);
                 contentObj[1].confirmed
                   ? (confirmAll = [...confirmAll, contentObj])
                   : (unConfirmAll = [...unConfirmAll, contentObj]);
@@ -106,7 +99,6 @@ const NotificationContainer = ({
                 <Notification
                   key={notice[0]}
                   noticeObj={notice}
-                  offNotification={offNotification}
                   activeNotice={activeNotice}
                 />
               ))

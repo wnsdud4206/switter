@@ -1,27 +1,19 @@
-import React, { useState } from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "routes/Auth";
 import Home from "routes/Home";
-// import OtherUserProfile from "routes/OtherUserProfile";
 import Profile from "routes/Profile";
 import Header from "./header/Header";
 import ContentEditor from "components/content/ContentEditor";
 import { useSelector } from "react-redux";
 import ContentBox from "./content/ContentBox";
 
-const AppRouter = ({ isLoggedIn, userObj, init }) => {
-  // const [otherUserId, setOtherUserId] = useState("");
-
+const AppRouter = ({ userObj }) => {
   const editMode = useSelector((state) => state.editState.mode);
   const boxMode = useSelector((state) => state.boxState.mode);
 
-  // const getId = (id) => {
-  //   setOtherUserId(id);
-  // };
-
   return (
     <Router>
-      {isLoggedIn && (
+      {userObj && (
         <>
           <Header userObj={userObj} />
           {editMode && <ContentEditor userObj={userObj} />}
@@ -29,28 +21,20 @@ const AppRouter = ({ isLoggedIn, userObj, init }) => {
         </>
       )}
       <Routes>
-        {isLoggedIn ? (
+        {userObj ? (
           <>
             <Route
               path="/"
               element={
                 <Home
                   userObj={userObj}
-                  init={init}
-                  // getId={getId}
                 />
               }
             />
-            {/* <Route
-              path={`/${otherUserId}`}
-              element={
-                <OtherUserUser userObj={userObj} otherUserId={otherUserId} />
-              }
-            /> */}
-            <Route path="/profile/:name" element={<Profile userObj={userObj} />} />
-            {/* path를 이용해서 myProfile과 해다 user의 profile을 구분해서 Route작성 */}
-            {/* redirect 사라져서 이렇게 사용, 또는 User.js 에서 useNavigate() 사용 */}
-            {/* <Route path="*" element={<Header replace to="/" />} /> */}
+            <Route
+              path="/profile/:name"
+              element={<Profile userObj={userObj} />}
+            />
           </>
         ) : (
           <>

@@ -12,6 +12,9 @@ const userDocCreator = async (data, pw = null) => {
     attachmentUrl,
     uid,
     password: pw,
+    follow: [],
+    follower: [],
+    introduce: ""
     // notification: {
     //   unconfirmed: [],
     //   confirmed: [],

@@ -5,7 +5,6 @@ const NavigationUserImage = styled.div`
   justify-content: center;
 
   border-radius: 50%;
-  box-sizing: border-box;
 
   overflow: hidden;
 

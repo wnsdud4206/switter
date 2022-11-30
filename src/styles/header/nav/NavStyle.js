@@ -58,8 +58,8 @@ const NavStyle = styled.nav`
 
         div#noticeOnIcon {
           display: none;
-          
-          background-color: red;
+
+          background-color: #ff6633;
 
           width: 8px;
           height: 8px;

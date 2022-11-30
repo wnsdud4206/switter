@@ -1,4 +1,8 @@
-import { configureStore, createStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
 import rootReducer from "reducers/rootReducer";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -22,7 +26,7 @@ root.render(
   <>
     {/* <React.StrictMode> */}
     <Provider store={store}>
-      <App />
+        <App />
     </Provider>
     {/* </React.StrictMode> */}
   </>,

@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   signOut,
   updateProfile,
+  deleteUser,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -63,6 +64,7 @@ export {
   signInWithPopup as signInSocial,
   signOut,
   updateProfile,
+  deleteUser,
 };
 
 // Firestore

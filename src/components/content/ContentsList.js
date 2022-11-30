@@ -1,20 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  dbService,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  where,
-  query,
-  onSnapshot,
-} from "fbase";
+import React, { useEffect, useState } from "react";
+import { dbService, collection, where, query, onSnapshot } from "fbase";
 import styled from "styled-components";
 import LoadingBox from "components/loading/LoadingBox";
 import Content from "./Content";
 import { useLocation, useParams } from "react-router-dom";
 import ContentNav from "./ContentNav";
-import UserProfile from "components/UserProfileEditor";
 
 const ContentsListStyle = styled.div`
   display: flex;
@@ -22,10 +12,8 @@ const ContentsListStyle = styled.div`
   align-items: flex-start;
   gap: 16px;
 
-  /* flex-basis: 470px; */
   width: 470px;
   padding: 32px 32px 32px 0;
-  /* box-sizing: border-box; */
 
   div#emptyContent {
     text-align: center;
@@ -42,7 +30,6 @@ const ContentsListStyle = styled.div`
 `;
 
 const ContentsList = ({ userObj }) => {
-  // const contents = useGetContents();
   const { pathname } = useLocation();
   const { name } = useParams();
   const [contents, setContents] = useState([]);
@@ -65,10 +52,7 @@ const ContentsList = ({ userObj }) => {
       });
     });
 
-    const contentsQuery = query(
-      collection(dbService(), "contents"),
-      // orderBy("createdAt", "desc"), // 순서 정렬, 최신 sweet이 위에서 쌓이게 하고 싶기 때문에 "desc" 추가
-    );
+    const contentsQuery = query(collection(dbService(), "contents"));
     onSnapshot(contentsQuery, (snapshot) => {
       setContents([]);
       snapshot.docs.forEach((doc) => {
@@ -104,14 +88,13 @@ const ContentsList = ({ userObj }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentType, userObj.uid, name]);
 
-  const onContentType = ({ target: { name } }) => {
-    const type = name;
-    setContentType(type);
-  };
+  const onContentType = ({ target: { name } }) => setContentType(name);
 
   return (
     <ContentsListStyle>
-      {contentType !== "all" && <ContentNav contentType={contentType} onContentType={onContentType} />}
+      {contentType !== "all" && (
+        <ContentNav contentType={contentType} onContentType={onContentType} />
+      )}
 
       {contents.length ? (
         contents
@@ -128,8 +111,6 @@ const ContentsList = ({ userObj }) => {
       ) : (
         <LoadingBox text={"Loading"} />
       )}
-
-      {/* 컨텐츠가 없을 경우에도 loding화면이 나와서 컨텐츠가 없을 때와 로딩중일 때의 구분을 해야함 */}
     </ContentsListStyle>
   );
 };

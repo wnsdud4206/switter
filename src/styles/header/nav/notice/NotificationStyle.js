@@ -23,7 +23,7 @@ const NotificationStyle = styled.li`
     min-width: 36px;
     height: 36px;
 
-    /* background-color: ; */
+    background-color: white;
 
     border-radius: 50%;
 
@@ -42,14 +42,31 @@ const NotificationStyle = styled.li`
     }
   }
 
-  /* a.noticeTextWrap { */
+  a.moveToProfile {
+    text-decoration: none;
+    font-size: 0.9em;
+
+    color: ${({ confirm }) => (confirm ? "#aaa" : "white")};
+
+    padding: 12px 0;
+
+    transition: background-color 0.2s;
+
+    span {
+      pointer-events: none;
+    }
+
+    &:hover {
+      background-color: rgba(135, 135, 135, 0.2);
+    }
+  }
+
   button.contentBoxBtn {
     outline: none;
     background: none;
     border: none;
     padding: 12px 0;
 
-    /* text-decoration: none; */
     color: ${({ confirm }) => (confirm ? "#aaa" : "white")};
     font-size: 0.9em;
 
@@ -72,16 +89,6 @@ const NotificationStyle = styled.li`
       background-color: rgba(135, 135, 135, 0.2);
     }
   }
-
-  /* div.noticeBtnWrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-
-    min-width: 50px;
-
-    outline: 1px solid white; */
 
   button.confirm {
     background: none;
@@ -109,7 +116,6 @@ const NotificationStyle = styled.li`
             }
           `};
   }
-  /* } */
 `;
 
 export default NotificationStyle;

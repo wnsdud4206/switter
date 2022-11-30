@@ -13,7 +13,6 @@ const UserProfileEditorStyle = styled.form`
     display: flex;
 
     div#attachmentProfile {
-      /* Add photo +가 애니메이션으로 cancel photo -로 바뀌게, 이미지 하단 x버튼 제거하고 */
       div#selectImage {
         display: flex;
         flex-direction: column;
@@ -24,18 +23,28 @@ const UserProfileEditorStyle = styled.form`
         position: relative;
 
         label[for="fileBtn"] {
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+
           color: var(--sub-color);
           font-weight: normal;
           font-size: 1.1rem;
 
+          min-width: 150px;
+          height: 150px;
+
+          background-color: white;
+
           border-radius: 50%;
+          border: 2px solid var(--icon-color);
+          box-sizing: border-box;
 
           position: relative;
 
           overflow: hidden;
 
           cursor: pointer;
-
           &:hover {
             div.changeIconWrap {
               opacity: 0.5;
@@ -44,6 +53,12 @@ const UserProfileEditorStyle = styled.form`
 
           img {
             vertical-align: middle;
+          }
+
+          svg.profileAttachmenticon {
+            font-size: 128px;
+
+            color: var(--icon-color);
           }
 
           div.changeIconWrap {
@@ -174,7 +189,7 @@ const UserProfileEditorStyle = styled.form`
           border-radius: 4px;
           box-sizing: border-box;
 
-          transition: background-color .2s;
+          transition: background-color 0.2s;
 
           cursor: pointer;
 
@@ -183,13 +198,11 @@ const UserProfileEditorStyle = styled.form`
           }
 
           &:hover {
-            background-color: rgba(128, 128, 128, .2);
+            background-color: rgba(128, 128, 128, 0.2);
           }
         }
 
         label[for="submitBtn"] {
-          /* background: #00acee; */
-
           display: flex;
           align-items: center;
           justify-content: center;
@@ -202,8 +215,8 @@ const UserProfileEditorStyle = styled.form`
           box-sizing: border-box;
 
           cursor: pointer;
-          
-          transition: background-color .2s;
+
+          transition: background-color 0.2s;
 
           svg {
             color: var(--icon-color);
@@ -214,7 +227,7 @@ const UserProfileEditorStyle = styled.form`
           }
 
           &:hover {
-            background-color: rgba(128, 128, 128, .2);
+            background-color: rgba(128, 128, 128, 0.2);
           }
         }
 

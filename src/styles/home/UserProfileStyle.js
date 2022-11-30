@@ -12,14 +12,26 @@ const UserProfileStyle = styled.div`
   div#attachmentProfile {
     div#userAttachment {
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      align-items: flex-end;
+      justify-content: center;
 
-      width: 150px;
+      min-width: 150px;
+      height: 150px;
       margin: 0 7vw;
 
+      background-color: white;
+
+      border-radius: 50%;
+      overflow: hidden;
+
       img {
-        border-radius: 50%;
+        vertical-align: middle;
+      }
+
+      svg.profileAttachmenticon {
+        font-size: 128px;
+
+        color: var(--icon-color);
       }
     }
   }
@@ -49,63 +61,6 @@ const UserProfileStyle = styled.div`
         display: flex;
         align-items: center;
         gap: 8px;
-
-        button#followToggle {
-          outline: none;
-          border: none;
-          background: none;
-          padding: 0;
-
-          display: flex;
-          align-items: center;
-
-          width: 32px;
-          height: 32px;
-
-          color: var(--sub-color);
-
-          cursor: pointer;
-
-          svg {
-            font-size: 22px;
-
-            margin-left: 5px;
-
-            &.followIcon {
-              display: block;
-              color: var(--icon-color);
-            }
-            &.unFollowIconHover {
-              display: none;
-              color: #ff6633;
-            }
-            &.unFollowIcon {
-              display: block;
-              color: var(--sub-color);
-            }
-            &.followIconHover {
-              display: none;
-              color: var(--icon-color);
-            }
-          }
-
-          &:hover {
-            svg {
-              &.followIcon {
-                display: none;
-              }
-              &.unFollowIconHover {
-                display: block;
-              }
-              &.unFollowIcon {
-                display: none;
-              }
-              &.followIconHover {
-                display: block;
-              }
-            }
-          }
-        }
 
         nav#profileMenu {
           display: flex;
@@ -137,7 +92,6 @@ const UserProfileStyle = styled.div`
 
           ul {
             display: none;
-            /* display: flex; */
             align-items: center;
             flex-direction: column;
             gap: 0;
@@ -182,7 +136,7 @@ const UserProfileStyle = styled.div`
                 &:hover {
                   opacity: 1;
 
-                  background-color: rgba(128, 128, 128, .2);
+                  background-color: rgba(128, 128, 128, 0.2);
 
                   &#accountWithdrawalBtn {
                     color: #ff6633;

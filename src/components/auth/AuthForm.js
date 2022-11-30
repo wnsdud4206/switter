@@ -1,10 +1,6 @@
 // firebase 내장 uuid인가?
 import { uuidv4 } from "@firebase/util";
-import {
-  // faNetworkWired,
-  faPlus,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   authService,
@@ -21,7 +17,6 @@ import userDocCreator from "services/userDocCreator";
 import { AuthFormSpanStyle, AuthFormStyle } from "styles/auth/AuthFormStyle";
 
 const AuthForm = () => {
-  // displayName, photoURL(attachmentUrl) 추가하기
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -33,10 +28,9 @@ const AuthForm = () => {
   const [error, setError] = useState("");
   const [nameAndPhotoInp, setNameAndPhotoInp] = useState(false);
 
-  const onChange = ({ target: { name, value } }) => {
+  const onChange = ({ target: { name, value } }) =>
     setForm({ ...form, [name]: value });
-  };
-  // profile image
+
   const onPhotoChange = ({ target: { files } }) => {
     const theFile = files[0];
     const reader = new FileReader();
@@ -49,11 +43,13 @@ const AuthForm = () => {
     };
     reader.readAsDataURL(theFile);
   };
+
   const onPhotoClear = (e) => {
-    e.preventDefault(); // good!
+    e.preventDefault();
     setAttachment("");
     fileInput.current.value = "";
   };
+
   useEffect(() => {
     if (form.displayName.length > 10) {
       alert("10글자");
@@ -69,15 +65,6 @@ const AuthForm = () => {
       let data;
       const auth = authService();
       if (newAccount) {
-        // if (
-        //   form.email === "" ||
-        //   form.password.length < 7 ||
-        //   form.displayName === ""
-        // ) {
-        //   alert("빈 입력창이 없도록 확인해 주세요.");
-        //   return;
-        // }
-
         data = await createUser(auth, form.email, form.password);
 
         let attachmentUrl = "";
@@ -87,12 +74,14 @@ const AuthForm = () => {
             storageService(),
             `${authService().currentUser.uid}/profileImages/${uuidv4()}`,
           );
+
           // eslint-disable-next-line no-unused-vars
           const response = await uploadString(
             attachmentRef,
             attachment,
             "data_url",
           );
+
           attachmentUrl = await getDownloadURL(attachmentRef);
         }
 
@@ -104,24 +93,22 @@ const AuthForm = () => {
         data = await signInEmail(auth, form.email, form.password);
       }
 
-      // email/password는 displayName 등등 유저 정보가 null로 생성되는 문제
       userDocCreator(data, form.password);
     } catch (error) {
       console.dir(error);
-      setError(error.message);
+      setError(error.message); // ?
     }
   };
+
+  // ?
   const toggleAccount = () => setNewAccount((prev) => !prev);
 
   useEffect(() => {
-    // Good!!
-    if (newAccount) {
-      setNameAndPhotoInp(newAccount);
-    } else if (!newAccount) {
+    if (newAccount) setNameAndPhotoInp(newAccount);
+    else if (!newAccount)
       setTimeout(() => {
         setNameAndPhotoInp(newAccount);
       }, 310);
-    }
   }, [newAccount]);
 
   return (
@@ -185,14 +172,6 @@ const AuthForm = () => {
             onChange={onChange}
             required
           />
-          {/* <input
-          name="profileImage"
-          type="file"
-          placeholder="Password"
-          required
-          value={form.password}
-          onChange={onChange}
-        /> */}
           <input
             type="submit"
             value={newAccount ? "Create Accont" : "Log In"}
@@ -200,7 +179,7 @@ const AuthForm = () => {
         </div>
         {error && <span id="errorText">{error}</span>}
       </AuthFormStyle>
-      {/* newAccount를 true로 바꾸어 submit 이벤트의 if문에 따라 버튼을 클릭하면 이전처럼 계정생성이 아닌 로그인(Sign In 메소드)이 되는 것 */}
+      
       <AuthFormSpanStyle onClick={toggleAccount}>
         {newAccount ? "Sign In" : "Create Account"}
       </AuthFormSpanStyle>

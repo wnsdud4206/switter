@@ -4,17 +4,15 @@ import AuthForm from "components/auth/AuthForm";
 import AuthOtherAccount from "components/auth/AuthOtherAccount";
 import React from "react";
 import AuthStyle from "styles/auth/AuthStyle";
-// 회원탈퇴는?
 
-const Auth = () => {
-  return (
-    <AuthStyle className="authPage">
-      <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
-      SWITTER(임시)
-      <AuthForm />
-      <AuthOtherAccount />
-    </AuthStyle>
-  );
-};
+const Auth = () => (
+  <AuthStyle className="authPage">
+    <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
+    SWITTER(임시)
+    <AuthForm />
+    <AuthOtherAccount />
+    <footer>Copyright &copy; {new Date().getFullYear()} By SongJunYoung</footer>
+  </AuthStyle>
+);
 
 export default Auth;

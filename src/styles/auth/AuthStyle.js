@@ -5,13 +5,11 @@ const AuthStyle = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* gap: 36px; */
 
   height: 100vh;
 
   svg#twiterLogo {
-    /* color: #00acee; */
-    color: var(--personal-color);
+    color: var(--icon-color);
     height: 70px;
     width: 70px;
 

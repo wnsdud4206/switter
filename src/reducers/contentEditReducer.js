@@ -1,8 +1,6 @@
 import {
   createAction,
   createReducer,
-  configureStore,
-  getDefaultMiddleware,
 } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -17,17 +15,11 @@ import {
   updateDoc,
   deleteObject,
 } from "fbase";
-// import getSweets from "db/getSweets";
-
-// 비동기로 하려면 createSlice로 하면 안될듯
-
-// getSweets를 어떻게 불러와서 state의 기본값으로 사용하지??
 
 const onEdit = createAction("EDIT/ONEDIT");
 const newContent = createAction("EDIT/NEWCONTENT");
 const editContent = createAction("EDIT/EDITCONTENT");
 const offEdit = createAction("EDIT/OFFEDIT");
-// const newComment = createAction("NEWCOMMENT");
 
 let Initializing = {
   mode: false,
@@ -66,15 +58,13 @@ export const editReducer = createReducer(Initializing, {
         creatorId: uid,
         attachmentUrl: attachmentUrlArr,
       };
-      // firestore에 추가
+      
       // eslint-disable-next-line no-unused-vars
       const docRef = await addDoc(
         collection(dbService(), "contents"),
         contentObj,
       );
 
-      // state.mode = mode;
-      // state.content = null;
       return (state = { mode: false, content: null });
     } catch (error) {
       console.error(error);
@@ -107,6 +97,7 @@ export const editReducer = createReducer(Initializing, {
           console.log(!attachment.includes(con));
           if (!attachment.includes(con)) {
             const attachmentRef = ref(storageService(), con);
+            // eslint-disable-next-line no-unused-vars
             const response = await deleteObject(attachmentRef);
           }
         }
@@ -133,11 +124,3 @@ export const editReducer = createReducer(Initializing, {
 });
 
 export const editActions = { onEdit, newContent, editContent, offEdit };
-
-// export default configureStore({
-//   reducer: editReducer,
-//   // 편법인가?? - 참고: https://guiyomi.tistory.com/116
-//   middleware: getDefaultMiddleware({
-//     serializableCheck: false,
-//   }),
-// });

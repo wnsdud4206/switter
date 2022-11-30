@@ -7,13 +7,16 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
 
-const Notification = ({ noticeObj, offNotification, activeNotice }) => {
+// 전체적으로 리펙토링 필요
+
+const Notification = ({ noticeObj, activeNotice }) => {
   const [noticeKey, noticeData] = noticeObj;
   const [contentText, setContentText] = useState("");
   const [contentObj, setContentObj] = useState({});
   const [imgError, setImgError] = useState(false);
   const dispatch = useDispatch();
 
+  // const [noticeState, setNoticeState] = useState({});
 
   let contentId, secondId, userId;
   let collection;
@@ -29,64 +32,72 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
     collection = "contents";
   } else if (noticeData.category === "follower") {
     userId = noticeKey;
-    collection = "contents";
+    collection = "users";
   }
 
   const onError = () => {
-    // 이미지 깨지면 대체
     setImgError(true);
   };
 
   const getContentAndUser = useCallback(async () => {
     try {
-      // getContent
-      const contentDoc = doc(dbService(), collection, secondId);
+      if (noticeData.category === "follower") {
+        const userDoc = doc(dbService(), collection, userId);
 
-      const contentGet = await getDoc(contentDoc);
+        const userGet = await getDoc(userDoc);
 
-      // 왜 자꾸 text를 바로바로 못가져 오는 거야..
-      let text;
-      if (contentGet.data().text?.length > 10) {
-        text = `${contentGet.data().text.slice(0, 10)}...`;
+        const displayName = userGet.data().displayName;
+        const attachmentUrl = userGet.data().attachmentUrl;
+
+        setContentObj({ displayName, attachmentUrl });
       } else {
-        text = contentGet.data().text;
+        // getContent
+        const contentDoc = doc(dbService(), collection, secondId);
+
+        const contentGet = await getDoc(contentDoc);
+
+        // 왜 자꾸 text를 바로바로 못가져 오는 거야..
+        let text;
+        if (contentGet.data().text?.length > 10) {
+          text = `${contentGet.data().text.slice(0, 10)}...`;
+        } else {
+          text = contentGet.data().text;
+        }
+
+        // getUser
+        let userDoc;
+        if (noticeData.category === "contentComments") {
+          const commentDoc = doc(dbService(), "comments", userId);
+          const commentGet = await getDoc(commentDoc);
+
+          userDoc = doc(dbService(), "users", commentGet.data().creatorId);
+        } else if (
+          noticeData.category === "contentLikes" ||
+          noticeData.category === "commentLikes"
+        ) {
+          userDoc = doc(dbService(), "users", userId);
+        }
+
+        const userGet = await getDoc(userDoc);
+
+        const displayName = userGet.data().displayName;
+        const attachmentUrl = userGet.data().attachmentUrl;
+
+        setContentText(text);
+        setContentObj({
+          ...contentGet.data(),
+          displayName,
+          attachmentUrl,
+        });
+        // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
       }
-
-      // getUser
-      let userDoc;
-      if (noticeData.category === "contentComments") {
-        const commentDoc = doc(dbService(), "comments", userId);
-        const commentGet = await getDoc(commentDoc);
-
-        userDoc = doc(dbService(), "users", commentGet.data().creatorId);
-      } else if (
-        noticeData.category === "contentLikes" ||
-        noticeData.category === "commentLikes"
-      ) {
-        userDoc = doc(dbService(), "users", userId);
-      }
-
-      const userGet = await getDoc(userDoc);
-
-      const creatorDisplayName = userGet.data().displayName;
-      const creatorAttachmentUrl = userGet.data().attachmentUrl;
-
-      setContentText(text);
-      setContentObj({
-        ...contentGet.data(),
-        creatorDisplayName,
-        creatorAttachmentUrl,
-      });
-      // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
     } catch (error) {
       console.error(error);
     }
   }, [collection, noticeData.category, secondId, userId]);
 
   useEffect(() => {
-    console.log(noticeData.category)
-    !(noticeData.category === "follower") && getContentAndUser();
-    // console.log(noticeObj);
+    getContentAndUser();
   }, [activeNotice, getContentAndUser]);
 
   const onConfirm = async () => {
@@ -116,7 +127,10 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
         },
         { merge: true },
       );
-    } else {
+    } else if (
+      noticeData.category === "contentLikes" ||
+      noticeData.category === "contentComments"
+    ) {
       // console.log(noticeSnap.data()[secondId][noticeData.category][noticeKey]);
       await setDoc(
         noticeDoc,
@@ -131,11 +145,19 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
         },
         { merge: true },
       );
+    } else if (noticeData.category === "follower") {
+      await setDoc(
+        noticeDoc,
+        {
+          follower: {
+            [userId]: {
+              confirmed: true,
+            },
+          },
+        },
+        { merge: true },
+      );
     }
-
-    // console.log(noticeObj);
-    // console.log(noticeSnap.data());
-    // console.log(noticeKey);
   };
 
   const onContentBox = async () => {
@@ -164,7 +186,7 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
       const creatorDisplayName = dbUser.data().displayName;
       const creatorAttachmentUrl = dbUser.data().attachmentUrl;
 
-      const contentObj = {
+      const content = {
         id,
         creatorId,
         attachmentUrl,
@@ -173,7 +195,7 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
         creatorAttachmentUrl,
       };
 
-      dispatch(boxActions.onContentBox(contentObj));
+      dispatch(boxActions.onContentBox(content));
       onConfirm();
     } catch (error) {
       console.error(error);
@@ -183,9 +205,9 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
   return (
     <NotificationStyle className="notice" confirm={noticeData.confirmed}>
       <div className="noticeProfileImage notice">
-        {contentObj.creatorAttachmentUrl && !imgError ? (
+        {contentObj.attachmentUrl && !imgError ? (
           <img
-            src={contentObj.creatorAttachmentUrl}
+            src={contentObj.attachmentUrl}
             width="36"
             height="36"
             alt="contentUserImage"
@@ -201,19 +223,31 @@ const Notification = ({ noticeObj, offNotification, activeNotice }) => {
         className="noticeTextWrap notice"
         onClick={offNotification}
       > */}
-      <button className="contentBoxBtn" onClick={onContentBox}>
-        <span className="notice">
-          "{contentText}"{" "}
-          {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
-          {noticeData.category === "contentComments" ? "에 " : "을 "}
-        </span>
-        <span className="notice">
-          "{contentObj.creatorDisplayName}"님이
-          {noticeData.category === "contentComments"
-            ? " 댓글을 남겼습니다"
-            : " 좋아합니다"}
-        </span>
-      </button>
+      {noticeData.category === "follower" ? (
+        <Link
+          className="moveToProfile"
+          to={`/profile/${contentObj.displayName}`}
+          onClick={onConfirm}
+        >
+          <span className="notice">
+            "{contentObj.displayName}"님이 팔로우 했습니다.
+          </span>
+        </Link>
+      ) : (
+        <button className="contentBoxBtn" onClick={onContentBox}>
+          <span className="notice">
+            "{contentText}"{" "}
+            {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
+            {noticeData.category === "contentComments" ? "에 " : "을 "}
+          </span>
+          <span className="notice">
+            "{contentObj.displayName}"님이
+            {noticeData.category === "contentComments"
+              ? " 댓글을 남겼습니다"
+              : " 좋아합니다"}
+          </span>
+        </button>
+      )}
       {/* </Link> */}
       {/* <div className="noticeBtnWrap"> */}
       <button className="notice confirm" onClick={onConfirm}>

@@ -12,9 +12,7 @@ import {
 
 const useGetContents = () => {
   const [contents, setContents] = useState([]);
-  // slideIndex가 각각의 값이 있는게 아니라 모두에게 적용됨 - attachment 부분만 component화해서 나눠야 할듯
 
-  // 읽기, 데이터 받아오기
   const getContents = async () => {
     try {
       const contentsCollection = collection(dbService(), "contents");
@@ -51,7 +49,6 @@ const useGetContents = () => {
             firstComment,
             firstCommentName,
             id: content.id,
-            // id, text, creatorId, createdAt
           };
 
           setContents((prev) => [contentObj, ...prev]);

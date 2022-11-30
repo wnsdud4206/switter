@@ -10,7 +10,6 @@ const AuthFormStyle = styled.form`
   position: relative;
 
   div#authFormWrap {
-    /* width: 100%; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,8 +26,6 @@ const AuthFormStyle = styled.form`
 
     transition: height ease 0.3s;
 
-    // 계정생성할 때 길어지는 데 이걸 애니메이션으로 길어지는 효과 구현하기(지금 height값이 없음) - AuthForm.js 하단 useEffect
-
     input:not(input[type="file"]) {
       width: 100%;
       min-height: 36px;
@@ -42,8 +39,7 @@ const AuthFormStyle = styled.form`
       box-sizing: border-box;
 
       &[type="submit"] {
-        /* background: #00acee; */
-        background: #9953e2;
+        background: var(--icon-color);
         color: white;
 
         font-size: 1rem;
@@ -65,7 +61,6 @@ const AuthFormStyle = styled.form`
         img,
         div {
           border-radius: 50%;
-          /* border: 3px solid #00acee; */
           border: 3px solid #9953e2;
 
           box-sizing: border-box;
@@ -73,7 +68,6 @@ const AuthFormStyle = styled.form`
           overflow: hidden;
         }
 
-        // image true
         img {
         }
         button {
@@ -88,9 +82,6 @@ const AuthFormStyle = styled.form`
           position: absolute;
           top: -13px;
           right: -5px;
-          /* bottom: -20px;
-        left: 50%;
-        transform: translateX(-50%); */
 
           cursor: pointer;
 
@@ -107,7 +98,6 @@ const AuthFormStyle = styled.form`
           }
         }
 
-        // image false
         div {
           display: flex;
           align-items: center;
@@ -120,7 +110,6 @@ const AuthFormStyle = styled.form`
           svg {
             width: 25px;
             height: 25px;
-            /* color: #00acee; */
             color: var(--personal-color);
           }
         }
@@ -138,15 +127,12 @@ const AuthFormStyle = styled.form`
     text-align: center;
     color: #ff6633;
 
-    /* outline: 1px solid red; */
-
     position: absolute;
     bottom: -28px;
   }
 `;
 
 const AuthFormSpanStyle = styled.span`
-  /* color: #00acee; */
   color: var(--personal-color);
   text-decoration-line: underline;
 

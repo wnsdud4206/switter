@@ -1,13 +1,6 @@
-import {
-  faArrowRight,
-  faCamera,
-  faCheck,
-  faPlus,
-  faUserPen,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faUser, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import UserProfileEditorStyle from "styles/UserProfileEditorStyle";
+import UserProfileEditorStyle from "styles/profile/UserProfileEditorStyle";
 import {
   authService,
   dbService,
@@ -20,61 +13,56 @@ import {
   getDownloadURL,
   deleteObject,
 } from "fbase";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useNavigate } from "react-router-dom";
 
 const UserProfileEditor = ({ userObj, onEditing }) => {
   const [text, setText] = useState({
     displayName: userObj.displayName,
     introduce: userObj?.introduce || "",
   });
-  const fileInput = useRef();
   const [attachment, setAttachment] = useState(
     authService().currentUser.photoURL,
   );
   const [imgError, setImgError] = useState(false);
+  const fileInput = useRef();
+  const navigate = useNavigate();
 
-  const onError = () => {
-    // 이미지 깨지면 대체
-    setImgError(true);
-  };
+  const onError = () => setImgError(true);
 
-  const onChange = ({ target: { className, value } }) => {
+  const onChange = ({ target: { className, value } }) =>
     setText((prev) => ({
       ...prev,
       [className]: value,
     }));
-  };
+
   const onFocusText = ({ target: { className } }) => {
     if (
       className === "displayName" &&
       text.displayName === userObj?.displayName
-    ) {
+    )
       setText((prev) => ({ ...prev, [className]: "" }));
-    } else if (
-      className === "introduce" &&
-      text.introduce === userObj?.introduce
-    ) {
+    else if (className === "introduce" && text.introduce === userObj?.introduce)
       setText((prev) => ({ ...prev, [className]: "" }));
-    }
   };
   const onBlurText = ({ target: { className } }) => {
-    if (className === "displayName" && !text.displayName) {
+    if (className === "displayName" && !text.displayName)
       setText((prev) => ({
         ...prev,
         [className]: userObj.displayName,
       }));
-    } else if (className === "introduce" && !text.introduce) {
+    else if (className === "introduce" && !text.introduce)
       setText((prev) => ({
         ...prev,
         [className]: userObj?.introduce || "",
       }));
-    }
   };
 
   const onPhotoChange = ({ target: { files } }) => {
     const theFile = files[0];
     const reader = new FileReader();
+
     reader.onloadend = (finishedEvent) => {
       // onloadend에 finishedEvent의 result를 setAttachment로 설정해주는 것
       const {
@@ -84,6 +72,7 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
     };
     reader.readAsDataURL(theFile);
   };
+
   const onClearAttachmentClick = () => {
     setAttachment("");
     fileInput.current.value = "";
@@ -105,16 +94,13 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
     const newUserObj = {
       attachmentUrl: url || authService().currentUser.photoURL,
       displayName: text.displayName,
-      email: email,
+      email,
       introduce: text.introduce,
-      uid: uid,
+      uid,
     };
     const newUser = doc(dbService(), "users", userObj.uid);
     // eslint-disable-next-line no-unused-vars
     const docRef = await setDoc(newUser, newUserObj, { merge: true });
-
-    // setAttachment(authService().currentUser.photoURL);
-    // fileInput.current.value = authService().currentUser.photoURL;
   };
 
   const onSubmit = async (e) => {
@@ -129,24 +115,19 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
       );
       if (ok) {
         try {
-          // 기존 url과 새 url이 같다.
           if (authService().currentUser.photoURL === attachment) {
             updateProfileAndDoc();
-            // 기존 url과 새 url이 다르다.
           } else if (authService().currentUser.photoURL !== attachment) {
             let attachmentUrl = "";
 
-            // 존재하는 기존 url -> 새 url 혹은 빈 url
             if (authService().currentUser.photoURL) {
-              // 새 url이 존재하면
               if (attachment !== "") {
-                // if (authService().currentUser.photoURL) {
                 const r = ref(
                   storageService(),
                   authService().currentUser.photoURL,
                 );
+
                 await deleteObject(r);
-                // }
 
                 const attachmentRef = ref(
                   storageService(),
@@ -158,21 +139,19 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
                   attachment,
                   "data_url",
                 );
-                attachmentUrl = await getDownloadURL(attachmentRef);
 
-                // 새 url이 존재하지 않다면(빈 url)
+                attachmentUrl = await getDownloadURL(attachmentRef);
               } else if (attachment === "") {
                 const sure = window.confirm(
                   "Are you sure you want to update empty profile image?",
                 );
                 if (sure) {
-                  // if (authService().currentUser.photoURL) {
                   const r = ref(
                     storageService(),
                     authService().currentUser.photoURL,
                   );
+
                   await deleteObject(r);
-                  // }
                 } else {
                   alert("please again profile update!");
                   return;
@@ -181,18 +160,19 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
 
               updateProfileAndDoc(attachmentUrl);
 
-              // 비어있는 기존 url
             } else {
               const attachmentRef = ref(
                 storageService(),
                 `${userObj.uid}/profileImages/${uuidv4()}`,
               );
+
               // eslint-disable-next-line no-unused-vars
               const response = await uploadString(
                 attachmentRef,
                 attachment,
                 "data_url",
               );
+
               attachmentUrl = await getDownloadURL(attachmentRef);
 
               updateProfileAndDoc(attachmentUrl);
@@ -200,6 +180,7 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
           }
 
           onEditing();
+          navigate(`/profile/${text.displayName}`, { replace: true });
         } catch (error) {
           console.error(error);
         }
@@ -211,20 +192,26 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
   };
 
   return (
-    // view모드 edit모드 구분(기본값 view)
     <UserProfileEditorStyle onSubmit={onSubmit}>
       <div id="profileEditWrap">
         <div id="attachmentProfile">
           {attachment && !imgError && (
             <div id="selectImage">
               <label htmlFor="fileBtn">
-                <img
-                  src={attachment}
-                  width="150px"
-                  height="150px"
-                  alt="profileImage"
-                  onError={onError}
-                />
+                {attachment && !imgError ? (
+                  <img
+                    src={attachment}
+                    width="150px"
+                    height="150px"
+                    alt="profileImage"
+                    onError={onError}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    className="profileAttachmenticon"
+                    icon={faUser}
+                  />
+                )}
                 <div className="changeIconWrap">
                   <FontAwesomeIcon icon={faCamera} title="changeImage" />
                 </div>
@@ -256,7 +243,6 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
             required
           />
 
-          {/* 글자 수 제한, input이 아니라 textarea? */}
           <textarea
             className="introduce"
             type="text"
@@ -275,11 +261,9 @@ const UserProfileEditor = ({ userObj, onEditing }) => {
               title="editing"
             >
               취소
-              {/* <FontAwesomeIcon icon={faUserPen} /> */}
             </button>
             <label htmlFor="submitBtn">
               확인
-              {/* <FontAwesomeIcon icon={faCheck} /> */}
               <input id="submitBtn" type="submit" value="Update Profile" />
             </label>
           </div>
