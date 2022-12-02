@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import {
-  authService,
   dbService,
   doc,
   getDocs,
@@ -9,14 +8,11 @@ import {
   collection,
   deleteDoc,
   deleteField,
-  onSnapshot,
-  arrayUnion,
   arrayRemove,
 } from "fbase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faHeart as like } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
-import { useEffect, useState } from "react";
 import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
 
@@ -89,6 +85,7 @@ const ContentBoxCommentActions = ({
 
         const noticeQuery = query(collection(dbService(), "notifications"));
         const noticeDocs = await getDocs(noticeQuery);
+
         noticeDocs.docs.forEach(async (noticeDoc) => {
           if (Object.keys(noticeDoc.data()).includes(content.id)) {
             const notice = doc(dbService(), "notifications", noticeDoc.id);
@@ -108,6 +105,7 @@ const ContentBoxCommentActions = ({
             );
           }
         });
+        
         getComments();
       }
     } catch (error) {

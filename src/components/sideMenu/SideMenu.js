@@ -1,7 +1,14 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FollowToggleBtn from "components/FollowToggleBtn";
-import { dbService, query, collection, where, getDocs } from "fbase";
+import {
+  dbService,
+  query,
+  collection,
+  where,
+  getDocs,
+  onSnapshot,
+} from "fbase";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SideMenuStyle from "styles/SideMenuStyle";
@@ -14,43 +21,74 @@ const SideMenu = ({ userObj }) => {
   const onError = () => setImgError(true);
 
   const getFollowUsers = async () => {
-    const userQuery = query(
+    const followUserQuery = query(
       collection(dbService(), "users"),
       where("follower", "array-contains-any", [userObj.uid]),
     );
-    const users = await getDocs(userQuery);
 
-    let followArr = [];
-    setFollowUsers([]);
-    users.docs.forEach((doc) => (followArr = [...followArr, doc.data()]));
-    setFollowUsers(followArr);
+    onSnapshot(followUserQuery, (users) => {
+      setFollowUsers([]);
+      users.docs.forEach((user) => {
+        setFollowUsers((prev) => [...prev, user.data()]);
+      });
+    });
   };
 
   const getRandomUsers = async () => {
-    const userQuery = query(
+    const randomUserQuery = query(
       collection(dbService(), "users"),
       where("follower", "not-in", [userObj.uid]),
     );
-    const users = await getDocs(userQuery);
 
-    let randomArr = [];
     let i = 0;
-    setRandomUsers([]);
-    users.docs
-      .sort(() => 0.5 - Math.random())
-      .forEach((doc) => {
-        if (i === 10 || userObj.follow.includes(doc.id)) return;
-        randomArr = [...randomArr, doc.data()];
-        i++;
-      });
-    setRandomUsers(randomArr);
+    onSnapshot(randomUserQuery, (users) => {
+      setRandomUsers([]);
+      users.docs
+        .sort(() => 0.5 - Math.random())
+        .forEach((doc) => {
+          if (i === 10 || userObj.follow.includes(doc.id)) return;
+          setRandomUsers((prev) => [...prev, doc.data()]);
+          i++;
+        });
+    });
   };
 
   useEffect(() => {
-    getFollowUsers();
-    getRandomUsers();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userObj]);
+    const followUserQuery = query(
+      collection(dbService(), "users"),
+      where("follower", "array-contains-any", [userObj.uid]),
+    );
+
+    onSnapshot(followUserQuery, (users) => {
+      setFollowUsers([]);
+      users.docs.forEach((user) => {
+        setFollowUsers((prev) => [...prev, user.data()]);
+      });
+    });
+
+    const randomUserQuery = query(
+      collection(dbService(), "users"),
+      where("follower", "not-in", [userObj.uid]),
+    );
+
+    onSnapshot(randomUserQuery, (users) => {
+      let i = 0;
+      setRandomUsers([]);
+      users.docs
+        .sort(() => 0.5 - Math.random())
+        .forEach((user) => {
+          if (
+            i === 10 ||
+            userObj.follow.includes(user.id) ||
+            userObj.uid === user.id
+          )
+            return;
+          setRandomUsers((prev) => [...prev, user.data()]);
+          i++;
+        });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userObj.follow]);
 
   return (
     <SideMenuStyle>
@@ -68,7 +106,7 @@ const SideMenu = ({ userObj }) => {
                 height="40"
                 alt="currentUserAttachment"
                 onError={onError}
-              ></img>
+              />
             ) : (
               <FontAwesomeIcon
                 className="currentUserAttachmentIcon"

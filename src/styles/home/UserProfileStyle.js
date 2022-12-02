@@ -57,7 +57,7 @@ const UserProfileStyle = styled.div`
         margin: 0;
       }
 
-      div#profileActions {
+      div#profileMenuBox {
         display: flex;
         align-items: center;
         gap: 8px;

@@ -32,6 +32,7 @@ const useGetLike = (contentObj, commentObj) => {
             );
           }
         }
+        
         setLikeCount(likes);
         setCurrentUserLike(userLike);
       });

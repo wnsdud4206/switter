@@ -7,7 +7,8 @@ const HomeContainerStyle = styled.div`
   display: flex;
   justify-content: center;
 
-  width: 792px;
+  /* width: 792px; */
+  max-width: 792px;
 
   margin-top: 61px;
 `;

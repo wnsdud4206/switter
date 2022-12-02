@@ -26,6 +26,11 @@ const HeaderStyle = styled.header`
 
   transition: background-color .2s;
 
+  
+  @media (max-width: 850px) {
+  padding: 18px 16px;
+  }
+
   div#homeLink {
   }
 

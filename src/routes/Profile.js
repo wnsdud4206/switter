@@ -13,7 +13,8 @@ const ProfileStyle = styled.div`
   flex-direction: column;
   align-items: center;
 
-  width: 792px;
+  /* width: 792px; */
+  max-width: 792px;
 
   margin-top: 61px;
 
@@ -66,26 +67,6 @@ const Profile = ({ userObj }) => {
           <LoadingBox text={"Profile Loading"} />
         )}
       </ProfileStyle>
-
-      {/* <div>
-        profileHeader
-          <nav>nav: myProfile(profileEdit, logOut, 계정삭제), myContent(myContents, myComments), myFriends(친구찾기(추가), 친구삭제)</nav>
-      </div> */}
-
-      {/* <ProfileEdit userObj={userObj} />
-      <SweetConatiner contents={myContents} userObj={userObj} /> */}
-
-      {/* {true ? (
-        <SweetConatiner contents={myContents} userObj={userObj} />
-      ) : (
-        <ProfileEdit userObj={userObj} />
-      )} */}
-
-      {/* <LogOutBtnStyle>
-        <button onClick={onLogOutClick}>Log Out</button>
-      </LogOutBtnStyle> */}
-
-      {/* <button onClick={profileImageFormat}>profile image format button</button> */}
     </>
   );
 };

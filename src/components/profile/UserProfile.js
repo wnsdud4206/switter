@@ -3,6 +3,10 @@ import {
   authService,
   signOut,
   dbService,
+  doc,
+  getDocs,
+  setDoc,
+  deleteDoc,
   query,
   collection,
   where,
@@ -33,7 +37,7 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
 
       setContentCount(count);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onLogOut = () => {
@@ -44,10 +48,34 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
     }
   };
 
-  const onAccountWithdrawal = () => {
+  const onAccountWithdrawal = async () => {
     const ok = window.confirm("정말로 회원탈퇴를 하시겠습니까?");
+    // users, content, comment, follower, follow, notifications
     if (ok) {
-      deleteUser(authService().currentUser);
+      const userDoc = doc(dbService(), "users", userObj.uid);
+
+      const contentQuery = query(
+        collection(dbService(), "contents"),
+        where("creatorId", "==", userObj.uid),
+      );
+      const contentSnap = await getDocs(contentQuery);
+
+      const commentQuery = query(
+        collection(dbService(), "comments"),
+        where("creatorId", "==", userObj.uid),
+      );
+      const commentSnap = await getDocs(commentQuery);
+
+      contentSnap.docs.forEach(async (content) => {
+        const contentDoc = doc(dbService(), "contents", content.id);
+        await deleteDoc(contentDoc);
+      });
+      commentSnap.docs.forEach(async (comment) => {
+        const commentDoc = doc(dbService(), "comments", comment.id);
+        await deleteDoc(commentDoc);
+      });
+      await deleteDoc(userDoc);
+      await deleteUser(authService().currentUser);
       navigate("/", { replace: true });
     }
   };
@@ -73,14 +101,8 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
       <div id="textProfile">
         <div id="textProfileHeader">
           <h2 id="userName">{profileObj?.displayName}</h2>
-          <div id="profileActions">
-            {/* profile 주인은 안보이게 */}
-            {userObj.uid !== profileObj.uid && (
-              <FollowToggleBtn userObj={userObj} profileObj={profileObj} />
-            )}
-
-            {/* profile 주인만 보이게 */}
-            {userObj.uid === profileObj.uid && (
+          <div id="profileMenuBox">
+            {userObj.uid === profileObj.uid ? (
               <nav id="profileMenu">
                 <button id="profileMenuBtn">
                   <FontAwesomeIcon icon={faEllipsisVertical} />
@@ -110,6 +132,8 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
                   </li>
                 </ul>
               </nav>
+            ) : (
+              <FollowToggleBtn userObj={userObj} profileObj={profileObj} />
             )}
           </div>
         </div>

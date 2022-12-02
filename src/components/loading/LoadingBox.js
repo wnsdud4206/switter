@@ -20,29 +20,17 @@ const LoadingBoxStyle = styled.div`
 
   h3 {
     color: var(--sub-color);
-    /* animation: loading 0.75s infinite linear alternate;
-
-    @keyframes loading {
-      0% {
-        color: black;
-      }
-      100% {
-        color: white;
-      }
-    } */
   }
 `;
 
-const LoadingBox = ({ text }) => {
-  return (
-    <LoadingBoxStyle
-      id="contentsLoading"
-      initial={text === "Initializing" ? true : false}
-    >
-      <LoadingIcon />
-      <h3>{text}</h3>
-    </LoadingBoxStyle>
-  );
-};
+const LoadingBox = ({ text }) => (
+  <LoadingBoxStyle
+    id="contentsLoading"
+    initial={text === "Initializing" ? true : false}
+  >
+    <LoadingIcon />
+    <h3>{text}</h3>
+  </LoadingBoxStyle>
+);
 
 export default LoadingBox;

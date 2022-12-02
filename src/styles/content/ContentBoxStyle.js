@@ -1,4 +1,3 @@
-
 import styled from "styled-components";
 
 const ContentBoxStyle = styled.div`
@@ -33,24 +32,18 @@ const ContentBoxStyle = styled.div`
 
       overflow: hidden;
 
-      /* outline: 1px solid white; */
-
       & > div {
         height: 100%;
-        // height 값은 flex grow로 준듯
       }
+
       div#contentBoxImagesWrap {
         width: 100%;
 
         position: relative;
 
-        /* overflow: hidden; */
-
         border-right: 1px solid var(--border-color);
 
         div#contentBoxImages {
-          /* height: 50%; */
-
           div#contentBoxImage {
             display: flex;
             justify-content: center;
@@ -60,7 +53,6 @@ const ContentBoxStyle = styled.div`
 
             img {
               width: 100%;
-              /* height: calc(460px - 42px); */
               height: 460px;
               object-fit: contain;
             }
@@ -304,8 +296,6 @@ const ContentBoxStyle = styled.div`
                 span.commentUserText {
                 }
               }
-
-              // div.commentBtnWrap, ContentBoxCommentActions.js
             }
           }
         }
@@ -325,10 +315,7 @@ const ContentBoxStyle = styled.div`
               min-width: 36px;
               height: 36px;
 
-              /* background-color: white; */
-
               border-radius: 50%;
-              /* border: 1px solid #00bdee; */
               box-sizing: border-box;
 
               overflow: hidden;
@@ -385,8 +372,6 @@ const ContentBoxStyle = styled.div`
               align-items: center;
               justify-content: center;
 
-              /* background-color: var(--icon-color); */
-
               min-width: 36px;
               height: 36px;
 
@@ -395,7 +380,6 @@ const ContentBoxStyle = styled.div`
               border-bottom-right-radius: 50%;
               border: 2px solid var(--icon-color);
               box-sizing: border-box;
-              /* border-radius: 50%; */
 
               cursor: pointer;
 

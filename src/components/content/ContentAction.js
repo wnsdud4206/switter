@@ -1,26 +1,6 @@
-import { useEffect, useState } from "react";
-import {
-  dbService,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  where,
-  query,
-  onSnapshot,
-  orderBy,
-  authService,
-  deleteField,
-  arrayUnion,
-  arrayRemove,
-} from "fbase";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart as like,
-  faComment as comment,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as like } from "@fortawesome/free-solid-svg-icons";
 import {
   faHeart as faRegHeart,
   faComment as faRegCommnet,
@@ -31,8 +11,6 @@ import onLikeToggle from "utils/onLikeToggle";
 const ContentActionStyle = styled.div`
   display: flex;
   justify-content: space-between;
-
-  /* background-color: var(--background-color); */
 
   padding: 8px;
 
@@ -80,9 +58,7 @@ const ContentActionStyle = styled.div`
 `;
 
 const ContentAction = ({ contentObj, onContentBox }) => {
-
   const { likeCount, currentUserLike } = useGetLike(contentObj);
-
 
   return (
     <ContentActionStyle className="contentActions">
@@ -101,14 +77,7 @@ const ContentAction = ({ contentObj, onContentBox }) => {
       </div>
 
       <div className="commentWrap">
-        {/* <span className="commentCounter">{commentCount.length}</span> */}
         <button className="commentBtn" onClick={onContentBox}>
-          {/* 이전처럼 comment가 열리고 닫히는게 아니라 comment의 존재여부로 icon 다르게 주기 */}
-          {/* {commentCount.length ? (
-            <FontAwesomeIcon className="commentShow" icon={comment} />
-          ) : (
-            <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
-          )} */}
           <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
         </button>
       </div>

@@ -23,14 +23,7 @@ const AppRouter = ({ userObj }) => {
       <Routes>
         {userObj ? (
           <>
-            <Route
-              path="/"
-              element={
-                <Home
-                  userObj={userObj}
-                />
-              }
-            />
+            <Route path="/" element={<Home userObj={userObj} />} />
             <Route
               path="/profile/:name"
               element={<Profile userObj={userObj} />}

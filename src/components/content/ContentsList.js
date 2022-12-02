@@ -12,7 +12,8 @@ const ContentsListStyle = styled.div`
   align-items: flex-start;
   gap: 16px;
 
-  width: 470px;
+  /* width: 470px; */
+  max-width: 470px;
   padding: 32px 32px 32px 0;
 
   div#emptyContent {

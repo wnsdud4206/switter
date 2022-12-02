@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 const useGetUser = () => {
   const [userObj, setUserObj] = useState(null);
-  const [init, setInit] = useState(false);
 
   useEffect(() => {
     onAuth(authService(), (user) => {
@@ -27,11 +26,10 @@ const useGetUser = () => {
       } else {
         setUserObj(null);
       }
-      setInit(true);
     });
   }, []);
-  
-  return { userObj, init };
+
+  return userObj;
 };
 
 export default useGetUser;

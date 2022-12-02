@@ -7,16 +7,12 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
 
-// 전체적으로 리펙토링 필요
-
 const Notification = ({ noticeObj, activeNotice }) => {
   const [noticeKey, noticeData] = noticeObj;
   const [contentText, setContentText] = useState("");
   const [contentObj, setContentObj] = useState({});
   const [imgError, setImgError] = useState(false);
   const dispatch = useDispatch();
-
-  // const [noticeState, setNoticeState] = useState({});
 
   let contentId, secondId, userId;
   let collection;
@@ -35,9 +31,7 @@ const Notification = ({ noticeObj, activeNotice }) => {
     collection = "users";
   }
 
-  const onError = () => {
-    setImgError(true);
-  };
+  const onError = () => setImgError(true);
 
   const getContentAndUser = useCallback(async () => {
     try {
@@ -58,16 +52,15 @@ const Notification = ({ noticeObj, activeNotice }) => {
 
         // 왜 자꾸 text를 바로바로 못가져 오는 거야..
         let text;
-        if (contentGet.data().text?.length > 10) {
+        if (contentGet.data().text?.length > 10)
           text = `${contentGet.data().text.slice(0, 10)}...`;
-        } else {
-          text = contentGet.data().text;
-        }
+        else text = contentGet.data().text;
 
         // getUser
         let userDoc;
         if (noticeData.category === "contentComments") {
           const commentDoc = doc(dbService(), "comments", userId);
+
           const commentGet = await getDoc(commentDoc);
 
           userDoc = doc(dbService(), "users", commentGet.data().creatorId);
@@ -89,7 +82,7 @@ const Notification = ({ noticeObj, activeNotice }) => {
           displayName,
           attachmentUrl,
         });
-        // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기
+        // getContentText, getUserName, getUserImage 를 contentObj 하나로 묶어서 dispatch 하기?
       }
     } catch (error) {
       console.error(error);
@@ -106,12 +99,8 @@ const Notification = ({ noticeObj, activeNotice }) => {
       "notifications",
       authService().currentUser.uid,
     );
-    // const noticeSnap = await getDoc(noticeDoc);
 
     if (noticeData.category === "commentLikes") {
-      // console.log(
-      //   noticeSnap.data()[contentId][noticeData.category][secondId][noticeKey],
-      // );
       await setDoc(
         noticeDoc,
         {
@@ -131,7 +120,6 @@ const Notification = ({ noticeObj, activeNotice }) => {
       noticeData.category === "contentLikes" ||
       noticeData.category === "contentComments"
     ) {
-      // console.log(noticeSnap.data()[secondId][noticeData.category][noticeKey]);
       await setDoc(
         noticeDoc,
         {
@@ -163,14 +151,13 @@ const Notification = ({ noticeObj, activeNotice }) => {
   const onContentBox = async () => {
     try {
       let contentDoc;
-      if (noticeData.category === "commentLikes") {
+      if (noticeData.category === "commentLikes")
         contentDoc = doc(dbService(), "contents", contentId);
-      } else if (
+      else if (
         noticeData.category === "contentComments" ||
         noticeData.category === "contentLikes"
-      ) {
+      )
         contentDoc = doc(dbService(), "contents", secondId);
-      }
 
       const contentSnap = await getDoc(contentDoc);
 
@@ -181,7 +168,6 @@ const Notification = ({ noticeObj, activeNotice }) => {
       const id = contentSnap.id;
       const creatorId = contentSnap.data().creatorId;
       const attachmentUrl = contentSnap.data().attachmentUrl;
-      // contentAction(contentList)에서도 text 넣어줘야함
       const text = contentSnap.data().text;
       const creatorDisplayName = dbUser.data().displayName;
       const creatorAttachmentUrl = dbUser.data().attachmentUrl;
@@ -217,12 +203,6 @@ const Notification = ({ noticeObj, activeNotice }) => {
           <FontAwesomeIcon id="profileicon" icon={faUser} />
         )}
       </div>
-      {/* <div className="noticeTextWrap notice"> */}
-      {/* <Link
-        to="/profile"
-        className="noticeTextWrap notice"
-        onClick={offNotification}
-      > */}
       {noticeData.category === "follower" ? (
         <Link
           className="moveToProfile"
@@ -248,13 +228,9 @@ const Notification = ({ noticeObj, activeNotice }) => {
           </span>
         </button>
       )}
-      {/* </Link> */}
-      {/* <div className="noticeBtnWrap"> */}
       <button className="notice confirm" onClick={onConfirm}>
         <FontAwesomeIcon icon={faCheck} />
       </button>
-      {/* <button className="delete">삭제</button> */}
-      {/* </div> */}
     </NotificationStyle>
   );
 };

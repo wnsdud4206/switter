@@ -1,7 +1,12 @@
 import styled from "styled-components";
 
 const ContentStyle = styled.div`
-  width: 100%;
+  /* width: 100%; */
+  width: 470px;
+
+  @media (max-width: 500px) {
+    width: 96vw;
+  }
 
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -12,7 +17,7 @@ const ContentStyle = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    padding: 8px;
+    padding: 8px 0 8px 8px;
 
     a.creatorWrap {
       display: flex;
@@ -50,32 +55,107 @@ const ContentStyle = styled.div`
       }
     }
 
-    div.headerBtnWrap {
+    div.contentMenuBox {
       display: flex;
+      align-items: center;
       gap: 8px;
 
-      button {
-        outline: none;
-        background: none;
-        border: none;
-        padding: 0;
+      nav.contentMenu {
+        display: flex;
 
-        cursor: pointer;
+        position: relative;
 
-        svg {
-          color: var(--icon-color);
-
-          width: 20px;
-          height: 20px;
-        }
-
-        &.editBtn {
-          svg {
+        &:hover {
+          ul {
+            display: flex;
           }
         }
-        &.removeBtn {
+
+        button.contentMenuBtn {
+          outline: none;
+          border: none;
+          background: none;
+          padding: 0;
+
+          width: 32px;
+          height: 32px;
+
+          cursor: pointer;
+
           svg {
-            padding-top: 2px;
+            color: var(--icon-color);
+            font-size: 24px;
+          }
+        }
+
+        ul {
+          display: none;
+          align-items: center;
+          flex-direction: column;
+          gap: 0;
+
+          list-style: none;
+
+          background-color: var(--background-color);
+
+          width: 120px;
+
+          padding: 0;
+          margin: 0;
+          border-top-left-radius: 6px;
+          border-bottom-right-radius: 6px;
+          border-bottom-left-radius: 6px;
+          border: 1px solid var(--border-color);
+
+          position: absolute;
+          top: 32px;
+          right: 0;
+
+          z-index: 1;
+
+          overflow: hidden;
+
+          li {
+            width: 100%;
+
+            overflow: hidden;
+
+            button {
+              border: none;
+              outline: none;
+              background: none;
+              padding: 8px 0;
+
+              color: var(--sub-color);
+
+              width: 100%;
+
+              opacity: 0.8;
+
+              cursor: pointer;
+
+              transition: opacity 0.2s color 0.2s background-color 0.2s;
+
+              &:hover {
+                opacity: 1;
+
+                background-color: rgba(128, 128, 128, 0.2);
+
+                &#accountWithdrawalBtn {
+                  color: #ff6633;
+                }
+              }
+
+              &.contentEditBtn {
+              }
+
+              &.contentDeleteBtn {
+              }
+            }
+
+            &:not(:first-child) {
+              border-top: 1px solid var(--border-color);
+            }
           }
         }
       }
@@ -96,7 +176,6 @@ const ContentStyle = styled.div`
       align-items: center;
 
       div.contentImage {
-
         img {
           vertical-align: middle;
         }
@@ -130,6 +209,15 @@ const ContentStyle = styled.div`
       transition: all 0.2s;
 
       cursor: pointer;
+
+      @media (max-width: 500px) {
+        opacity: 0.7;
+
+        &#accountWithdrawalBtn {
+          opacity: 1;
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
 
       &.prev {
         left: 0;

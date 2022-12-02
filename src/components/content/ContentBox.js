@@ -27,7 +27,6 @@ import onLikeToggle from "utils/onLikeToggle";
 import { Link } from "react-router-dom";
 import ContentBoxStyle from "styles/content/ContentBoxStyle";
 
-
 const ContentBox = ({ userObj }) => {
   const [imgError, setImgError] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -37,14 +36,9 @@ const ContentBox = ({ userObj }) => {
   const { content } = useSelector((state) => state.boxState);
   const { likeCount, currentUserLike } = useGetLike(content);
 
-  const onError = () => {
-    // 이미지 깨지면 대체
-    setImgError(true);
-  };
+  const onError = () => setImgError(true);
 
-  // useEffect onSnapshot 해야 좋을듯(async&await 없이)
   const getComments = async () => {
-    // const commentsDoc = doc(dbService(), "comments");
     const commentsQuery = query(
       collection(dbService(), "comments"),
       where("contentId", "==", content.id),
@@ -54,8 +48,6 @@ const ContentBox = ({ userObj }) => {
     setComments([]);
     commentsSnap.docs.forEach(async (comment) => {
       try {
-        // console.log(comment.data());
-        // 여기서 comment creator displayName 가져오기
         const usersRef = doc(dbService(), "users", comment.data().creatorId);
         const usersSnap = await getDoc(usersRef);
 
@@ -67,6 +59,7 @@ const ContentBox = ({ userObj }) => {
           attachmentUrl,
           displayName,
         };
+
         setComments((prev) => [commentObj, ...prev]);
       } catch (error) {
         console.error(error);
@@ -76,14 +69,10 @@ const ContentBox = ({ userObj }) => {
 
   useEffect(() => {
     getComments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setCommentText(value);
-  };
+  const onChange = ({ target: { value } }) => setCommentText(value);
 
   const sliderBtn = (e, urlArr) => {
     if (e.target.className === "prev")
@@ -112,7 +101,7 @@ const ContentBox = ({ userObj }) => {
         creatorId: userObj.uid,
         contentId: content.id,
       };
-      // firestore에 추가
+
       // eslint-disable-next-line no-unused-vars
       const docRef = await addDoc(
         collection(dbService(), "comments"),
@@ -120,6 +109,7 @@ const ContentBox = ({ userObj }) => {
       );
 
       const noticeDoc = doc(dbService(), "notifications", content.creatorId);
+
       await setDoc(
         noticeDoc,
         {
@@ -137,6 +127,7 @@ const ContentBox = ({ userObj }) => {
       );
 
       const contentsDoc = doc(dbService(), "contents", content.id);
+
       await setDoc(
         contentsDoc,
         {
@@ -164,8 +155,6 @@ const ContentBox = ({ userObj }) => {
                   <div id="contentBoxImage">
                     <img
                       src={content.attachmentUrl[slideIndex]}
-                      // width="100%"
-                      // height="100%"
                       alt="contentImage"
                     />
                   </div>
@@ -189,12 +178,11 @@ const ContentBox = ({ userObj }) => {
               </>
             ) : (
               <div id="noImage">
-                <p>이미지가 없는 글입니다😉</p>
+                <p>이미지가 없습니다😉</p>
               </div>
             )}
           </div>
 
-          {/* right */}
           <div id="CommentBox">
             <div id="contentBoxHeader">
               <div id="contentCreator">
@@ -243,7 +231,6 @@ const ContentBox = ({ userObj }) => {
 
             <div id="commentsWrap">
               <ul id="commentsList">
-                {/* contents나 comments에 displayName도 저장하고 profile 수정할 때 contents, comments 의 displayName도 변경하게 끔 해야할 듯, 왜냐면 해당 content나 comment의 주인을 찾으려면 또 일일이 db를 가져오는 것이 번거로움(아래 댓글 작성자 부분) - 아냐 그럼 content랑 comment가 아주 많은 유저는 바꾸는 것이 너무 오래걸리거나 무거워 질 수도 있음 */}
                 <li id="creatorText">{content.text}</li>
                 {comments?.length ? (
                   comments.map((comment) => (
@@ -298,8 +285,6 @@ const ContentBox = ({ userObj }) => {
                       src={userObj.photoURL}
                       width="100%"
                       height="100%"
-                      // width="32"
-                      // height="32"
                       alt="userImage"
                     />
                   ) : (

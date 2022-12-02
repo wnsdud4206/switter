@@ -7,20 +7,19 @@ import {
   getDocs,
   where,
   query,
-  onSnapshot,
-  orderBy,
-  authService,
   deleteDoc,
   setDoc,
   deleteField,
   ref,
   storageService,
   deleteObject,
+  authService,
 } from "fbase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faEllipsisVertical,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import ContentAction from "./ContentAction";
@@ -34,12 +33,13 @@ import {
 import { Link } from "react-router-dom";
 import ContentStyle from "styles/content/ContentStyle";
 
-
 const Content = ({ content, userObj }) => {
   const [imgError, setImgError] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const [contentObj, setContentObj] = useState(content);
   const dispatch = useDispatch();
+  const imageSizeRef = useRef();
+  const [imageSize, setImageSize] = useState(0)
 
   const getCreator = async () => {
     const d = doc(dbService(), "users", `${content.creatorId}`);
@@ -52,24 +52,24 @@ const Content = ({ content, userObj }) => {
       creatorDisplayName,
       creatorAttachmentUrl,
     }));
-
-    // console.log(docSnap.data().comments.length || 0);
-    // setCommentLength(docSnap.data().comments.length || 0);
   };
 
   useEffect(() => {
     getCreator();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onError = () => {
-    // 이미지 깨지면 대체
-    setImgError(true);
-  };
+  // 렌더링할 때 크기조절이 왜케 느리지..
+  useEffect(() => {
+    // console.log(imageSizeRef);
+    setImageSize(imageSizeRef.current?.offsetWidth);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [window.innerWidth])
 
-  const onEditing = () => {
+  const onError = () => setImgError(true);
+
+  const onEditing = () =>
     dispatch(editActions.onEdit({ mode: true, contentObj }));
-    // contentEditor에게 현재 content의 정보를 보내는 방법?
-  };
 
   const sliderBtn = (e, urlArr) => {
     if (e.target.className === "prev")
@@ -84,7 +84,6 @@ const Content = ({ content, userObj }) => {
   };
 
   const onDeleteClick = async () => {
-    // try {
     const ok = window.confirm("Are you sure you want to delete this content?");
     if (ok) {
       try {
@@ -96,17 +95,23 @@ const Content = ({ content, userObj }) => {
           collection(dbService(), "comments"),
           where("contentId", "==", contentId),
         );
+
         const commentDocs = await getDocs(commentQuery);
+
         commentDocs.docs.forEach(async (commentDoc) => {
           const d = doc(dbService(), "comments", commentDoc.id);
+
           await deleteDoc(d);
         });
 
         const noticeQuery = query(collection(dbService(), "notifications"));
+
         const noticeDocs = await getDocs(noticeQuery);
+
         noticeDocs.docs.forEach(async (noticeDoc) => {
           if (Object.keys(noticeDoc.data()).includes(contentId)) {
             const notice = doc(dbService(), "notifications", noticeDoc.id);
+
             await setDoc(
               notice,
               {
@@ -120,7 +125,6 @@ const Content = ({ content, userObj }) => {
         await deleteDoc(contentDoc);
 
         if (contentObj.attachmentUrl) {
-          // storage에 들어가는 이미지파일의 이름은 uuid 아니었나? 근데 이렇게 해도 잘 지워지네? 근데 왜 가끔 에러가 뜨지? - 이미지가 없는 content을 지우려니까 없는 것 찾으려고 해서 에러가 난듯
           const r = ref(storageService(), contentObj.attachmentUrl);
           await deleteObject(r);
         }
@@ -128,14 +132,9 @@ const Content = ({ content, userObj }) => {
         console.error(error);
       }
     }
-    // } catch (error) {
-    //   console.error(error);
-    // }
   };
 
-  const onContentBox = () => {
-    dispatch(boxActions.onContentBox(contentObj));
-  };
+  const onContentBox = () => dispatch(boxActions.onContentBox(contentObj));
 
   return (
     <ContentStyle className="content">
@@ -165,18 +164,33 @@ const Content = ({ content, userObj }) => {
           <span className="creatorName">{contentObj.creatorDisplayName}</span>
         </Link>
 
-        {contentObj.creatorId === userObj.uid && (
-          <div className="headerBtnWrap">
-            <button className="editBtn" onClick={onEditing} title="contentEdit">
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </button>
-            <button
-              className="removeBtn"
-              onClick={onDeleteClick}
-              title="contentDelete"
-            >
-              <FontAwesomeIcon icon={faSquareMinus} />
-            </button>
+        {contentObj.creatorId === authService().currentUser.uid && (
+          <div className="contentMenuBox">
+            <nav className="contentMenu">
+              <button className="contentMenuBtn">
+                <FontAwesomeIcon icon={faEllipsisVertical} />
+              </button>
+              <ul>
+                <li>
+                  <button
+                    className="contentEditBtn"
+                    onClick={onEditing}
+                    title="editing"
+                  >
+                    글 수정
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className="contentDeleteBtn"
+                    onClick={onDeleteClick}
+                    title="deleting"
+                  >
+                    글 삭제
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
         )}
       </div>
@@ -185,17 +199,16 @@ const Content = ({ content, userObj }) => {
         <div className="contentImagesWrap">
           <div
             className="contentImages"
-            style={{ transform: `translateX(${slideIndex * -468}px)` }}
+            // style={{ transform: `translateX(${slideIndex * -468}px)` }}
+            style={{ transform: `translateX(${slideIndex * -imageSize}px)` }}
+            ref={imageSizeRef}
           >
             {contentObj.attachmentUrl.map((url, i) => (
-              <div
-                key={contentObj.id + i}
-                // className={`contentImage ${i === slideIndex && "active"}`}
-                className="contentImage"
-              >
+              <div key={contentObj.id + i} className="contentImage">
                 <img
                   src={url}
-                  width="468px"
+                  // width="468px"
+                  width={`${imageSize}px`}
                   height="100%"
                   alt="contentImage"
                   loading="lazy"
@@ -228,12 +241,6 @@ const Content = ({ content, userObj }) => {
       </div>
 
       <ContentAction contentObj={contentObj} onContentBox={onContentBox} />
-
-      {/* {contentObj.firstComment && (
-        <div className="contentComments">
-          <b>{contentObj.firstCommentName}</b>/{contentObj.firstComment}
-        </div>
-      )} */}
     </ContentStyle>
   );
 };

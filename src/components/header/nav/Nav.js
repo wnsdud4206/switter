@@ -26,11 +26,9 @@ const Nav = ({ userObj, activeNotice, toggleNotification }) => {
   const onError = () => setImgError(true);
 
   const onDarkModeToggle = () =>
-    dispatch(
-      darkMode
-        ? darkModeActions.dark({ mode: true })
-        : darkModeActions.light({ mode: false }),
-    );
+    darkMode
+      ? dispatch(darkModeActions.light({ mode: false }))
+      : dispatch(darkModeActions.dark({ mode: true }));
 
   const onNewNotice = (bool) => setNewNotice(bool);
 
