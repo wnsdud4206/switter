@@ -19,42 +19,6 @@ const ContentStyle = styled.div`
 
     padding: 8px 0 8px 8px;
 
-    a.creatorWrap {
-      display: flex;
-      align-items: center;
-
-      text-decoration: none;
-
-      div.creatorAttachment {
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-
-        width: 40px;
-        height: 40px;
-
-        background-color: white;
-
-        border-radius: 50%;
-        overflow: hidden;
-
-        img {
-          vertical-align: middle;
-        }
-
-        svg.creatorAttachmentIcon {
-          font-size: 32px;
-          color: var(--icon-color);
-        }
-      }
-
-      span.creatorName {
-        margin-left: 8px;
-
-        color: var(--sub-color);
-      }
-    }
-
     div.contentMenuBox {
       display: flex;
       align-items: center;
@@ -71,7 +35,7 @@ const ContentStyle = styled.div`
           }
         }
 
-        button.contentMenuBtn {
+        button.contentMenuHover {
           outline: none;
           border: none;
           background: none;

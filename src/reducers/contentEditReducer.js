@@ -1,7 +1,4 @@
-import {
-  createAction,
-  createReducer,
-} from "@reduxjs/toolkit";
+import { createAction, createReducer } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import {
   addDoc,
@@ -54,11 +51,11 @@ export const editReducer = createReducer(Initializing, {
 
       const contentObj = {
         text,
-        createdAt: Date.now(),
+        at: Date.now(),
         creatorId: uid,
         attachmentUrl: attachmentUrlArr,
       };
-      
+
       // eslint-disable-next-line no-unused-vars
       const docRef = await addDoc(
         collection(dbService(), "contents"),

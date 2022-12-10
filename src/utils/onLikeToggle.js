@@ -12,7 +12,7 @@ const onLikeToggle = async (contentObj, currentUserLike, commentObj) => {
   const { uid } = authService().currentUser;
 
   const noticeDoc = doc(dbService(), "notifications", contentObj.creatorId);
-  const docment = commentObj
+  const document = commentObj
     ? doc(dbService(), "comments", commentObj.id)
     : doc(dbService(), "contents", contentObj.id);
 
@@ -49,7 +49,7 @@ const onLikeToggle = async (contentObj, currentUserLike, commentObj) => {
     { merge: true },
   );
   await setDoc(
-    docment,
+    document,
     { likes: currentUserLike ? arrayRemove(uid) : arrayUnion(uid) },
     { merge: true },
   );

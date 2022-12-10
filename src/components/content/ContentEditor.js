@@ -17,6 +17,8 @@ const ContentEditor = ({ userObj }) => {
   const fileInput = useRef();
   const imagesWrapRef = useRef();
 
+  // 팔로우 새 글
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -24,7 +26,7 @@ const ContentEditor = ({ userObj }) => {
       const ok = window.confirm(
         "Are you sure you want to delete this content?",
       );
-      if (ok) {
+      if (ok)
         dispatch(
           editActions.editContent({
             attachment,
@@ -33,7 +35,6 @@ const ContentEditor = ({ userObj }) => {
             content,
           }),
         );
-      }
     } else {
       dispatch(
         editActions.newContent({
@@ -50,18 +51,9 @@ const ContentEditor = ({ userObj }) => {
     // dispatch(editActions.offEdit(false));
   };
 
-  const onChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setText(value);
-  };
+  const onChange = ({ target: { value } }) => setText(value);
 
-  const onFileChange = (e) => {
-    const {
-      target: { files },
-    } = e;
-
+  const onFileChange = ({ target: { files } }) => {
     if (attachment.length < 10) {
       const reader = new FileReader();
       let i = 0;
@@ -99,7 +91,7 @@ const ContentEditor = ({ userObj }) => {
       setText(newText);
       setAttachment(newAttachmentUrl);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // drag&drop - https://inpa.tistory.com/entry/%EB%93%9C%EB%9E%98%EA%B7%B8-%EC%95%A4-%EB%93%9C%EB%A1%AD-Drag-Drop-%EA%B8%B0%EB%8A%A5

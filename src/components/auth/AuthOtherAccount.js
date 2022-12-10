@@ -34,7 +34,6 @@ const AuthOtherAccount = () => {
         });
       }
 
-      console.log(data);
       userDocCreator(data);
     } catch (e) {
       setError(e.code);

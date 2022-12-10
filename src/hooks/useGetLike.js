@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
-import { query, collection, dbService, onSnapshot, authService } from "fbase";
+import {
+  query,
+  collection,
+  dbService,
+  onSnapshot,
+  authService,
+} from "fbase";
 
+// likeObj
 const useGetLike = (contentObj, commentObj) => {
   const [likeCount, setLikeCount] = useState([]);
   const [currentUserLike, setCurrentUserLike] = useState(false);
@@ -32,11 +39,25 @@ const useGetLike = (contentObj, commentObj) => {
             );
           }
         }
-        
+
         setLikeCount(likes);
         setCurrentUserLike(userLike);
       });
     });
+
+    // const d = doc(
+    //   dbService(),
+    //   likeObj?.contentId ? "comments" : "contents",
+    //   likeObj.id,
+    // );
+
+    // onSnapshot(d, (snapshot) => {
+    //   const likes = Object.keys(snapshot.data()?.likes || {}); // array
+    //   const userLike = likes.includes(authService().currentUser?.uid);
+    //   setLikeCount(likes);
+    //   setCurrentUserLike(userLike);
+    // });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return { likeCount, currentUserLike };

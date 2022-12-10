@@ -23,8 +23,8 @@ const userStyle = css`
 
     div {
       display: flex;
-      justify-content: center;
       align-items: flex-end;
+      justify-content: center;
 
       background-color: white;
 
@@ -106,6 +106,10 @@ const SideMenuStyle = styled.div`
 
         span {
         }
+      }
+
+      &#emptyFollowList {
+        color: var(--sub-color);
       }
     }
 

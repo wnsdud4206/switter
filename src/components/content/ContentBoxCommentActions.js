@@ -15,6 +15,7 @@ import { faTrashCan, faHeart as like } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
 import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
+import { useEffect } from "react";
 
 const ContentBoxCommentActionsStyle = styled.div`
   display: flex;

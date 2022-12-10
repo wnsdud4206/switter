@@ -13,33 +13,26 @@ import {
   ref,
   storageService,
   deleteObject,
-  authService,
 } from "fbase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
   faEllipsisVertical,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import ContentAction from "./ContentAction";
 import { useDispatch } from "react-redux";
 import { boxActions } from "reducers/contentBoxReducer";
 import { editActions } from "reducers/contentEditReducer";
-import {
-  faPenToSquare,
-  faSquareMinus,
-} from "@fortawesome/free-regular-svg-icons";
-import { Link } from "react-router-dom";
 import ContentStyle from "styles/content/ContentStyle";
+import HeaderUserProfile from "components/HeaderUserProfile";
 
 const Content = ({ content, userObj }) => {
-  const [imgError, setImgError] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const [contentObj, setContentObj] = useState(content);
+  const [imageSize, setImageSize] = useState(0);
   const dispatch = useDispatch();
   const imageSizeRef = useRef();
-  const [imageSize, setImageSize] = useState(0)
 
   const getCreator = async () => {
     const d = doc(dbService(), "users", `${content.creatorId}`);
@@ -56,17 +49,10 @@ const Content = ({ content, userObj }) => {
 
   useEffect(() => {
     getCreator();
+    // 렌더링할 때 크기조절이 왜케 느리지..
+    setImageSize(imageSizeRef.current?.offsetWidth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // 렌더링할 때 크기조절이 왜케 느리지..
-  useEffect(() => {
-    // console.log(imageSizeRef);
-    setImageSize(imageSizeRef.current?.offsetWidth);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.innerWidth])
-
-  const onError = () => setImgError(true);
 
   const onEditing = () =>
     dispatch(editActions.onEdit({ mode: true, contentObj }));
@@ -104,6 +90,7 @@ const Content = ({ content, userObj }) => {
           await deleteDoc(d);
         });
 
+
         const noticeQuery = query(collection(dbService(), "notifications"));
 
         const noticeDocs = await getDocs(noticeQuery);
@@ -122,6 +109,7 @@ const Content = ({ content, userObj }) => {
           }
         });
 
+
         await deleteDoc(contentDoc);
 
         if (contentObj.attachmentUrl) {
@@ -139,35 +127,16 @@ const Content = ({ content, userObj }) => {
   return (
     <ContentStyle className="content">
       <div className="contentHeader">
-        <Link
-          className="creatorWrap"
-          to={`/profile/${contentObj.creatorDisplayName}`}
-        >
-          <div className="creatorAttachment">
-            {contentObj.creatorAttachmentUrl && !imgError ? (
-              <img
-                src={contentObj.creatorAttachmentUrl}
-                width="40"
-                height="40"
-                alt="contentUserImage"
-                onError={onError}
-                loading="lazy"
-              />
-            ) : (
-              <FontAwesomeIcon
-                className="creatorAttachmentIcon"
-                icon={faUser}
-              />
-            )}
-          </div>
+        <HeaderUserProfile
+          name={contentObj.creatorDisplayName}
+          image={contentObj.creatorAttachmentUrl}
+        />
 
-          <span className="creatorName">{contentObj.creatorDisplayName}</span>
-        </Link>
-
-        {contentObj.creatorId === authService().currentUser.uid && (
+        {/* {contentObj.creatorId === authService().currentUser.uid && ( */}
+        {contentObj.creatorId === userObj.uid && (
           <div className="contentMenuBox">
             <nav className="contentMenu">
-              <button className="contentMenuBtn">
+              <button className="contentMenuHover">
                 <FontAwesomeIcon icon={faEllipsisVertical} />
               </button>
               <ul>

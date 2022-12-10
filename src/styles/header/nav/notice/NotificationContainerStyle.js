@@ -58,7 +58,7 @@ const NotificationContainerStyle = styled.div`
       align-items: center;
       justify-content: space-between;
 
-      background: var(--background-color);
+      /* background: var(--background-color); */
 
       width: 100%;
 
@@ -69,30 +69,43 @@ const NotificationContainerStyle = styled.div`
       position: sticky;
       top: 0;
 
-      button {
+      div > button {
         background: none;
         outline: none;
         border: none;
 
-        color: var(--sub-color);   // 임시
+        color: var(--sub-color); // 임시
 
         cursor: pointer;
+
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: rgba(128, 128, 128, 0.2);
+        }
+
+        &.active {
+          background-color: rgba(128, 128, 128, 0.3);
+        }
       }
 
       div#categoryTab {
+        display: flex;
+        gap: 8px;
+
         button {
-        }
-        button#sweetNotice {
-        }
-        button#commentNotice {
+          &#newNotice {
+          }
+          &#confirmNotice {
+          }
         }
       }
       div#noticeAction {
         button {
-        }
-        button#allConfirm {
-        }
-        button#allDelete {
+          &#allConfirm {
+          }
+          &#allDelete {
+          }
         }
       }
     }

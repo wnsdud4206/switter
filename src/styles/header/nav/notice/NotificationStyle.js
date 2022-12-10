@@ -46,7 +46,7 @@ const NotificationStyle = styled.li`
     text-decoration: none;
     font-size: 0.9em;
 
-    color: ${({ confirm }) => (confirm ? "#aaa" : "white")};
+    color: ${({ confirm }) => (confirm ? "#aaa" : "var(--sub-color)")};
 
     padding: 12px 0;
 
@@ -67,7 +67,7 @@ const NotificationStyle = styled.li`
     border: none;
     padding: 12px 0;
 
-    color: ${({ confirm }) => (confirm ? "#aaa" : "white")};
+    color: ${({ confirm }) => (confirm ? "#aaa" : "var(--sub-color)")};
     font-size: 0.9em;
 
     display: flex;

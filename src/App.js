@@ -9,7 +9,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 const helmetContext = {};
 
 function App() {
-  const userObj = useGetUser();
+  const { userObj, init } = useGetUser();
   const darkMode = useSelector((state) => state.darkModeState.mode);
 
   return (
@@ -70,7 +70,7 @@ function App() {
       {/* <MyHelmet /> */}
 
       <GlobalStyle them={darkMode} />
-      {userObj ? (
+      {init ? (
         <AppRouter userObj={userObj} />
       ) : (
         <LoadingBox text={"Initializing"} />

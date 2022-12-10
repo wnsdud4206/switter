@@ -21,22 +21,15 @@ const FollowToggleBtnStyle = styled.button`
   border: none;
   background: none;
   padding: 0;
-
   display: flex;
   align-items: center;
-
   width: 32px;
   height: 32px;
-
   color: var(--sub-color);
-
   cursor: pointer;
-
   svg {
     font-size: 22px;
-
     margin-left: 5px;
-
     &.followIcon {
       display: block;
       color: var(--icon-color);
@@ -54,7 +47,6 @@ const FollowToggleBtnStyle = styled.button`
       color: var(--icon-color);
     }
   }
-
   &:hover {
     svg {
       &.followIcon {
@@ -77,7 +69,7 @@ const FollowToggleBtn = ({ userObj, profileObj }) => {
   const [currentUserFollow, setCurrentUserFollow] = useState(false);
 
   useEffect(() => {
-    setCurrentUserFollow(profileObj.follower?.includes(userObj.uid) ? true : false);
+    setCurrentUserFollow(profileObj.follower?.includes(userObj.uid));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userObj, profileObj]);
 
@@ -98,7 +90,9 @@ const FollowToggleBtn = ({ userObj, profileObj }) => {
     await setDoc(
       profileDoc,
       {
-        follower: currentUserFollow ? arrayRemove(userObj.uid) : arrayUnion(userObj.uid),
+        follower: currentUserFollow
+          ? arrayRemove(userObj.uid)
+          : arrayUnion(userObj.uid),
       },
       { merge: true },
     );

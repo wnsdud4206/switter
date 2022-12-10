@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 const useGetUser = () => {
   const [userObj, setUserObj] = useState(null);
+  const [init, setInit] = useState(false);
 
   useEffect(() => {
     onAuth(authService(), (user) => {
@@ -10,13 +11,14 @@ const useGetUser = () => {
         const userDoc = doc(dbService(), "users", user.uid);
 
         onSnapshot(userDoc, (snapshot) => {
+          const { displayName, uid, photoURL, email } = user;
           const { introduce, follower, follow } = snapshot.data();
 
           setUserObj({
-            displayName: user.displayName,
-            uid: user.uid,
-            photoURL: user.photoURL,
-            email: user.email,
+            displayName,
+            uid,
+            photoURL,
+            email,
             introduce,
             follower: follower || [],
             follow: follow || [],
@@ -26,10 +28,11 @@ const useGetUser = () => {
       } else {
         setUserObj(null);
       }
+      setInit(true);
     });
   }, []);
 
-  return userObj;
+  return { userObj, init };
 };
 
 export default useGetUser;

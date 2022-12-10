@@ -11,6 +11,7 @@ const AuthOtherAccountStyle = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: 16px;
 
     width: 100%;
 
@@ -18,10 +19,12 @@ const AuthOtherAccountStyle = styled.div`
       height: 36px;
       background: #eee;
       outline: none;
-      border: none;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+
+      border: 1px solid var(--border-color);
       border-radius: 18px;
       box-sizing: border-box;
-      font-weight: bold;
 
       padding: 0 12px;
       margin: 24px 0 16px;

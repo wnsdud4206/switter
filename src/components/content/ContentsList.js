@@ -78,7 +78,7 @@ const ContentsList = ({ userObj }) => {
               return;
           }
           contentArr = {
-            ...doc.data(), // creatorId, createdAt, text
+            ...doc.data(), // creatorId, at, text
             id: doc.id,
           };
         }
@@ -100,8 +100,8 @@ const ContentsList = ({ userObj }) => {
       {contents.length ? (
         contents
           .sort((a, b) => {
-            if (a.createdAt < b.createdAt) return 1;
-            if (a.createdAt > b.createdAt) return -1;
+            if (a.at < b.at) return 1;
+            if (a.at > b.at) return -1;
             return 0;
           })
           .map((content, i) => (

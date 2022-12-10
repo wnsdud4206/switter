@@ -13,17 +13,12 @@ const Header = ({ userObj }) => {
   const toggleNotification = () => setActiveNotice(activeNotice ? false : true);
 
   useEffect(() => {
-    const noticeEnable = (e) => {
-      if (e.target.classList.contains("notice")) {
-        return;
-      } else {
-        setActiveNotice(false);
-        return;
-      }
-    };
+    const noticeEnable = ({ target }) =>
+      !target.classList.contains("notice") && setActiveNotice(false);
 
-    if (activeNotice) window.addEventListener("click", noticeEnable);
-    else window.removeEventListener("click", noticeEnable);
+    activeNotice
+      ? window.addEventListener("click", noticeEnable)
+      : window.removeEventListener("click", noticeEnable);
   }, [activeNotice]);
 
   return (

@@ -13,7 +13,7 @@ import {
   onSnapshot,
   deleteUser,
 } from "fbase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserProfileStyle from "styles/home/UserProfileStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -52,6 +52,9 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
     const ok = window.confirm("정말로 회원탈퇴를 하시겠습니까?");
     // users, content, comment, follower, follow, notifications
     if (ok) {
+      // useGetUser (15line) 을 다시 불러와버려서 에러가 뜨는데 로그아웃부터 해야하나?
+      // 일단 users Collection에서 지워는 것 확인
+      
       const userDoc = doc(dbService(), "users", userObj.uid);
 
       const contentQuery = query(
@@ -104,13 +107,13 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
           <div id="profileMenuBox">
             {userObj.uid === profileObj.uid ? (
               <nav id="profileMenu">
-                <button id="profileMenuBtn">
+                <button id="profileMenuHover">
                   <FontAwesomeIcon icon={faEllipsisVertical} />
                 </button>
                 <ul>
                   <li>
                     <button
-                      className="profileEditBtn"
+                      className="profileEditBtn profileMenuBtn"
                       onClick={onEditing}
                       title="editing"
                     >
@@ -118,13 +121,13 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
                     </button>
                   </li>
                   <li>
-                    <button id="logOutBtn" onClick={onLogOut} title="logout">
+                    <button className="logOutBtn profileMenuBtn" onClick={onLogOut} title="logout">
                       로그아웃
                     </button>
                   </li>
                   <li>
                     <button
-                      id="accountWithdrawalBtn"
+                      className="accountWithdrawalBtn profileMenuBtn"
                       onClick={onAccountWithdrawal}
                     >
                       회원탈퇴

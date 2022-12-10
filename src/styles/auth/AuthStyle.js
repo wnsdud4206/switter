@@ -8,12 +8,36 @@ const AuthStyle = styled.div`
 
   height: 100vh;
 
-  svg#twiterLogo {
-    color: var(--icon-color);
-    height: 70px;
-    width: 70px;
+  header#authHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    margin-bottom: 16px;
+    width: 100%;
+    
+    svg#twiterLogo {
+      color: var(--icon-color);
+      height: 70px;
+      width: 70px;
+
+      margin-bottom: 16px;
+    }
+
+    span {
+    }
+
+    button {
+      justify-self: flex-end;
+      align-self: flex-end;
+    }
+  }
+
+  footer {
+    color: rgba(128, 128, 128, 0.8);
+    margin-top: 16px;
+
+    position: fixed;
+    bottom: 8px;
   }
 `;
 

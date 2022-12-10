@@ -97,7 +97,7 @@ const ContentBox = ({ userObj }) => {
     try {
       const commentObj = {
         text: commentText,
-        createdAt: Date.now(),
+        at: Date.now(),
         creatorId: userObj.uid,
         contentId: content.id,
       };
@@ -234,7 +234,7 @@ const ContentBox = ({ userObj }) => {
                 <li id="creatorText">{content.text}</li>
                 {comments?.length ? (
                   comments.map((comment) => (
-                    <li key={comment.createdAt}>
+                    <li key={comment.at}>
                       <div className="comment">
                         <Link
                           className="commentLink cancel"

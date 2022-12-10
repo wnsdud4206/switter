@@ -73,7 +73,7 @@ const UserProfileStyle = styled.div`
             }
           }
 
-          button#profileMenuBtn {
+          button#profileMenuHover {
             outline: none;
             border: none;
             background: none;
@@ -138,18 +138,34 @@ const UserProfileStyle = styled.div`
 
                   background-color: rgba(128, 128, 128, 0.2);
 
-                  &#accountWithdrawalBtn {
+                  &.accountWithdrawalBtn {
                     color: #ff6633;
                   }
                 }
+              }
 
-                &.profileEditBtn {
-                }
+              a.logOutBtn {
+                text-decoration: none;
+                display: block;
 
-                &#logOutBtn {
-                }
+                text-align: center;
+                
+                font-size: .9rem;
+                color: var(--sub-color);
 
-                &#accountWithdrawalBtn {
+                width: 100%;
+                padding: 8px 0;
+
+                opacity: 0.8;
+
+                transition: opacity 0.2s color 0.2s background-color 0.2s;
+
+                outline: 1px solid red;
+
+                &:hover {
+                  opacity: 1;
+
+                  background-color: rgba(128, 128, 128, 0.2);
                 }
               }
 

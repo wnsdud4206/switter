@@ -10,7 +10,7 @@ import ContentBox from "./content/ContentBox";
 const AppRouter = ({ userObj }) => {
   const editMode = useSelector((state) => state.editState.mode);
   const boxMode = useSelector((state) => state.boxState.mode);
-
+  
   return (
     <Router>
       {userObj && (

@@ -10,13 +10,9 @@ const NavStyle = styled.nav`
     padding: 0;
     margin: 0;
 
-    /* outline: 1px solid white; */
-
     li {
       display: flex;
       justify-content: center;
-
-      /* outline: 1px solid white; */
 
       & > button {
         /* 임시style */
@@ -25,10 +21,9 @@ const NavStyle = styled.nav`
         border: none;
         padding: 0;
 
-        color: white;
-        width: 25px;
-        height: 25px;
-        /* outline: 1px solid red; */
+        color: var(--icon-color);
+        width: 26px;
+        height: 26px;
 
         cursor: pointer;
       }
@@ -79,18 +74,21 @@ const NavStyle = styled.nav`
       &#profileLink {
         a#myProfile {
           display: flex;
-          flex-direction: column;
+          justify-content: flex-end;
           align-items: center;
 
-          span {
-            color: white;
-            font-size: 12px;
+          width: 26px;
+          height: 26px;
 
-            text-align: center;
+          background-color: white;
 
-            flex-wrap: nowrap;
+          border-radius: 50%;
 
-            margin-top: 4px;
+          overflow: hidden;
+
+          svg {
+            width: 20px;
+            height: 20px;
           }
         }
       }

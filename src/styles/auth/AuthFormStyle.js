@@ -31,14 +31,15 @@ const AuthFormStyle = styled.form`
       min-height: 36px;
       background: white;
       outline: none;
-      border: none;
+      
       border-radius: 18px;
+      border: 1px solid var(--border-color);
+      box-sizing: border-box;
 
       padding: 0 12px;
 
-      box-sizing: border-box;
-
       &[type="submit"] {
+        border: none;
         background: var(--icon-color);
         color: white;
 
@@ -61,7 +62,8 @@ const AuthFormStyle = styled.form`
         img,
         div {
           border-radius: 50%;
-          border: 3px solid #9953e2;
+          /* border: 3px solid #9953e2; */
+          border: 3px solid var(--icon-color);
 
           box-sizing: border-box;
 
@@ -110,7 +112,7 @@ const AuthFormStyle = styled.form`
           svg {
             width: 25px;
             height: 25px;
-            color: var(--personal-color);
+            color: var(--icon-color);
           }
         }
 
@@ -133,7 +135,7 @@ const AuthFormStyle = styled.form`
 `;
 
 const AuthFormSpanStyle = styled.span`
-  color: var(--personal-color);
+  color: var(--icon-color);
   text-decoration-line: underline;
 
   margin-top: 32px;
