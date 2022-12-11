@@ -58,7 +58,7 @@ const NotificationContainerStyle = styled.div`
       align-items: center;
       justify-content: space-between;
 
-      /* background: var(--background-color); */
+      background: var(--background-color);
 
       width: 100%;
 
@@ -81,7 +81,7 @@ const NotificationContainerStyle = styled.div`
         transition: background-color 0.2s;
 
         &:hover {
-          background-color: rgba(128, 128, 128, 0.2);
+          background-color: rgba(128, 128, 128, 0.1);
         }
 
         &.active {
