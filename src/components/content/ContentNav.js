@@ -55,17 +55,17 @@ const NavList = ({ name, text, contentType, onContentType }) => (
   </li>
 );
 
-const ContentNav = ({ contentType, onContentType }) => {
-  const navListArr = [
-    { name: "myContents", text: "게시글" },
-    { name: "myLikes", text: "좋아하는 글" },
-    { name: "myComments", text: "댓글 쓴 글" },
-  ];
+const ContentNav = ({ category, contentType, onContentType }) => {
+  // const navListArr = [
+  //   { name: "myContents", text: "게시글" },
+  //   { name: "myLikes", text: "좋아하는 글" },
+  //   { name: "myComments", text: "댓글 쓴 글" },
+  // ];
 
   return (
     <ContentNavStyle id="contentNav">
       <ul id="contentMenu">
-        {navListArr.map(({ name, text }) => (
+        {category.map(({ name, text }) => (
           <NavList
             key={name}
             name={name}

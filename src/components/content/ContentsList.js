@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { dbService, collection, where, query, onSnapshot } from "fbase";
+import { dbService, collection, where, query, onSnapshot, doc } from "fbase";
 import styled from "styled-components";
 import LoadingBox from "components/loading/LoadingBox";
 import Content from "./Content";
@@ -35,23 +35,33 @@ const ContentsList = ({ userObj }) => {
   const { name } = useParams();
   const [contents, setContents] = useState([]);
   const [myCommentsArr, setMyCommentsArr] = useState([]);
+  const [followUsers, setFollowUsers] = useState([]);
   const [contentType, setContentType] = useState(
-    pathname.includes("profile") ? "myContents" : "all",
+    pathname.includes("profile") ? "myContents" : "allContents",
   );
 
   useEffect(() => {
+    // follow한 user들은 users에서 불러와야 하는데 조건문으로 contentType이 followContents로 구분되게 해야할듯
+
     // 너무 많은 양을 가져오게 되는 문제
-    const commentQuery = query(
-      collection(dbService(), "comments"),
-      where("creatorId", "==", userObj.uid),
-    );
-    onSnapshot(commentQuery, (subSnapshot) => {
-      setMyCommentsArr([]);
-      subSnapshot.docs.forEach((doc) => {
-        const commentId = doc.id;
-        setMyCommentsArr((prev) => [...prev, commentId]);
+    if (pathname.includes("profile")) {
+      const commentQuery = query(
+        collection(dbService(), "comments"),
+        where("creatorId", "==", userObj.uid),
+      );
+      onSnapshot(commentQuery, (subSnapshot) => {
+        setMyCommentsArr([]);
+        subSnapshot.docs.forEach((doc) => {
+          const commentId = doc.id;
+          setMyCommentsArr((prev) => [...prev, commentId]);
+        });
       });
-    });
+    } else {
+      const userDoc = doc(dbService(), "users", userObj.uid);
+      onSnapshot(userDoc, (snapshot) => {
+        setFollowUsers([...(snapshot.data()?.follow || [])]);
+      });
+    }
 
     const contentsQuery = query(collection(dbService(), "contents"));
     onSnapshot(contentsQuery, (snapshot) => {
@@ -76,6 +86,8 @@ const ContentsList = ({ userObj }) => {
           } else if (contentType === "myLikes") {
             if (!doc.data()?.likes || !doc.data().likes.includes(userObj.uid))
               return;
+          } else if (contentType === "followContents") {
+            if (!followUsers.includes(doc.data().creatorId)) return;
           }
           contentArr = {
             ...doc.data(), // creatorId, at, text
@@ -93,8 +105,25 @@ const ContentsList = ({ userObj }) => {
 
   return (
     <ContentsListStyle>
-      {contentType !== "all" && (
-        <ContentNav contentType={contentType} onContentType={onContentType} />
+      {pathname.includes("profile") ? (
+        <ContentNav
+          category={[
+            { name: "myContents", text: "게시글" },
+            { name: "myLikes", text: "좋아하는 글" },
+            { name: "myComments", text: "댓글 쓴 글" },
+          ]}
+          contentType={contentType}
+          onContentType={onContentType}
+        />
+      ) : (
+        <ContentNav
+          category={[
+            { name: "allContents", text: "모든 게시글" },
+            { name: "followContents", text: "팔로우한 친구 글" },
+          ]}
+          contentType={contentType}
+          onContentType={onContentType}
+        />
       )}
 
       {contents.length ? (

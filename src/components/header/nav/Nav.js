@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +18,10 @@ const Nav = ({ userObj, activeNotice, toggleNotification }) => {
   const [newNotice, setNewNotice] = useState(false);
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   console.log();
+  // }, []);
+  
   const contentCreate = () =>
     dispatch(editActions.onEdit({ mode: true, content: null }));
 

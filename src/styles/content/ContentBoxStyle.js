@@ -37,7 +37,13 @@ const ContentBoxStyle = styled.div`
       }
 
       div#contentBoxImagesWrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         width: 100%;
+
+        background-color: var(--background-color);
 
         position: relative;
 
@@ -101,13 +107,14 @@ const ContentBoxStyle = styled.div`
             pointer-events: none;
           }
 
-          &:hover button {
-            opacity: 0.7;
-          }
           &:active {
             opacity: 1;
             background-color: rgba(0, 0, 0, 0.1);
           }
+        }
+
+        &:hover button {
+          opacity: 0.7;
         }
 
         div#noImage {
@@ -116,11 +123,6 @@ const ContentBoxStyle = styled.div`
           display: flex;
           justify-content: center;
           align-items: center;
-
-          width: 100%;
-
-          border-right: 1px solid var(--border-color);
-          background-color: var(--background-color);
 
           p {
           }
@@ -224,6 +226,24 @@ const ContentBoxStyle = styled.div`
         div#commentsWrap {
           flex: 1;
 
+          max-height: 340px;
+
+          overflow-y: auto;
+
+          &::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: var(--icon-color);
+            /* background-color: #444; */
+          }
+
+          &::-webkit-scrollbar-track {
+            background-color: transparent;
+          }
+
           ul#commentsList {
             list-style: none;
 
@@ -240,8 +260,10 @@ const ContentBoxStyle = styled.div`
 
               &#creatorText {
                 font-size: 1.1em;
-                padding-left: 8px;
+                /* padding-left: 8px; */
+                padding: 0 0 12px 8px;
                 margin-bottom: 12px;
+                border-bottom: 1px solid var(--border-color);
               }
 
               &#emptyComment {
@@ -301,6 +323,8 @@ const ContentBoxStyle = styled.div`
         }
 
         div#commentFactory {
+          background-color: var(--background-color);
+
           padding: 12px 8px;
           border-top: 1px solid var(--border-color);
 

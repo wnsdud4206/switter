@@ -21,7 +21,7 @@ const ContentEditor = ({ userObj }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
+    
     if (content) {
       const ok = window.confirm(
         "Are you sure you want to delete this content?",

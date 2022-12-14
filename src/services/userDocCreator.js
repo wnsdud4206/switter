@@ -13,9 +13,6 @@ const userDocCreator = async (data, pw = null) => {
     attachmentUrl,
     uid,
     password: pw,
-    follow: [],
-    follower: [],
-    introduce: ""
   };
   
   const newUser = doc(dbService(), "users", uid);
@@ -23,21 +20,8 @@ const userDocCreator = async (data, pw = null) => {
   await setDoc(
     newUser,
     newUserObj,
-    { capital: false },
-    { merge: false },
+    { merge: true },
   );
-
-  // google이나 github 의 프로파일 이미지를 가져와서 storage에 저장하는 건 안되는 듯
-  // const attachmentRef = ref(
-  //   storageService(),
-  //   `${authService().currentUser.uid}/profileImages/${uuidv4()}`,
-  // );
-  // // eslint-disable-next-line no-unused-vars
-  // const response = await uploadString(
-  //   attachmentRef,
-  //   authService().currentUser.photoURL,
-  //   "data_url",
-  // );
 };
 
 export default userDocCreator;

@@ -90,7 +90,6 @@ const Content = ({ content, userObj }) => {
           await deleteDoc(d);
         });
 
-
         const noticeQuery = query(collection(dbService(), "notifications"));
 
         const noticeDocs = await getDocs(noticeQuery);
@@ -109,12 +108,13 @@ const Content = ({ content, userObj }) => {
           }
         });
 
-
         await deleteDoc(contentDoc);
 
         if (contentObj.attachmentUrl) {
-          const r = ref(storageService(), contentObj.attachmentUrl);
-          await deleteObject(r);
+          contentObj.attachmentUrl.forEach(async (att) => {
+            const r = ref(storageService(), att);
+            await deleteObject(r);
+          });
         }
       } catch (error) {
         console.error(error);

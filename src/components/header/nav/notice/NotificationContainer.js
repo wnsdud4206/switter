@@ -79,9 +79,9 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
 
   useEffect(() => {
     setUlSize(ulRef.current.clientHeight);
-    allConfirm();
+    // allConfirm();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNotice, noticeType]);
 
   const onNoticeType = ({ target: { name } }) => {
@@ -110,6 +110,9 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
       }
     });
 
+    // 아니면 일일이 다 찾아서 false해주는 게 아니라 Notification.js에 onConfirm을 한번 씩 다 누르게 하면??
+
+    // unConfirmNotice을 반복문으로 돌려서?
     // if (noticeData.category === "commentLikes") {
     //   await setDoc(
     //     noticeDoc,
@@ -194,14 +197,14 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
               확인한 알림
             </button>
           </div>
-          <div id="noticeAction" className="notice">
+          {/* <div id="noticeAction" className="notice">
             <button id="allConfirm" className="notice">
               모두 확인
             </button>
-            {/* <button id="allDelete" className="notice">
+            <button id="allDelete" className="notice">
               모두 삭제
-            </button> */}
-          </div>
+            </button>
+          </div> */}
         </div>
 
         <div

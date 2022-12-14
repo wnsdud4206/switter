@@ -12,16 +12,15 @@ const useGetUser = () => {
 
         onSnapshot(userDoc, (snapshot) => {
           const { displayName, uid, photoURL, email } = user;
-          const { introduce, follower, follow } = snapshot.data();
 
           setUserObj({
             displayName,
             uid,
             photoURL,
             email,
-            introduce,
-            follower: follower || [],
-            follow: follow || [],
+            introduce: snapshot.data()?.introduce || "",
+            follower: snapshot.data()?.follower || [],
+            follow: snapshot.data()?.follow || [],
             updateProfile: (args) => user.updateProfile(args),
           });
         });

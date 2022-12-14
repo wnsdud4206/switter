@@ -148,40 +148,34 @@ const ContentBox = ({ userObj }) => {
       <div id="contentBackground" className="cancel" onClick={contentBoxCancel}>
         <div id="content">
           {/* left */}
-          <div id="contentBoxImagesWrap">
-            {content.attachmentUrl?.length ? (
-              <>
-                <div id="contentBoxImages">
-                  <div id="contentBoxImage">
-                    <img
-                      src={content.attachmentUrl[slideIndex]}
-                      alt="contentImage"
-                    />
-                  </div>
+          {content.attachmentUrl?.length > 0 && (
+            <div id="contentBoxImagesWrap">
+              <div id="contentBoxImages">
+                <div id="contentBoxImage">
+                  <img
+                    src={content.attachmentUrl[slideIndex]}
+                    alt="contentImage"
+                  />
                 </div>
-                {content.attachmentUrl.length > 1 && (
-                  <>
-                    <button
-                      className="prev"
-                      onClick={(e) => sliderBtn(e, content.attachmentUrl)}
-                    >
-                      <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <button
-                      className="next"
-                      onClick={(e) => sliderBtn(e, content.attachmentUrl)}
-                    >
-                      <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
-                  </>
-                )}
-              </>
-            ) : (
-              <div id="noImage">
-                <p>이미지가 없습니다😉</p>
               </div>
-            )}
-          </div>
+              {content.attachmentUrl.length > 1 && (
+                <>
+                  <button
+                    className="prev"
+                    onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                  >
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
+                  <button
+                    className="next"
+                    onClick={(e) => sliderBtn(e, content.attachmentUrl)}
+                  >
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </button>
+                </>
+              )}
+            </div>
+          )}
 
           <div id="CommentBox">
             <div id="contentBoxHeader">

@@ -27,7 +27,7 @@ let Initializing = {
 export const editReducer = createReducer(Initializing, {
   [onEdit.type]: (state, action) => {
     // A case reducer on a non-draftable value must not return undefined 에러는 아래처럼 return 해주지 않으면 나옴, state가 mutate하지 않았나?
-    return (state = { mode: true, content: action.payload?.content });
+    return (state = { mode: true, content: action.payload?.contentObj });
   },
   [newContent.type]: async (state, action) => {
     const { attachment, text, uid } = action.payload;

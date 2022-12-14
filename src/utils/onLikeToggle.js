@@ -19,6 +19,15 @@ const onLikeToggle = async (contentObj, currentUserLike, commentObj) => {
   await setDoc(
     noticeDoc,
     {
+      // [commentObj
+      //   ? contentObj.id + "/" + commentObj.id + "/" + uid
+      //   : contentObj.id + "/" + uid]: currentUserLike
+      //   ? deleteField()
+      //   : {
+      //       confirmed: false,
+      //       lastUpdate: Date.now(),
+      //       category: commentObj ? "commentLikes" : "contentLikes",
+      //     },
       [contentObj.id]: commentObj
         ? {
             commentLikes: {

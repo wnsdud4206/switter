@@ -12,6 +12,9 @@ import {
   where,
   onSnapshot,
   deleteUser,
+  ref,
+  storageService,
+  deleteObject,
 } from "fbase";
 import { Link, useNavigate } from "react-router-dom";
 import UserProfileStyle from "styles/home/UserProfileStyle";
@@ -20,6 +23,7 @@ import { faEllipsisVertical, faUser } from "@fortawesome/free-solid-svg-icons";
 import FollowToggleBtn from "components/FollowToggleBtn";
 
 const UserProfile = ({ userObj, profileObj, onEditing }) => {
+  // const [userProfile, setUserProfile] = useState({});
   const [contentCount, setContentCount] = useState(0);
   const [imgError, setImgError] = useState(false);
 
@@ -28,6 +32,11 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
   const onError = () => setImgError(true);
 
   useEffect(() => {
+    // const userDoc = doc(dbService(), "users", userObj.uid);
+    // onSnapshot(userDoc, (snapshot) => {
+
+    // })
+    
     const contentQuery = query(
       collection(dbService(), "contents"),
       where("creatorId", "==", profileObj.uid),
@@ -49,37 +58,56 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
   };
 
   const onAccountWithdrawal = async () => {
-    const ok = window.confirm("정말로 회원탈퇴를 하시겠습니까?");
-    // users, content, comment, follower, follow, notifications
-    if (ok) {
-      // useGetUser (15line) 을 다시 불러와버려서 에러가 뜨는데 로그아웃부터 해야하나?
-      // 일단 users Collection에서 지워는 것 확인
-      
-      const userDoc = doc(dbService(), "users", userObj.uid);
+    try {
+      const ok = window.confirm("정말로 회원탈퇴를 하시겠습니까?");
+      // users, content, comment, follower, follow, notifications
+      if (ok) {
+        // useGetUser (15line) 을 다시 불러와버려서 에러가 뜨는데 로그아웃부터 해야하나?
+        // 일단 users Collection에서 지워는 것 확인
 
-      const contentQuery = query(
-        collection(dbService(), "contents"),
-        where("creatorId", "==", userObj.uid),
-      );
-      const contentSnap = await getDocs(contentQuery);
+        // 로그인 페이지로 이동
+        navigate("/", { replace: true });
 
-      const commentQuery = query(
-        collection(dbService(), "comments"),
-        where("creatorId", "==", userObj.uid),
-      );
-      const commentSnap = await getDocs(commentQuery);
+        // user 프로필 이미지 삭제
+        if (userObj?.photoURL) {
+          const userRef = ref(storageService(), userObj.photoURL);
+          await deleteObject(userRef);
+        }
+        // 해당 유저의 content들의 이미지들은?
 
-      contentSnap.docs.forEach(async (content) => {
-        const contentDoc = doc(dbService(), "contents", content.id);
-        await deleteDoc(contentDoc);
-      });
-      commentSnap.docs.forEach(async (comment) => {
-        const commentDoc = doc(dbService(), "comments", comment.id);
-        await deleteDoc(commentDoc);
-      });
-      await deleteDoc(userDoc);
-      await deleteUser(authService().currentUser);
-      navigate("/", { replace: true });
+        const userDoc = doc(dbService(), "users", userObj.uid);
+
+        // 해당 유저의 content들 삭제
+        const contentQuery = query(
+          collection(dbService(), "contents"),
+          where("creatorId", "==", userObj.uid),
+        );
+        const contentSnap = await getDocs(contentQuery);
+
+        // 해당 유저의 comment들 삭제
+        const commentQuery = query(
+          collection(dbService(), "comments"),
+          where("creatorId", "==", userObj.uid),
+        );
+        const commentSnap = await getDocs(commentQuery);
+
+        // db 삭제
+        contentSnap.docs.forEach(async (content) => {
+          const contentDoc = doc(dbService(), "contents", content.id);
+          await deleteDoc(contentDoc);
+        });
+        commentSnap.docs.forEach(async (comment) => {
+          const commentDoc = doc(dbService(), "comments", comment.id);
+          await deleteDoc(commentDoc);
+        });
+        await deleteDoc(userDoc);
+        // auth 삭제
+        await deleteUser(authService().currentUser);
+        // 로그아웃이 필요할까?
+        signOut(authService());
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -121,7 +149,11 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
                     </button>
                   </li>
                   <li>
-                    <button className="logOutBtn profileMenuBtn" onClick={onLogOut} title="logout">
+                    <button
+                      className="logOutBtn profileMenuBtn"
+                      onClick={onLogOut}
+                      title="logout"
+                    >
                       로그아웃
                     </button>
                   </li>

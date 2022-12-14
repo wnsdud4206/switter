@@ -89,11 +89,11 @@ const AuthForm = () => {
           displayName: form.displayName,
           photoURL: attachmentUrl,
         });
+
+        userDocCreator(data, form.password);
       } else {
         data = await signInEmail(auth, form.email, form.password);
       }
-
-      userDocCreator(data, form.password);
     } catch (error) {
       console.dir(error);
       setError(error.message); // ?
@@ -179,7 +179,7 @@ const AuthForm = () => {
         </div>
         {error && <span id="errorText">{error}</span>}
       </AuthFormStyle>
-      
+
       <AuthFormSpanStyle onClick={toggleAccount}>
         {newAccount ? "Sign In" : "Create Account"}
       </AuthFormSpanStyle>

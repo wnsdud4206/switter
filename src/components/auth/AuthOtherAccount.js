@@ -33,7 +33,7 @@ const AuthOtherAccount = () => {
           displayName: authService().currentUser.uid.slice(0, 11),
         });
       }
-
+      
       userDocCreator(data);
     } catch (e) {
       setError(e.code);
