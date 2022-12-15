@@ -5,7 +5,6 @@ import {
   dbService,
   doc,
   getDocs,
-  setDoc,
   deleteDoc,
   query,
   collection,
@@ -16,7 +15,7 @@ import {
   storageService,
   deleteObject,
 } from "fbase";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserProfileStyle from "styles/home/UserProfileStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -32,11 +31,9 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
   const onError = () => setImgError(true);
 
   useEffect(() => {
-    // const userDoc = doc(dbService(), "users", userObj.uid);
-    // onSnapshot(userDoc, (snapshot) => {
+    console.log(userObj);
+    console.log(profileObj);
 
-    // })
-    
     const contentQuery = query(
       collection(dbService(), "contents"),
       where("creatorId", "==", profileObj.uid),
@@ -83,6 +80,16 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
           where("creatorId", "==", userObj.uid),
         );
         const contentSnap = await getDocs(contentQuery);
+        contentSnap.docs.forEach(async (content) => {
+          const contentDoc = doc(dbService(), "contents", content.id);
+          await deleteDoc(contentDoc);
+        });
+        // onSnapshot(contentQuery, (contentSnap) => {
+        //   contentSnap.docs.forEach(async (content) => {
+        //     const contentDoc = doc(dbService(), "contents", content.id);
+        //     await deleteDoc(contentDoc);
+        //   });
+        // });
 
         // 해당 유저의 comment들 삭제
         const commentQuery = query(
@@ -90,16 +97,17 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
           where("creatorId", "==", userObj.uid),
         );
         const commentSnap = await getDocs(commentQuery);
-
-        // db 삭제
-        contentSnap.docs.forEach(async (content) => {
-          const contentDoc = doc(dbService(), "contents", content.id);
-          await deleteDoc(contentDoc);
-        });
         commentSnap.docs.forEach(async (comment) => {
           const commentDoc = doc(dbService(), "comments", comment.id);
           await deleteDoc(commentDoc);
         });
+        // onSnapshot(commentQuery, (commentSnap) => {
+        //   commentSnap.docs.forEach(async (comment) => {
+        //     const commentDoc = doc(dbService(), "comments", comment.id);
+        //     await deleteDoc(commentDoc);
+        //   });
+        // });
+
         await deleteDoc(userDoc);
         // auth 삭제
         await deleteUser(authService().currentUser);

@@ -23,35 +23,36 @@ const useGetContents = () => {
             doc(dbService(), "users", content.data().creatorId),
           );
 
-          const dbComment = await getDocs(
-            query(
-              collection(dbService(), "comments"),
-              where("contentId", "==", content.id),
-            ),
-          );
+          // const dbComment = await getDocs(
+          //   query(
+          //     collection(dbService(), "comments"),
+          //     where("contentId", "==", content.id),
+          //   ),
+          // );
+          onSnapshot(dbUser, async (dbComment) => {
+            const creatorDisplayName = dbUser.data().displayName;
+            const creatorAttachmentUrl = dbUser.data().attachmentUrl;
+            const firstComment = dbComment.docs[0]?.data().text;
+            let firstCommentName;
 
-          const creatorDisplayName = dbUser.data().displayName;
-          const creatorAttachmentUrl = dbUser.data().attachmentUrl;
-          const firstComment = dbComment.docs[0]?.data().text;
-          let firstCommentName;
+            if (dbComment.docs[0]?.data().creatorId) {
+              const dbCommentUser = await getDoc(
+                doc(dbService(), "users", dbComment.docs[0]?.data().creatorId),
+              );
+              firstCommentName = dbCommentUser.data().displayName;
+            }
 
-          if (dbComment.docs[0]?.data().creatorId) {
-            const dbCommentUser = await getDoc(
-              doc(dbService(), "users", dbComment.docs[0]?.data().creatorId),
-            );
-            firstCommentName = dbCommentUser.data().displayName;
-          }
+            const contentObj = {
+              ...content.data(),
+              creatorDisplayName,
+              creatorAttachmentUrl,
+              firstComment,
+              firstCommentName,
+              id: content.id,
+            };
 
-          const contentObj = {
-            ...content.data(),
-            creatorDisplayName,
-            creatorAttachmentUrl,
-            firstComment,
-            firstCommentName,
-            id: content.id,
-          };
-
-          setContents((prev) => [contentObj, ...prev]);
+            setContents((prev) => [contentObj, ...prev]);
+          });
         });
       });
     } catch (error) {

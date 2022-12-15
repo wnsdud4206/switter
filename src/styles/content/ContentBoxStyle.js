@@ -24,7 +24,7 @@ const ContentBoxStyle = styled.div`
       flex-direction: row;
 
       // 임시, mobile에서는 다르게
-      width: 87vw;
+      max-width: 87vw;
       height: 460px;
 
       border: 1px solid var(--border-color);

@@ -28,7 +28,6 @@ function App() {
           name="image"
           content="https://firebasestorage.googleapis.com/v0/b/switter-53663.appspot.com/o/Switter_logo%2FTwitter-logo-png-1.png?alt=media&token=b5c3198c-177f-4374-a80c-f12f5de6aa01"
         />
-
         <meta property="og:type" content="website" />
         <meta
           property="og:url"

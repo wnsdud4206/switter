@@ -76,6 +76,8 @@ const NotificationContainerStyle = styled.div`
 
         color: var(--sub-color); // 임시
 
+        border-radius: 4px;
+
         cursor: pointer;
 
         transition: background-color 0.2s;

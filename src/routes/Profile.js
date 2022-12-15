@@ -1,6 +1,6 @@
 import ContentsList from "components/content/ContentsList";
 import LoadingBox from "components/loading/LoadingBox";
-import SideMenu from "components/sideMenu/SideMenu";
+import SideBar from "components/sideBar/SideBar";
 import UserProfile from "components/profile/UserProfile";
 import UserProfileEditor from "components/profile/UserProfileEditor";
 import { dbService, query, collection, where, onSnapshot } from "fbase";
@@ -60,7 +60,7 @@ const Profile = ({ userObj }) => {
             )}
             <div id="bottomBox">
               <ContentsList userObj={profileObj} />
-              <SideMenu userObj={userObj} />
+              <SideBar userObj={userObj} />
             </div>
           </>
         ) : (

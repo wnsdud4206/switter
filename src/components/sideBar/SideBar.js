@@ -1,25 +1,25 @@
 import FollowToggleBtn from "components/FollowToggleBtn";
-import HeaderUserProfile from "components/HeaderUserProfile";
+import User from "components/User";
 import LoadingBox from "components/loading/LoadingBox";
 import { dbService, query, collection, where, onSnapshot } from "fbase";
 import { useEffect, useState } from "react";
-import SideMenuStyle from "styles/SideMenuStyle";
+import SideBarStyle from "styles/sideBar/SideBarStyle";
 
-const SideMenu = ({ userObj }) => {
-  const [followUsers, setFollowUsers] = useState([]);
+const SideBar = ({ userObj }) => {
+  const [userArr, setUserArr] = useState([]);
+  const [userType, setUserType] = useState(true);
   const [randomUsers, setRandomUsers] = useState([]);
 
   useEffect(() => {
-    // getFollowUsers
-    const followUserQuery = query(
+    const userQuery = query(
       collection(dbService(), "users"),
-      where("follower", "array-contains-any", [userObj.uid]),
+      where(userType ? "follower" : "follow", "array-contains-any", [userObj.uid]),
     );
 
-    onSnapshot(followUserQuery, (users) => {
-      setFollowUsers([]);
+    onSnapshot(userQuery, (users) => {
+      setUserArr([]);
       users.docs.forEach((user) => {
-        setFollowUsers((prev) => [...prev, user.data()]);
+        setUserArr((prev) => [...prev, user.data()]);
       });
     });
 
@@ -47,35 +47,38 @@ const SideMenu = ({ userObj }) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userObj.follow]);
+  }, [userObj.follow, userType]);
+
+  const toggleUserType = () => {
+    setUserType((prev) => !prev);
+  };
 
   return (
-    <SideMenuStyle>
+    <SideBarStyle>
       {/* 내 프로파일은 없어도 되려나 */}
-      <div id="sideMenuHeader">
-        <HeaderUserProfile
-          name={userObj.displayName}
-          image={userObj.photoURL}
-        />
+      <div id="sideBarHeader">
+        <User name={userObj.displayName} image={userObj.photoURL} />
       </div>
       <ul id="followList">
-        <h4>팔로우 중인 친구</h4>
-        {followUsers?.length ? (
-          followUsers.map((user) => (
+        <div id="listHeader">
+          <h4>{userType ? "팔로우" : "팔로워"} 목록</h4>
+          <button id="userTypeToggleBtn" onClick={toggleUserType}>
+            {userType ? "팔로워" : "팔로우"} 목록 보기
+          </button>
+        </div>
+        {userArr?.length ? (
+          userArr.map((user) => (
+            // component화 시켜서 여기랑 팔로워, 팔로우 목록에서도 사용하기
             <li key={user.uid} className="followUser">
-              <HeaderUserProfile
+              <User
                 name={user.displayName}
                 image={user.attachmentUrl}
-              />
-
-              <FollowToggleBtn
-                id="sideFollowBtn"
                 userObj={userObj}
                 profileObj={user}
               />
             </li>
           ))
-        ) : followUsers.length === 0 ? (
+        ) : userArr.length === 0 ? (
           <li id="emptyFollowList">아직 팔로우 중인 친구가 없어요!😪</li>
         ) : (
           <LoadingBox text="친구불러오는중..." />
@@ -86,13 +89,9 @@ const SideMenu = ({ userObj }) => {
         {randomUsers ? (
           randomUsers.map((user) => (
             <li key={user.uid} className="randomUser">
-              <HeaderUserProfile
+              <User
                 name={user.displayName}
                 image={user.attachmentUrl}
-              />
-
-              <FollowToggleBtn
-                id="sideFollowBtn"
                 userObj={userObj}
                 profileObj={user}
               />
@@ -105,8 +104,8 @@ const SideMenu = ({ userObj }) => {
       <footer>
         Copyright &copy; {new Date().getFullYear()} By SongJunYoung
       </footer>
-    </SideMenuStyle>
+    </SideBarStyle>
   );
 };
 
-export default SideMenu;
+export default SideBar;

@@ -26,6 +26,7 @@ import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
 import { Link } from "react-router-dom";
 import ContentBoxStyle from "styles/content/ContentBoxStyle";
+import User from "components/User";
 
 const ContentBox = ({ userObj }) => {
   const [imgError, setImgError] = useState(false);

@@ -1,6 +1,6 @@
 import React from "react";
 import ContentsList from "components/content/ContentsList";
-import SideMenu from "components/sideMenu/SideMenu";
+import SideBar from "components/sideBar/SideBar";
 import styled from "styled-components";
 
 const HomeContainerStyle = styled.div`
@@ -17,7 +17,7 @@ const Home = ({ userObj }) => (
   <>
     <HomeContainerStyle>
       <ContentsList userObj={userObj} />
-      <SideMenu userObj={userObj} />
+      <SideBar userObj={userObj} />
     </HomeContainerStyle>
   </>
 );

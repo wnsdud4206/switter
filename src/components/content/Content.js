@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { boxActions } from "reducers/contentBoxReducer";
 import { editActions } from "reducers/contentEditReducer";
 import ContentStyle from "styles/content/ContentStyle";
-import HeaderUserProfile from "components/HeaderUserProfile";
+import User from "components/User";
 
 const Content = ({ content, userObj }) => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -127,7 +127,7 @@ const Content = ({ content, userObj }) => {
   return (
     <ContentStyle className="content">
       <div className="contentHeader">
-        <HeaderUserProfile
+        <User
           name={contentObj.creatorDisplayName}
           image={contentObj.creatorAttachmentUrl}
         />

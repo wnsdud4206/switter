@@ -52,7 +52,7 @@ const userStyle = css`
   }
 `;
 
-const SideMenuStyle = styled.div`
+const SideBarStyle = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -93,8 +93,6 @@ const SideMenuStyle = styled.div`
       color: var(--sub-color);
 
       font-size: 0.9rem;
-
-      margin: 0 0 8px 0;
     }
 
     li {
@@ -114,6 +112,37 @@ const SideMenuStyle = styled.div`
     }
 
     &#followList {
+      div#listHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin: 0 0 4px 0;
+
+        h4 {
+          margin: 0;
+        }
+
+        button#userTypeToggleBtn {
+          outline: none;
+          border: none;
+          padding: 4px;
+
+          background-color: rgba(128, 128, 128, 0.2);
+          color: var(--sub-color);
+
+          border-radius: 4px;
+
+          transition: background-color .2s;
+          
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgba(128, 128, 128, 0.3);
+          }
+        }
+      }
+
       li.followUser {
         a.followUserLink {
           div.followUserAttachment {
@@ -129,6 +158,9 @@ const SideMenuStyle = styled.div`
       }
     }
     &#randomList {
+      h4 {
+        margin: 0 0 8px 0;
+      }
       li.randomUser {
         a.randomUserLink {
           div.randomUserAttachment {
@@ -154,4 +186,4 @@ const SideMenuStyle = styled.div`
   }
 `;
 
-export default SideMenuStyle;
+export default SideBarStyle;

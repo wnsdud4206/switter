@@ -1,10 +1,11 @@
-import { dbService, doc, onSnapshot } from "fbase";
+import { dbService, doc, onSnapshot, setDoc, getDoc } from "fbase";
 import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/header/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
 
 const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
-  const [noticeArr, setNoticeArr] = useState([]);
+  const [confirmNotice, setConfirmNotice] = useState([]);
+  const [unConfirmNotice, setUnConfirmNotice] = useState([]);
   // all, new, confirm
   const [noticeType, setNoticeType] = useState("all");
   const [ulSize, setUlSize] = useState(0);
@@ -16,7 +17,8 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
     // contents.comments, contents.likes, comments.likes, users.follower
     const noticeDoc = doc(dbService(), "notifications", userObj.uid);
     onSnapshot(noticeDoc, (snapshot) => {
-      setNoticeArr([]);
+      setConfirmNotice([]);
+      setUnConfirmNotice([]);
       let data = snapshot.data();
       let confirmAll = [];
       let unConfirmAll = [];
@@ -68,18 +70,95 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
         return 0;
       });
 
-      // console.log(conResult);
-      // console.log(unConResult);
-
-      setNoticeArr([...unConResult, ...conResult]);
+      setConfirmNotice([...conResult]);
+      setUnConfirmNotice([...unConResult]);
     });
 
-    setUlSize(ulRef.current.clientHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeNotice]);
+  }, []);
+
+  useEffect(() => {
+    setUlSize(ulRef.current.clientHeight);
+    // allConfirm();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNotice, noticeType]);
 
   const onNoticeType = ({ target: { name } }) => {
     setNoticeType(name);
+  };
+
+  const allConfirm = async () => {
+    // follower notice는 따로둬야하나..
+    const noticeDoc = doc(dbService(), "notifications", userObj.uid);
+    const noticeSnap = await getDoc(noticeDoc);
+    Object.entries(noticeSnap.data()).forEach(([noticeKey, noticeValue]) => {
+      if (noticeKey === "follower") {
+        Object.keys(noticeValue).forEach((followerKey) => {
+          console.log(`${noticeKey} > ${followerKey} > confirmed`);
+        });
+      } else {
+        // noticeKey
+        Object.entries(noticeValue).forEach(([categoryKey, categoryValue]) => {
+          // console.log(categoryKey, categoryValue);
+          Object.keys(categoryValue).forEach((lastKey) => {
+            console.log(
+              `${noticeKey} > ${categoryKey} > ${lastKey} > confirmed`,
+            );
+          });
+        });
+      }
+    });
+
+    // 아니면 일일이 다 찾아서 false해주는 게 아니라 Notification.js에 onConfirm을 한번 씩 다 누르게 하면??
+
+    // unConfirmNotice을 반복문으로 돌려서?
+    // if (noticeData.category === "commentLikes") {
+    //   await setDoc(
+    //     noticeDoc,
+    //     {
+    //       [contentId]: {
+    //         [noticeData.category]: {
+    //           [secondId]: {
+    //             [noticeKey]: {
+    //               confirmed: true,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     { merge: true },
+    //   );
+    // } else if (
+    //   noticeData.category === "contentLikes" ||
+    //   noticeData.category === "contentComments"
+    // ) {
+    //   await setDoc(
+    //     noticeDoc,
+    //     {
+    //       [secondId]: {
+    //         [noticeData.category]: {
+    //           [noticeKey]: {
+    //             confirmed: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //     { merge: true },
+    //   );
+    // } else if (noticeData.category === "follower") {
+    //   await setDoc(
+    //     noticeDoc,
+    //     {
+    //       follower: {
+    //         [userId]: {
+    //           confirmed: true,
+    //         },
+    //       },
+    //     },
+    //     { merge: true },
+    //   );
+    // }
   };
 
   return (
@@ -118,14 +197,14 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
               확인한 알림
             </button>
           </div>
-          <div id="noticeAction" className="notice">
+          {/* <div id="noticeAction" className="notice">
             <button id="allConfirm" className="notice">
               모두 확인
             </button>
             <button id="allDelete" className="notice">
               모두 삭제
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div
@@ -133,50 +212,45 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
           className={`notice ${activeNotice ? "dropdown" : "dropup"}`}
         >
           <ul id="notificationList" className="notice" ref={ulRef}>
-            {noticeArr.length ? (
-              noticeArr.map((notice) => {
-                if (noticeType === "all") {
-                  return (
-                    <Notification
-                      key={notice[0]}
-                      noticeObj={notice}
-                      activeNotice={activeNotice}
-                    />
-                  );
-                } else if (noticeType === "new") {
-                  if (!notice[1].confirmed) {
-                    return (
-                      <Notification
-                        key={notice[0]}
-                        noticeObj={notice}
-                        activeNotice={activeNotice}
-                      />
-                    );
-                  }
-                } else if (noticeType === "confirm") {
-                  if (notice[1].confirmed) {
-                    return (
-                      <Notification
-                        key={notice[0]}
-                        noticeObj={notice}
-                        activeNotice={activeNotice}
-                      />
-                    );
-                  }
-                }
-              })
+            {(noticeType === "all" &&
+              !(unConfirmNotice.concat(confirmNotice)?.length > 0)) ||
+              (noticeType === "new" && !(unConfirmNotice?.length > 0)) ||
+              (noticeType === "confirm" && !(confirmNotice?.length > 0) ? (
+                <p id="noNotice" className="notice">
+                  아직 알림이 없어요😪
+                </p>
+              ) : (
+                (noticeType === "all"
+                  ? unConfirmNotice.concat(confirmNotice)
+                  : noticeType === "new"
+                  ? unConfirmNotice
+                  : confirmNotice
+                ).map((notice) => (
+                  <Notification
+                    key={notice[0]}
+                    noticeObj={notice}
+                    activeNotice={activeNotice}
+                  />
+                ))
+              ))}
+            {/* {unConfirmNotice.length + confirmNotice.length ? (
+              (noticeType === "all"
+                ? unConfirmNotice.concat(confirmNotice)
+                : noticeType === "new"
+                ? unConfirmNotice
+                : confirmNotice
+              ).map((notice) => (
+                <Notification
+                  key={notice[0]}
+                  noticeObj={notice}
+                  activeNotice={activeNotice}
+                />
+              ))
             ) : (
-              // noticeArr.map((notice) => (
-              //   <Notification
-              //     key={notice[0]}
-              //     noticeObj={notice}
-              //     activeNotice={activeNotice}
-              //   />
-              // ))
               <p id="noNotice" className="notice">
                 아직 알림이 없어요😪
               </p>
-            )}
+            )} */}
           </ul>
         </div>
       </div>
