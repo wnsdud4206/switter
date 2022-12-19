@@ -8,8 +8,13 @@ const userStyle = css`
   border-radius: 4px;
   padding: 4px;
   box-sizing: border-box;
-
+  
   transition: background-color 0.2s;
+
+  // 임시
+  @media (max-width: 850px) {
+    display: none;
+  }
 
   &:hover {
     background-color: rgba(128, 128, 128, 0.3);

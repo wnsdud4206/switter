@@ -464,6 +464,48 @@ const ContentBoxStyle = styled.div`
       }
     }
   }
+
+  @media (max-width: 850px) {
+    div#contentBackground {
+      div#content {
+        flex-direction: column;
+        justify-content: space-between;
+
+        min-width: 95vw;
+        height: auto;
+
+        div#contentBoxImagesWrap {
+          div#contentBoxImages {
+            div#contentBoxImage {
+              img {
+                height: 200px;
+              }
+            }
+          }
+        }
+
+        div#CommentBox {
+          min-width: 100%;
+          height: 330px;
+
+          div#commentsWrap {
+            ul#commentsList {
+              li {
+                div.comment {
+                  flex-direction: column;
+                  align-items: flex-start;
+
+                  span.commentUserText {
+                    margin-left: 8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 
 export default ContentBoxStyle;
