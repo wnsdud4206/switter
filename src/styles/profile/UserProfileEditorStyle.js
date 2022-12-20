@@ -237,21 +237,6 @@ const UserProfileEditorStyle = styled.form`
       }
     }
   }
-
-  @media (max-width: 850px) {
-    padding: 16px 0;
-
-    div#profileEditWrap {
-      flex-direction: column;
-      gap: 16px;
-
-      width: 100%;
-
-      div#textProfile {
-        gap: 16px;
-      }
-    }
-  }
 `;
 
 export default UserProfileEditorStyle;

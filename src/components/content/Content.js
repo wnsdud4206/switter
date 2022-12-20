@@ -34,16 +34,6 @@ const Content = ({ content, userObj }) => {
   const dispatch = useDispatch();
   const imageSizeRef = useRef();
 
-  const contentRef = useRef();
-
-  // redux로 아래 observer 조건에 따라 더 불러오는 로직을 짜야할 듯?
-  // useEffect(() => {
-  //   let observer = new IntersectionObserver((e) => {
-  //     console.log(e[0]);
-  //   });
-  //   observer.observe(contentRef.current);
-  // }, []);
-
   const getCreator = async () => {
     const d = doc(dbService(), "users", `${content.creatorId}`);
     const docSnap = await getDoc(d);
@@ -135,7 +125,7 @@ const Content = ({ content, userObj }) => {
   const onContentBox = () => dispatch(boxActions.onContentBox(contentObj));
 
   return (
-    <ContentStyle className="content" ref={contentRef}>
+    <ContentStyle className="content">
       <div className="contentHeader">
         <User
           name={contentObj.creatorDisplayName}

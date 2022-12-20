@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 const ContentNavStyle = styled.nav`
-  /* width: 470px; */
-  width: 100%;
+  width: 470px;
 
   border: 1px solid var(--border-color);
   border-radius: 8px;

@@ -29,7 +29,6 @@ import {
   arrayUnion,
   arrayRemove,
   deleteField,
-  limit,
 } from "firebase/firestore";
 import {
   getStorage,
@@ -86,7 +85,6 @@ export {
   arrayUnion,
   arrayRemove,
   deleteField,
-  limit,
 };
 
 // Storage
