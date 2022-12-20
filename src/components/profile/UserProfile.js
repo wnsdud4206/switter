@@ -31,9 +31,6 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
   const onError = () => setImgError(true);
 
   useEffect(() => {
-    console.log(userObj);
-    console.log(profileObj);
-
     const contentQuery = query(
       collection(dbService(), "contents"),
       where("creatorId", "==", profileObj.uid),

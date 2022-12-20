@@ -96,6 +96,8 @@ const UserProfileStyle = styled.div`
             flex-direction: column;
             gap: 0;
 
+            background-color: var(--background-color);
+
             width: 120px;
 
             list-style: none;
@@ -149,8 +151,8 @@ const UserProfileStyle = styled.div`
                 display: block;
 
                 text-align: center;
-                
-                font-size: .9rem;
+
+                font-size: 0.9rem;
                 color: var(--sub-color);
 
                 width: 100%;
@@ -193,6 +195,26 @@ const UserProfileStyle = styled.div`
     }
 
     p {
+    }
+  }
+
+  @media (max-width: 850px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    padding: 16px 0;
+
+    div#textProfile
+      > div#textProfileHeader
+      > div#profileMenuBox
+      > nav#profileMenu
+      > ul {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 0;
+
+      top: 32px;
+      transform: translateX(-100%);
     }
   }
 `;

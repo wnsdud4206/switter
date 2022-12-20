@@ -4,6 +4,9 @@ const ContentEditorStyle = styled.div`
   background-color: rgba(0, 0, 0, 0.2);
   width: 100%;
 
+  padding: 0 6px;
+  box-sizing: border-box;
+  
   position: fixed;
   top: 0;
   left: 0;
