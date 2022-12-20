@@ -7,7 +7,7 @@ const NotificationContainerStyle = styled.div`
   align-items: flex-start;
   justify-content: center;
 
-  width: 470px;
+  min-width: 470px;
 
   // 모바일은 center
   position: absolute;
@@ -47,7 +47,7 @@ const NotificationContainerStyle = styled.div`
     border: 2px solid #444;
     box-sizing: border-box;
 
-    max-height: 65vh;
+    max-height: 60vh;
 
     position: relative;
 
@@ -169,11 +169,6 @@ const NotificationContainerStyle = styled.div`
     &::-webkit-scrollbar-track {
       background-color: transparent;
     }
-  }
-
-  
-  @media (max-width: 850px) {
-    width: 300px;
   }
 `;
 

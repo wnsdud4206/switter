@@ -41,7 +41,7 @@ const UserStyle = styled(Link)`
   }
 `;
 
-const User = ({ name, image, userObj, profileObj }) => {
+const User = ({ name, image, userObj, profileObj, onClick }) => {
   const [imgError, setImgError] = useState(false);
 
   const onError = () => setImgError(true);
@@ -51,6 +51,7 @@ const User = ({ name, image, userObj, profileObj }) => {
       <UserStyle
         className="UserLink"
         to={`/profile/${name}`}
+        onClick
       >
         <div className="UserAttachment">
           {image && !imgError ? (
