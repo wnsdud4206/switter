@@ -142,7 +142,6 @@ const Content = ({ content, userObj }) => {
           image={contentObj.creatorAttachmentUrl}
         />
 
-        {/* {contentObj.creatorId === authService().currentUser.uid && ( */}
         {contentObj.creatorId === userObj.uid && (
           <div className="contentMenuBox">
             <nav className="contentMenu">
@@ -178,7 +177,6 @@ const Content = ({ content, userObj }) => {
         <div className="contentImagesWrap">
           <div
             className="contentImages"
-            // style={{ transform: `translateX(${slideIndex * -468}px)` }}
             style={{ transform: `translateX(${slideIndex * -imageSize}px)` }}
             ref={imageSizeRef}
           >
@@ -186,7 +184,6 @@ const Content = ({ content, userObj }) => {
               <div key={contentObj.id + i} className="contentImage">
                 <img
                   src={url}
-                  // width="468px"
                   width={`${imageSize}px`}
                   height="100%"
                   alt="contentImage"

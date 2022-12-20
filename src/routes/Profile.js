@@ -23,6 +23,10 @@ const ProfileStyle = styled.div`
 
     border-top: 1px solid var(--border-color);
   }
+  
+  @media (max-width: 850px) {
+    width: 100%;
+  }
 `;
 
 const Profile = ({ userObj }) => {

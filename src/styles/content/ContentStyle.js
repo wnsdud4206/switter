@@ -5,7 +5,7 @@ const ContentStyle = styled.div`
   width: 470px;
 
   @media (max-width: 500px) {
-    width: 96vw;
+    width: 100%;
   }
 
   border: 1px solid var(--border-color);

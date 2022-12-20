@@ -33,7 +33,8 @@ const NotificationContainerStyle = styled.div`
 
     position: absolute;
     top: -10px;
-    right: 52px;
+    /* right: 52px; */  // pc
+    right: 34px;        // mobile
 
     transform: translateX(-50%);
   }
@@ -62,7 +63,7 @@ const NotificationContainerStyle = styled.div`
 
       width: 100%;
 
-      padding: 4px 8px;
+      padding: 8px;
       border-bottom: 2px solid var(--border-color);
       box-sizing: border-box;
 
@@ -173,7 +174,7 @@ const NotificationContainerStyle = styled.div`
 
   
   @media (max-width: 850px) {
-    width: 300px;
+    width: 94vw;
   }
 `;
 

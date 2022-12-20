@@ -21,8 +21,7 @@ const ContentsListStyle = styled.div`
   align-items: flex-start;
   gap: 16px;
 
-  /* width: 470px; */
-  max-width: 470px;
+  width: 470px;
   padding: 32px 32px 32px 0;
 
   div#emptyContent {
@@ -31,10 +30,11 @@ const ContentsListStyle = styled.div`
 
     width: 100%;
 
-    padding: 32px 0;
+    padding: 32px 0;   
   }
 
   @media (max-width: 850px) {
+    width: 96vw;
     padding: 32px 0;
   }
 `;
@@ -118,7 +118,7 @@ const ContentsList = ({ userObj }) => {
   const handelScroll = useCallback(() => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-    if ((scrollTop / (scrollHeight - clientHeight)) * 100 >= 100)
+    if ((scrollTop / (scrollHeight - clientHeight)) * 100 >= 99)
       setScrollLimitCount((prev) => prev + 10);
   }, []);
 
@@ -165,6 +165,7 @@ const ContentsList = ({ userObj }) => {
       ) : (
         <LoadingBox text={"Loading"} />
       )}
+      {/* <div id="emptyContent">아직 글이 없어요!😪</div> */}
     </ContentsListStyle>
   );
 };

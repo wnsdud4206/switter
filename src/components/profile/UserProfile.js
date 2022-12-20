@@ -16,7 +16,7 @@ import {
   deleteObject,
 } from "fbase";
 import { useNavigate } from "react-router-dom";
-import UserProfileStyle from "styles/home/UserProfileStyle";
+import UserProfileStyle from "styles/profile/UserProfileStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faUser } from "@fortawesome/free-solid-svg-icons";
 import FollowToggleBtn from "components/FollowToggleBtn";

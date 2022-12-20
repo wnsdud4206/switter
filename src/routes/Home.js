@@ -11,15 +11,30 @@ const HomeContainerStyle = styled.div`
   max-width: 792px;
 
   margin-top: 61px;
+
+  div#testBox {
+    /* */
+    width: 100px;
+    max-width: 120px;
+    /* */
+
+    height: 100px;
+    outline: 1px solid powderblue;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    z-index: 100000;
+  }
 `;
 
 const Home = ({ userObj }) => (
-  <>
-    <HomeContainerStyle>
-      <ContentsList userObj={userObj} />
-      <SideBar userObj={userObj} />
-    </HomeContainerStyle>
-  </>
+  <HomeContainerStyle>
+    <div id="testBox">dddddddddddd</div>
+    <ContentsList userObj={userObj} />
+    <SideBar userObj={userObj} />
+  </HomeContainerStyle>
 );
 
 export default React.memo(Home);
