@@ -1,5 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { dbService, collection, where, query, onSnapshot, doc } from "fbase";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  dbService,
+  collection,
+  where,
+  query,
+  onSnapshot,
+  doc,
+  limit,
+  orderBy,
+} from "fbase";
 import styled from "styled-components";
 import LoadingBox from "components/loading/LoadingBox";
 import Content from "./Content";
@@ -39,6 +48,7 @@ const ContentsList = ({ userObj }) => {
   const [contentType, setContentType] = useState(
     pathname.includes("profile") ? "myContents" : "allContents",
   );
+  const [scrollLimitCount, setScrollLimitCount] = useState(10);
 
   useEffect(() => {
     // follow한 user들은 users에서 불러와야 하는데 조건문으로 contentType이 followContents로 구분되게 해야할듯
@@ -63,7 +73,11 @@ const ContentsList = ({ userObj }) => {
       });
     }
 
-    const contentsQuery = query(collection(dbService(), "contents"));
+    const contentsQuery = query(
+      collection(dbService(), "contents"),
+      orderBy("at", "desc"),
+      limit(scrollLimitCount),
+    );
     onSnapshot(contentsQuery, (snapshot) => {
       setContents([]);
       snapshot.docs.forEach((doc) => {
@@ -99,32 +113,42 @@ const ContentsList = ({ userObj }) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contentType, userObj.uid, name]);
+  }, [contentType, userObj.uid, name, scrollLimitCount]);
+
+  const handelScroll = useCallback(() => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if ((scrollTop / (scrollHeight - clientHeight)) * 100 >= 100)
+      setScrollLimitCount((prev) => prev + 10);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handelScroll, true);
+    return () => window.addEventListener("scroll", handelScroll, true);
+  }, [handelScroll]);
 
   const onContentType = ({ target: { name } }) => setContentType(name);
 
   return (
     <ContentsListStyle>
-      {pathname.includes("profile") ? (
+      {
         <ContentNav
-          category={[
-            { name: "myContents", text: "게시글" },
-            { name: "myLikes", text: "좋아하는 글" },
-            { name: "myComments", text: "댓글 쓴 글" },
-          ]}
+          category={
+            pathname.includes("profile")
+              ? [
+                  { name: "myContents", text: "게시글" },
+                  { name: "myLikes", text: "좋아하는 글" },
+                  { name: "myComments", text: "댓글 쓴 글" },
+                ]
+              : [
+                  { name: "allContents", text: "모든 게시글" },
+                  { name: "followContents", text: "팔로우한 친구 글" },
+                ]
+          }
           contentType={contentType}
           onContentType={onContentType}
         />
-      ) : (
-        <ContentNav
-          category={[
-            { name: "allContents", text: "모든 게시글" },
-            { name: "followContents", text: "팔로우한 친구 글" },
-          ]}
-          contentType={contentType}
-          onContentType={onContentType}
-        />
-      )}
+      }
 
       {contents.length ? (
         contents
