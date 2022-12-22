@@ -4,13 +4,13 @@ const ContentStyle = styled.div`
   /* width: 100%; */
   width: 470px;
 
-  @media (max-width: 500px) {
-    width: 100%;
-  }
-
   border: 1px solid var(--border-color);
   border-radius: 8px;
   box-sizing: border-box;
+
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 
   div.contentHeader {
     display: flex;

@@ -466,6 +466,7 @@ const ContentBoxStyle = styled.div`
   }
 
   @media (max-width: 850px) {
+    /* X버튼? */
     div#contentBackground {
       div#content {
         flex-direction: column;
@@ -478,7 +479,8 @@ const ContentBoxStyle = styled.div`
           div#contentBoxImages {
             div#contentBoxImage {
               img {
-                height: 200px;
+                /* height: 200px; */
+                height: 30vh;
               }
             }
           }
@@ -486,7 +488,8 @@ const ContentBoxStyle = styled.div`
 
         div#CommentBox {
           min-width: 100%;
-          height: 330px;
+          /* height: 330px; */
+          height: 52vh;
 
           div#commentsWrap {
             ul#commentsList {
@@ -495,9 +498,21 @@ const ContentBoxStyle = styled.div`
                   flex-direction: column;
                   align-items: flex-start;
 
-                  span.commentUserText {
-                    margin-left: 8px;
+                  a.commentLink {
+                    div.commentUserImage {
+                      width: 32px;
+                      height: 32px;
+                    }
+
+                    svg {
+                      font-size: 24px;
+                    }
                   }
+                  span.commentUserName {
+                  }
+                }
+                span.commentUserText {
+                  margin-left: 8px;
                 }
               }
             }

@@ -26,7 +26,6 @@ import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
 import { Link } from "react-router-dom";
 import ContentBoxStyle from "styles/content/ContentBoxStyle";
-import User from "components/User";
 
 const ContentBox = ({ userObj }) => {
   const [imgError, setImgError] = useState(false);
@@ -240,8 +239,8 @@ const ContentBox = ({ userObj }) => {
                             {comment.attachmentUrl && !imgError ? (
                               <img
                                 src={comment.attachmentUrl}
-                                width="40"
-                                height="40"
+                                width="32"
+                                height="32"
                                 alt="commentImage"
                                 onError={onError}
                               />
@@ -250,7 +249,7 @@ const ContentBox = ({ userObj }) => {
                             )}
                           </div>
                           <span className="commentUserName">
-                            <b>{comment.displayName}</b>
+                            {comment.displayName}
                           </span>
                         </Link>
                         <span className="commentUserText">

@@ -18,10 +18,6 @@ const Nav = ({ userObj, activeNotice, toggleNotification }) => {
   const [newNotice, setNewNotice] = useState(false);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   console.log();
-  // }, []);
-  
   const contentCreate = () =>
     dispatch(editActions.onEdit({ mode: true, content: null }));
 
@@ -38,9 +34,6 @@ const Nav = ({ userObj, activeNotice, toggleNotification }) => {
           </button>
         </li>
         <li id="darkMode" title="darkMode">
-          {/* <button onClick={onDarkModeToggle}>
-            <FontAwesomeIcon icon={faCircleHalfStroke} />
-          </button> */}
           <DarkModeButton />
         </li>
         <li

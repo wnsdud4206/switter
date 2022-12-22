@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   dbService,
   collection,
@@ -30,7 +30,7 @@ const ContentsListStyle = styled.div`
 
     width: 100%;
 
-    padding: 32px 0;   
+    padding: 32px 0;
   }
 
   @media (max-width: 850px) {
@@ -80,14 +80,15 @@ const ContentsList = ({ userObj }) => {
     );
     onSnapshot(contentsQuery, (snapshot) => {
       setContents([]);
+      let contentArr = [];
       snapshot.docs.forEach((doc) => {
-        let contentArr = {};
+        let contentObj = {};
         if (contentType === "myComments") {
           if (myCommentsArr.length === 0) return;
           if (!doc.data()?.comments || !doc.data().comments?.length > 0) return;
           for (let comment of doc.data().comments) {
             if (myCommentsArr.length !== 0 && myCommentsArr.includes(comment)) {
-              contentArr = {
+              contentObj = {
                 ...doc.data(),
                 id: doc.id,
               };
@@ -103,29 +104,36 @@ const ContentsList = ({ userObj }) => {
           } else if (contentType === "followContents") {
             if (!followUsers.includes(doc.data().creatorId)) return;
           }
-          contentArr = {
+          contentObj = {
             ...doc.data(), // creatorId, at, text
             id: doc.id,
           };
         }
-        setContents((prev) => [contentArr, ...prev]);
+        contentArr = [contentObj, ...contentArr];
       });
+      setContents(contentArr);
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentType, userObj.uid, name, scrollLimitCount]);
 
-  const handelScroll = useCallback(() => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-    if ((scrollTop / (scrollHeight - clientHeight)) * 100 >= 99)
-      setScrollLimitCount((prev) => prev + 10);
-  }, []);
-
   useEffect(() => {
-    window.addEventListener("scroll", handelScroll, true);
-    return () => window.addEventListener("scroll", handelScroll, true);
-  }, [handelScroll]);
+    window.addEventListener(
+      "scroll",
+      () => {
+        const { scrollTop, scrollHeight } = document.documentElement;
+        const { innerHeight } = window;
+
+        if ((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100) {
+          console.log((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100);
+          const contentCount = document.querySelectorAll(".content").length;
+
+          setScrollLimitCount(contentCount + 10);
+        }
+      },
+      true,
+    );
+  }, []);
 
   const onContentType = ({ target: { name } }) => setContentType(name);
 

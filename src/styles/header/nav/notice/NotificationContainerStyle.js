@@ -33,8 +33,7 @@ const NotificationContainerStyle = styled.div`
 
     position: absolute;
     top: -10px;
-    /* right: 52px; */  // pc
-    right: 34px;        // mobile
+    right: 53px;
 
     transform: translateX(-50%);
   }
@@ -172,9 +171,12 @@ const NotificationContainerStyle = styled.div`
     }
   }
 
-  
   @media (max-width: 850px) {
     width: 94vw;
+
+    &:before {
+      right: 33px; // mobile
+    }
   }
 `;
 
