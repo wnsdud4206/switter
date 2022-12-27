@@ -43,6 +43,8 @@ const ScrollTopButtonStyle = styled.button`
 
     width: 24px;
     height: 24px;
+
+    margin-top: 2px;
   }
 `;
 

@@ -6,7 +6,7 @@ const ContentEditorStyle = styled.div`
 
   padding: 0 6px;
   box-sizing: border-box;
-  
+
   position: fixed;
   top: 0;
   left: 0;
@@ -32,6 +32,28 @@ const ContentEditorStyle = styled.div`
       padding: 16px 0;
       border-radius: 8px;
       border: 1px solid var(--border-color);
+
+      position: relative;
+
+      button#contentEditorCloseButton {
+        background: none;
+        border: none;
+        padding: 0;
+        outline: none;
+
+        position: absolute;
+        top: -26px;
+        right: 0;
+
+        cursor: pointer;
+
+        svg {
+          font-size: 26px;
+          color: rgba(128, 128, 128, 0.8);
+
+          pointer-events: none;
+        }
+      }
 
       form {
         display: flex;
@@ -95,7 +117,7 @@ const ContentEditorStyle = styled.div`
             position: relative;
 
             img {
-              vertical-align: middle
+              vertical-align: middle;
             }
 
             button {

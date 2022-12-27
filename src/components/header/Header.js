@@ -6,9 +6,12 @@ import HeaderStyle from "styles/header/HeaderStyle";
 import ScrollProgress from "./ScrollProgress";
 import ScrollTopButton from "components/ScrollTopButton";
 import Nav from "./nav/Nav";
+import { sideBarActions } from "reducers/SideBarReducer";
+import { useDispatch } from "react-redux";
 
 const Header = ({ userObj }) => {
   const [activeNotice, setActiveNotice] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleNotification = () => setActiveNotice(activeNotice ? false : true);
 
@@ -21,11 +24,13 @@ const Header = ({ userObj }) => {
       : window.removeEventListener("click", noticeEnable);
   }, [activeNotice]);
 
+  const closeSideBar = () => dispatch(sideBarActions.toggleSideBar(false));
+
   return (
     <>
       <HeaderStyle>
         <div id="homeLink" title="home">
-          <Link to="/">
+          <Link to="/" onClick={closeSideBar}>
             <FontAwesomeIcon id="twitterIcon" icon={faTwitter} />
           </Link>
         </div>

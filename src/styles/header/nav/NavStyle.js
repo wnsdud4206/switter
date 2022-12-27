@@ -5,7 +5,7 @@ const NavStyle = styled.nav`
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 22px;
+    gap: 16px;
 
     padding: 0;
     margin: 0;
@@ -16,7 +16,7 @@ const NavStyle = styled.nav`
 
       & > button {
         /* 임시style */
-        outline: none;
+        /* outline: none;
         background: none;
         border: none;
         padding: 0;
@@ -25,7 +25,7 @@ const NavStyle = styled.nav`
         width: 26px;
         height: 26px;
 
-        cursor: pointer;
+        cursor: pointer; */
       }
 
       &:first-child {
@@ -38,35 +38,45 @@ const NavStyle = styled.nav`
       &.darkMode {
       }
 
+      &#sideBarToggle {
+        /* display: none;
+
+        @media (max-width: 850px) {
+          display: block;
+        } */
+      }
+
       &#notification {
         position: relative;
-        
+
         cursor: pointer;
 
-        svg {
-          /* color: #00acee; */
-          /* color: var(--personal-color); */
-          /* font-size: 50px; */
+        button {
+          svg {
+            /* color: #00acee; */
+            /* color: var(--personal-color); */
+            /* font-size: 50px; */
 
-          pointer-events: none;
-        }
+            /* pointer-events: none; */
+          }
 
-        div#noticeOnIcon {
-          display: none;
+          div#noticeOnIcon {
+            display: none;
 
-          background-color: #ff6633;
+            background-color: #ff6633;
 
-          width: 8px;
-          height: 8px;
+            width: 8px;
+            height: 8px;
 
-          border-radius: 50%;
+            border-radius: 50%;
 
-          position: absolute;
-          top: -5px;
-          right: -5px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
 
-          &.enable {
-            display: block;
+            &.enable {
+              display: block;
+            }
           }
         }
       }
@@ -77,18 +87,23 @@ const NavStyle = styled.nav`
           justify-content: flex-end;
           align-items: center;
 
-          width: 26px;
-          height: 26px;
-
-          background-color: white;
+          width: 36px;
+          height: 36px;
 
           border-radius: 50%;
 
           overflow: hidden;
 
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: rgba(128, 128, 128, 0.3);
+          }
+
           svg {
-            width: 20px;
-            height: 20px;
+            font-size: 26px;
+
+            pointer-events: none;
           }
         }
       }

@@ -21,7 +21,7 @@ const ContentEditor = ({ userObj }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    
+
     if (content) {
       const ok = window.confirm(
         "Are you sure you want to delete this content?",
@@ -80,9 +80,11 @@ const ContentEditor = ({ userObj }) => {
     setAttachment(newAttachment);
   };
 
-  const onEditCancel = (e) =>
-    e.target.id === "contentEditBackground" &&
-    dispatch(editActions.offEdit({ mode: false, content: null }));
+  const onEditCancel = (e) => {
+    e.stopPropagation();
+    e.target.className.includes("cancel") &&
+      dispatch(editActions.offEdit({ mode: false, content: null }));
+  };
 
   useEffect(() => {
     if (content) {
@@ -140,8 +142,15 @@ const ContentEditor = ({ userObj }) => {
 
   return (
     <ContentEditorStyle>
-      <div id="contentEditBackground" onClick={onEditCancel}>
+      <div id="contentEditBackground" className="cancel" onClick={onEditCancel}>
         <div id="createBox">
+          <button
+            id="contentEditorCloseButton"
+            className="cancel"
+            onClick={onEditCancel}
+          >
+            <FontAwesomeIcon icon={faXmark} title="contentEditorClose" />
+          </button>
           <form onSubmit={onSubmit}>
             <label
               htmlFor="fileBtn"

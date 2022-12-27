@@ -67,13 +67,13 @@ const UserProfileStyle = styled.div`
 
           position: relative;
 
-          &:hover {
+          /* &:hover {
             ul {
               display: flex;
             }
-          }
+          } */
 
-          button#profileMenuHover {
+          /* button#profileMenuBtn {
             outline: none;
             border: none;
             background: none;
@@ -88,10 +88,10 @@ const UserProfileStyle = styled.div`
               color: var(--icon-color);
               font-size: 24px;
             }
-          }
+          } */
 
           ul {
-            display: none;
+            display: flex;
             align-items: center;
             flex-direction: column;
             gap: 0;

@@ -20,6 +20,7 @@ const ProfileStyle = styled.div`
 
   div#bottomBox {
     display: flex;
+    align-items: flex-start;
 
     border-top: 1px solid var(--border-color);
   }
@@ -46,7 +47,7 @@ const Profile = ({ userObj }) => {
     });
   }, [name, editing]);
 
-  const onEditing = () => setEditing(!editing);
+  const onEditing = () => setEditing(prev => !prev);
 
   return (
     <>

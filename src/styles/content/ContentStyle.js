@@ -17,7 +17,7 @@ const ContentStyle = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    padding: 8px 0 8px 8px;
+    padding: 8px;
 
     div.contentMenuBox {
       display: flex;
@@ -29,13 +29,13 @@ const ContentStyle = styled.div`
 
         position: relative;
 
-        &:hover {
+        /* &:hover {
           ul {
             display: flex;
           }
-        }
+        } */
 
-        button.contentMenuHover {
+        /* button.contentMenuBtn {
           outline: none;
           border: none;
           background: none;
@@ -50,10 +50,10 @@ const ContentStyle = styled.div`
             color: var(--icon-color);
             font-size: 24px;
           }
-        }
+        } */
 
         ul {
-          display: none;
+          display: flex;
           align-items: center;
           flex-direction: column;
           gap: 0;

@@ -27,10 +27,34 @@ const ContentBoxStyle = styled.div`
       max-width: 87vw;
       height: 460px;
 
+      background-color: var(--background-color);
+
       border: 1px solid var(--border-color);
       border-radius: 8px;
 
-      overflow: hidden;
+      /* overflow: hidden; */
+
+      position: relative;
+
+      button#contentBoxCloseButton {
+        background: none;
+        border: none;
+        padding: 0;
+        outline: none;
+
+        position: absolute;
+        top: -26px;
+        right: 0;
+
+        cursor: pointer;
+
+        svg {
+          font-size: 26px;
+          color: rgba(128, 128, 128, 0.8);
+
+          pointer-events: none;
+        }
+      }
 
       & > div {
         height: 100%;
@@ -43,8 +67,6 @@ const ContentBoxStyle = styled.div`
 
         width: 100%;
 
-        background-color: var(--background-color);
-
         position: relative;
 
         border-right: 1px solid var(--border-color);
@@ -54,8 +76,6 @@ const ContentBoxStyle = styled.div`
             display: flex;
             justify-content: center;
             align-items: center;
-
-            background-color: var(--background-color);
 
             img {
               width: 100%;
@@ -132,8 +152,6 @@ const ContentBoxStyle = styled.div`
       div#CommentBox {
         display: flex;
         flex-direction: column;
-
-        background-color: var(--background-color);
 
         min-width: 405px;
 
@@ -323,8 +341,6 @@ const ContentBoxStyle = styled.div`
         }
 
         div#commentFactory {
-          background-color: var(--background-color);
-
           padding: 12px 8px;
           border-top: 1px solid var(--border-color);
 

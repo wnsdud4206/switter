@@ -26,11 +26,13 @@ import { boxActions } from "reducers/contentBoxReducer";
 import { editActions } from "reducers/contentEditReducer";
 import ContentStyle from "styles/content/ContentStyle";
 import User from "components/User";
+import IconButtonStyle from "styles/IconButtonStyle";
 
 const Content = ({ content, userObj }) => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [contentObj, setContentObj] = useState(content);
   const [imageSize, setImageSize] = useState(0);
+  const [contentMenuToggle, setContentMenuToggle] = useState(false);
   const dispatch = useDispatch();
   const imageSizeRef = useRef();
 
@@ -64,8 +66,12 @@ const Content = ({ content, userObj }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onEditing = () =>
+  const onContentMenuToggle = () => setContentMenuToggle((prev) => !prev);
+
+  const onEditing = () => {
+    setContentMenuToggle(false);
     dispatch(editActions.onEdit({ mode: true, contentObj }));
+  };
 
   const sliderBtn = (e, urlArr) => {
     if (e.target.className === "prev")
@@ -80,6 +86,8 @@ const Content = ({ content, userObj }) => {
   };
 
   const onDeleteClick = async () => {
+    setContentMenuToggle(false);
+
     const ok = window.confirm("Are you sure you want to delete this content?");
     if (ok) {
       try {
@@ -145,29 +153,29 @@ const Content = ({ content, userObj }) => {
         {contentObj.creatorId === userObj.uid && (
           <div className="contentMenuBox">
             <nav className="contentMenu">
-              <button className="contentMenuHover">
+              <IconButtonStyle
+                className="contentMenuBtn"
+                onClick={onContentMenuToggle}
+              >
                 <FontAwesomeIcon icon={faEllipsisVertical} />
-              </button>
-              <ul>
-                <li>
-                  <button
-                    className="contentEditBtn"
-                    onClick={onEditing}
-                    title="editing"
-                  >
-                    글 수정
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="contentDeleteBtn"
-                    onClick={onDeleteClick}
-                    title="deleting"
-                  >
-                    글 삭제
-                  </button>
-                </li>
-              </ul>
+              </IconButtonStyle>
+              {contentMenuToggle && (
+                <ul>
+                  <li>
+                    <button className="contentEditBtn" onClick={onEditing}>
+                      글 수정
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="contentDeleteBtn"
+                      onClick={onDeleteClick}
+                    >
+                      글 삭제
+                    </button>
+                  </li>
+                </ul>
+              )}
             </nav>
           </div>
         )}

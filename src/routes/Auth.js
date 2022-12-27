@@ -11,7 +11,7 @@ const Auth = () => (
     <header id="authHeader">
       <DarkModeButton />
       <FontAwesomeIcon id="twiterLogo" icon={faTwitter} />
-      <span>SWITTER(임시)</span>
+      <span>SWITTER</span>
     </header>
     <AuthForm />
     <AuthOtherAccount />

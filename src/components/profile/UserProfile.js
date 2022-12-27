@@ -20,11 +20,13 @@ import UserProfileStyle from "styles/profile/UserProfileStyle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faUser } from "@fortawesome/free-solid-svg-icons";
 import FollowToggleBtn from "components/FollowToggleBtn";
+import IconButtonStyle from "styles/IconButtonStyle";
 
 const UserProfile = ({ userObj, profileObj, onEditing }) => {
   // const [userProfile, setUserProfile] = useState({});
   const [contentCount, setContentCount] = useState(0);
   const [imgError, setImgError] = useState(false);
+  const [profileMenuToggle, setProfileMenuToggle] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,6 +44,8 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onProfileMenuToggle = () => setProfileMenuToggle((prev) => !prev);
 
   const onLogOut = () => {
     const ok = window.confirm("로그아웃 하시겠습니까?");
@@ -140,37 +144,42 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
           <div id="profileMenuBox">
             {userObj.uid === profileObj.uid ? (
               <nav id="profileMenu">
-                <button id="profileMenuHover">
+                <IconButtonStyle id="profileMenuBtn" onClick={onProfileMenuToggle}>
                   <FontAwesomeIcon icon={faEllipsisVertical} />
-                </button>
-                <ul>
-                  <li>
-                    <button
-                      className="profileEditBtn profileMenuBtn"
-                      onClick={onEditing}
-                      title="editing"
-                    >
-                      프로필 수정
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="logOutBtn profileMenuBtn"
-                      onClick={onLogOut}
-                      title="logout"
-                    >
-                      로그아웃
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      className="accountWithdrawalBtn profileMenuBtn"
-                      onClick={onAccountWithdrawal}
-                    >
-                      회원탈퇴
-                    </button>
-                  </li>
-                </ul>
+                </IconButtonStyle>
+                {profileMenuToggle && (
+                  <ul>
+                    <li>
+                      <button
+                        className="profileEditBtn profileMenuBtn"
+                        onClick={() => {
+                          onEditing();
+                          setProfileMenuToggle(false);
+                        }}
+                        title="editing"
+                      >
+                        프로필 수정
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="logOutBtn profileMenuBtn"
+                        onClick={onLogOut}
+                        title="logout"
+                      >
+                        로그아웃
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="accountWithdrawalBtn profileMenuBtn"
+                        onClick={onAccountWithdrawal}
+                      >
+                        회원탈퇴
+                      </button>
+                    </li>
+                  </ul>
+                )}
               </nav>
             ) : (
               <FollowToggleBtn userObj={userObj} profileObj={profileObj} />

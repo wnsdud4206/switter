@@ -34,6 +34,8 @@ const ContentsListStyle = styled.div`
   }
 
   @media (max-width: 850px) {
+    align-items: center;
+
     width: 96vw;
     padding: 32px 0;
   }
@@ -125,7 +127,7 @@ const ContentsList = ({ userObj }) => {
         const { innerHeight } = window;
 
         if ((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100) {
-          console.log((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100);
+          // console.log((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100);
           const contentCount = document.querySelectorAll(".content").length;
 
           setScrollLimitCount(contentCount + 10);

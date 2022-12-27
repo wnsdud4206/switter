@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
             --icon-color: #00acee;
             --sub-color: black;
             --background-color: white;
-            --border-color: rgb(212, 212, 212);
+            --border-color: rgb(198, 198, 198);
           }
         `}
 
@@ -66,7 +66,7 @@ const GlobalStyle = createGlobalStyle`
 
       position: relative;
 
-      overflow-x: hidden;
+      /* overflow-x: hidden; */
 
       transition: background-color .2s;
       

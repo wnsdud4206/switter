@@ -3,6 +3,7 @@ import {
   faChevronRight,
   faUser,
   faHeart as like,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -147,6 +148,10 @@ const ContentBox = ({ userObj }) => {
     <ContentBoxStyle>
       <div id="contentBackground" className="cancel" onClick={contentBoxCancel}>
         <div id="content">
+          <button id="contentBoxCloseButton" className="cancel" onClick={contentBoxCancel}>
+            <FontAwesomeIcon icon={faXmark} title="contentBoxClose" />
+          </button>
+
           {/* left */}
           {content.attachmentUrl?.length > 0 && (
             <div id="contentBoxImagesWrap">
@@ -239,8 +244,8 @@ const ContentBox = ({ userObj }) => {
                             {comment.attachmentUrl && !imgError ? (
                               <img
                                 src={comment.attachmentUrl}
-                                width="32"
-                                height="32"
+                                // width="32"
+                                // height="32"
                                 alt="commentImage"
                                 onError={onError}
                               />

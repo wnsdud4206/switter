@@ -6,6 +6,7 @@ import styled from "styled-components";
 const HomeContainerStyle = styled.div`
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 
   /* width: 792px; */
   max-width: 792px;
