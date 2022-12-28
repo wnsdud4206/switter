@@ -61,7 +61,7 @@ const NotificationStyle = styled.li`
     }
   }
 
-  button.contentBoxBtn {
+  button.noticeTextBtn {
     outline: none;
     background: none;
     border: none;

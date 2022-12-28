@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NotificationStyle from "styles/header/nav/notice/NotificationStyle";
+import IconButtonStyle from "styles/IconButtonStyle";
 
 const Notification = ({ noticeObj, activeNotice }) => {
   const [noticeKey, noticeData] = noticeObj;
@@ -214,7 +215,7 @@ const Notification = ({ noticeObj, activeNotice }) => {
           </span>
         </Link>
       ) : (
-        <button className="contentBoxBtn" onClick={onContentBox}>
+        <button className="noticeTextBtn" onClick={onContentBox}>
           <span className="notice">
             "{contentText}"{" "}
             {noticeData.category === "commentLikes" ? "댓글" : "게시글"}
@@ -228,9 +229,9 @@ const Notification = ({ noticeObj, activeNotice }) => {
           </span>
         </button>
       )}
-      <button className="notice confirm" onClick={onConfirm}>
+      <IconButtonStyle className="notice confirm" onClick={onConfirm}>
         <FontAwesomeIcon icon={faCheck} />
-      </button>
+      </IconButtonStyle>
     </NotificationStyle>
   );
 };

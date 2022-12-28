@@ -1,4 +1,5 @@
-import { dbService, doc, onSnapshot, setDoc, getDoc } from "fbase";
+import React from "react";
+import { dbService, doc, onSnapshot, getDoc } from "fbase";
 import { useEffect, useRef, useState } from "react";
 import NotificationContainerStyle from "styles/header/nav/notice/NotificationContainerStyle";
 import Notification from "./Notification";
@@ -6,15 +7,11 @@ import Notification from "./Notification";
 const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
   const [confirmNotice, setConfirmNotice] = useState([]);
   const [unConfirmNotice, setUnConfirmNotice] = useState([]);
-  // all, new, confirm
   const [noticeType, setNoticeType] = useState("all");
   const [ulSize, setUlSize] = useState(0);
   const ulRef = useRef();
 
   useEffect(() => {
-    // content, comments, users
-    // contents, contents.likes, comments, comments.likes, users.follow, users.follower
-    // contents.comments, contents.likes, comments.likes, users.follower
     const noticeDoc = doc(dbService(), "notifications", userObj.uid);
     onSnapshot(noticeDoc, (snapshot) => {
       setConfirmNotice([]);
@@ -258,4 +255,4 @@ const NotificationContainer = ({ userObj, activeNotice, onNewNotice }) => {
   );
 };
 
-export default NotificationContainer;
+export default React.memo(NotificationContainer);

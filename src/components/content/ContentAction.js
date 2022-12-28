@@ -7,16 +7,18 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import useGetLike from "hooks/useGetLike";
 import onLikeToggle from "utils/onLikeToggle";
+import IconButtonStyle from "styles/IconButtonStyle";
 
 const ContentActionStyle = styled.div`
   display: flex;
   justify-content: space-between;
 
-  padding: 8px;
+  padding: 2px;
 
   div {
     display: flex;
     justify-content: center;
+    align-items: center;
 
     button {
       background: none;
@@ -31,6 +33,12 @@ const ContentActionStyle = styled.div`
       }
     }
 
+    & > span {
+      margin: 0 2px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
     &.likeWrap {
       button.likeBtn {
         svg.userLike {
@@ -42,12 +50,25 @@ const ContentActionStyle = styled.div`
       }
 
       span.likeCounter {
-        margin: 0 8px;
-        font-size: 1.2rem;
       }
+
+      /* @media (min-width: 851px) {
+        span.likeCounter {
+          opacity: .2;
+
+          transition: opacity 0.2s;
+        }
+
+        button.likeBtn:hover + span.likeCounter {
+          opacity: 1;
+        }
+      } */
     }
 
     &.commentWrap {
+      span.commentCounter {
+      }
+
       button.commentBtn {
         svg {
           color: var(--sub-color);
@@ -63,7 +84,8 @@ const ContentAction = ({ contentObj, onContentBox }) => {
   return (
     <ContentActionStyle className="contentActions">
       <div className="likeWrap">
-        <button
+        {/* <IconButtonStyle */}
+        <IconButtonStyle
           className="likeBtn"
           onClick={() => onLikeToggle(contentObj, currentUserLike)}
         >
@@ -72,16 +94,21 @@ const ContentAction = ({ contentObj, onContentBox }) => {
           ) : (
             <FontAwesomeIcon className="userNotLike" icon={faRegHeart} />
           )}
-        </button>
-        <span className="likeCounter">{likeCount.length}</span>
+        </IconButtonStyle>
+        {likeCount.length > 0 && (
+          <span className="likeCounter">{likeCount.length}</span>
+        )}
       </div>
 
       <div className="commentWrap">
-        <button className="commentBtn" onClick={onContentBox}>
+        {contentObj.comments?.length > 0 && (
+          <span className="commentCounter">{contentObj.comments.length}</span>
+        )}
+        <IconButtonStyle className="commentBtn" onClick={onContentBox}>
           <FontAwesomeIcon className="commentHidden" icon={faRegCommnet} />
-        </button>
+        </IconButtonStyle>
       </div>
-      {/* 공유버튼 추가, 해당 content가 열려있는 url주소 복사 */}
+      {/* 공유버튼 추가?? */}
     </ContentActionStyle>
   );
 };

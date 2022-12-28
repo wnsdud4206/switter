@@ -39,11 +39,11 @@ const NavStyle = styled.nav`
       }
 
       &#sideBarToggle {
-        /* display: none;
+        display: none;
 
         @media (max-width: 850px) {
           display: block;
-        } */
+        }
       }
 
       &#notification {

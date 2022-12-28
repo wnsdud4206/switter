@@ -180,4 +180,4 @@ const ContentsList = ({ userObj }) => {
   );
 };
 
-export default ContentsList;
+export default React.memo(ContentsList);
