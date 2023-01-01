@@ -43,7 +43,7 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
       setContentCount(count);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [profileObj]);
 
   const onProfileMenuToggle = () => setProfileMenuToggle((prev) => !prev);
 
@@ -144,7 +144,10 @@ const UserProfile = ({ userObj, profileObj, onEditing }) => {
           <div id="profileMenuBox">
             {userObj.uid === profileObj.uid ? (
               <nav id="profileMenu">
-                <IconButtonStyle id="profileMenuBtn" onClick={onProfileMenuToggle}>
+                <IconButtonStyle
+                  id="profileMenuBtn"
+                  onClick={onProfileMenuToggle}
+                >
                   <FontAwesomeIcon icon={faEllipsisVertical} />
                 </IconButtonStyle>
                 {profileMenuToggle && (

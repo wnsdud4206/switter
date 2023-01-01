@@ -21,43 +21,56 @@ const FollowToggleBtnStyle = styled.button`
   border: none;
   background: none;
   padding: 0;
+
   display: flex;
   align-items: center;
-  width: 32px;
-  height: 32px;
+  
   color: var(--sub-color);
+
+  width: 38px;
+  height: 38px;
+
   cursor: pointer;
+
   svg {
     font-size: 22px;
     margin-left: 5px;
+
     &.followIcon {
       display: block;
       color: var(--icon-color);
     }
+
     &.unFollowIconHover {
       display: none;
       color: #ff6633;
     }
+
     &.unFollowIcon {
       display: block;
       color: var(--sub-color);
     }
+
     &.followIconHover {
       display: none;
       color: var(--icon-color);
     }
   }
+
   &:hover {
     svg {
       &.followIcon {
         display: none;
       }
+
       &.unFollowIconHover {
         display: block;
       }
+
       &.unFollowIcon {
         display: none;
       }
+      
       &.followIconHover {
         display: block;
       }

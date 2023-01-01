@@ -21,6 +21,8 @@ const userStyle = css`
 
     text-decoration: none;
 
+    width: 100%;
+
     div {
       display: flex;
       align-items: flex-end;
@@ -74,7 +76,7 @@ const SideBarStyle = styled.div`
 
     transition: background-color 0.2s;
 
-    div#sideMenuHeader {
+    div#sideBarHeader {
       ${userStyle}
 
       a.currentUserLink {

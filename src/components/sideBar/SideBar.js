@@ -58,9 +58,10 @@ const SideBar = ({ userObj }) => {
     setUserType((prev) => !prev);
   };
 
-  const backgroundCloseSideBar = ({ target }) =>
-    target.className.includes("show") &&
-    dispatch(sideBarActions.toggleSideBar(false));
+  const backgroundCloseSideBar = ({ target }) => {
+    target.id.includes("sideBarContainer") &&
+      dispatch(sideBarActions.toggleSideBar(false));
+  };
 
   const closeSideBar = () => dispatch(sideBarActions.toggleSideBar(false));
 

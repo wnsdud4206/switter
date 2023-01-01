@@ -5,7 +5,7 @@ const NavStyle = styled.nav`
     list-style: none;
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 6px;
 
     padding: 0;
     margin: 0;

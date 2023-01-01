@@ -6,6 +6,8 @@ import {
   query,
   onSnapshot,
   doc,
+  getDoc,
+  getDocs,
   limit,
   orderBy,
 } from "fbase";
@@ -52,69 +54,90 @@ const ContentsList = ({ userObj }) => {
   );
   const [scrollLimitCount, setScrollLimitCount] = useState(10);
 
+  // myLikes Test
+  // useEffect(() => {
+  //   const contentsQuery = query(
+  //     collection(dbService(), "contents"),
+  //     where("creatorId", "in", [
+  //       "1AMsq8Dcpld9BqbH6b3VAsChLCq2",
+  //       "XCiblkEpbhhDbIP2IbyJh5fTAhG3",
+  //     ]),
+  //     orderBy("at", "desc"),
+  //     limit(scrollLimitCount),
+  //   );
+  //   onSnapshot(contentsQuery, (snapshot) => {
+  //     snapshot.docs.forEach((doc) => {
+  //       console.log(doc.data().at);
+  //     });
+  //   });
+  // }, []);
+
+  const getContents = async () => {
+    try {
+      // 너무 많은 양을 가져오게 되는 문제
+      if (pathname.includes("profile")) {
+        const commentQuery = query(
+          collection(dbService(), "comments"),
+          where("creatorId", "==", userObj.uid),
+        );
+        const commentSnapshot = await getDocs(commentQuery);
+        setMyCommentsArr([]);
+        commentSnapshot.forEach((snapshot) => {
+          const commentId = snapshot.id;
+          setMyCommentsArr((prev) => [...prev, commentId]);
+        });
+      } else {
+        const userDoc = doc(dbService(), "users", userObj.uid);
+        const userSnapshot = await getDoc(userDoc);
+        setFollowUsers([...(userSnapshot.data()?.follow || [])]);
+      }
+
+      if (contentType === "myComments" && !(myCommentsArr > 0)) {
+        setContents([]);
+        return;
+      }
+
+      const contentsQuery =
+        contentType === "allContents"
+          ? query(
+              collection(dbService(), "contents"),
+              orderBy("at", "desc"),
+              limit(scrollLimitCount),
+            )
+          : query(
+              collection(dbService(), "contents"),
+              orderBy("at", "desc"),
+              contentType === "followContents"
+                ? where("creatorId", "in", followUsers)
+                : contentType === "myContents"
+                ? where("creatorId", "==", userObj.uid)
+                : contentType === "myComments"
+                ? where("comments", "array-contains-any", myCommentsArr)
+                : where("likes", "array-contains", userObj.uid),
+              limit(scrollLimitCount),
+            );
+      // where가 자꾸 안들어감.. contentType state에 아예 넣어줘야 할듯?
+      // 맨 처음 10개를 무작위로 불러오는데 해당 유저의 uid와 겹쳐지는 doc이 10개 보다 덜 할거나 없을 수 있어서 다음 scroll해서 불러오는것이 문제가됨, 애초에 where로 "creatorId", "==", userObj.uid 를 해주면 좋겠지만 그렇게 되면 myComments에서 문제가 생길듯 함 봐야겠다.
+      // contentType에 따라 orderBy와 where를 다른 조건으로 줘서 해당 조건에 맞는 document들만 가져오게끔 해야함(orderBy를 바꿀 필요 없나?)
+      const contentsSnapshot = await getDocs(contentsQuery);
+      setContents([]);
+      contentsSnapshot.docs.forEach((snapshot) => {
+        const contentObj = {
+          ...snapshot.data(),
+          id: snapshot.id,
+        };
+
+        setContents((prev) => [contentObj, ...prev]);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     // follow한 user들은 users에서 불러와야 하는데 조건문으로 contentType이 followContents로 구분되게 해야할듯
 
-    // 너무 많은 양을 가져오게 되는 문제
-    if (pathname.includes("profile")) {
-      const commentQuery = query(
-        collection(dbService(), "comments"),
-        where("creatorId", "==", userObj.uid),
-      );
-      onSnapshot(commentQuery, (subSnapshot) => {
-        setMyCommentsArr([]);
-        subSnapshot.docs.forEach((doc) => {
-          const commentId = doc.id;
-          setMyCommentsArr((prev) => [...prev, commentId]);
-        });
-      });
-    } else {
-      const userDoc = doc(dbService(), "users", userObj.uid);
-      onSnapshot(userDoc, (snapshot) => {
-        setFollowUsers([...(snapshot.data()?.follow || [])]);
-      });
-    }
-
-    const contentsQuery = query(
-      collection(dbService(), "contents"),
-      orderBy("at", "desc"),
-      limit(scrollLimitCount),
-    );
-    onSnapshot(contentsQuery, (snapshot) => {
-      setContents([]);
-      let contentArr = [];
-      snapshot.docs.forEach((doc) => {
-        let contentObj = {};
-        if (contentType === "myComments") {
-          if (myCommentsArr.length === 0) return;
-          if (!doc.data()?.comments || !doc.data().comments?.length > 0) return;
-          for (let comment of doc.data().comments) {
-            if (myCommentsArr.length !== 0 && myCommentsArr.includes(comment)) {
-              contentObj = {
-                ...doc.data(),
-                id: doc.id,
-              };
-              break;
-            }
-          }
-        } else {
-          if (contentType === "myContents") {
-            if (doc.data().creatorId !== userObj.uid) return;
-          } else if (contentType === "myLikes") {
-            if (!doc.data()?.likes || !doc.data().likes.includes(userObj.uid))
-              return;
-          } else if (contentType === "followContents") {
-            if (!followUsers.includes(doc.data().creatorId)) return;
-          }
-          contentObj = {
-            ...doc.data(), // creatorId, at, text
-            id: doc.id,
-          };
-        }
-        contentArr = [contentObj, ...contentArr];
-      });
-      setContents(contentArr);
-    });
+    getContents();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contentType, userObj.uid, name, scrollLimitCount]);
@@ -129,6 +152,9 @@ const ContentsList = ({ userObj }) => {
         if ((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100) {
           // console.log((scrollTop / (scrollHeight - innerHeight)) * 100 >= 100);
           const contentCount = document.querySelectorAll(".content").length;
+          console.log(contentCount < scrollLimitCount);
+
+          if (contentCount < scrollLimitCount) return;
 
           setScrollLimitCount(contentCount + 10);
         }
@@ -137,7 +163,10 @@ const ContentsList = ({ userObj }) => {
     );
   }, []);
 
-  const onContentType = ({ target: { name } }) => setContentType(name);
+  const onContentType = ({ target: { name } }) => {
+    setScrollLimitCount(10);
+    setContentType(name);
+  };
 
   return (
     <ContentsListStyle>
